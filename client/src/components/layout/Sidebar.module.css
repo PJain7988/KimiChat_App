@@ -1,0 +1,235 @@
+/* ══════════════════════════════════════════════
+   KimiChat Sidebar
+   Layout: icon centered, label below icon
+   Width: 80px
+══════════════════════════════════════════════ */
+
+.sidebar {
+  width: 80px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0 16px;
+  flex-shrink: 0;
+  z-index: 20;
+  gap: 0;
+}
+
+/* ── Logo ─────────────────────────────────── */
+.logoWrap {
+  width: 46px;
+  height: 46px;
+  cursor: pointer;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.logoWrap:hover {
+  transform: scale(1.07);
+  filter: drop-shadow(0 0 10px rgba(0,201,177,0.5));
+}
+
+.logoImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 13px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(0,201,177,0.35));
+}
+
+.logoFallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--teal-glow);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+/* ── Divider ──────────────────────────────── */
+.divider {
+  width: 40px;
+  height: 1px;
+  background: var(--border2);
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Nav ──────────────────────────────────── */
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+/* ── Every nav button — icon stacked above label ── */
+.navBtn {
+  width: 64px;
+  min-height: 58px;
+  border-radius: 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;      /* ← vertical stack */
+  align-items: center;
+  justify-content: center;
+  gap: 4px;                    /* space between icon and label */
+  padding: 8px 4px;
+  position: relative;
+  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-dim);
+}
+
+.navBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+/* Active state */
+.navActive {
+  background: linear-gradient(
+    160deg,
+    rgba(0, 201, 177, 0.15),
+    rgba(26, 140, 255, 0.08)
+  ) !important;
+  color: var(--teal) !important;
+}
+
+/* Left accent bar */
+.activeBar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 26px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(180deg, var(--teal), var(--blue));
+  box-shadow: 0 0 10px rgba(0, 201, 177, 0.55);
+}
+
+/* Icon wrapper */
+.navIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Label — sits below icon */
+.navLabel {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60px;
+  text-align: center;
+}
+
+/* Unread badge */
+.badge {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  min-width: 16px;
+  height: 16px;
+  background: var(--pink);
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 2px 6px rgba(255, 79, 163, 0.4);
+  letter-spacing: 0;
+}
+
+/* ── Spacer ───────────────────────────────── */
+.spacer { flex: 1; }
+
+/* ── Bottom section ───────────────────────── */
+.bottomNav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  padding: 0 8px;
+}
+
+/* ── Avatar button ────────────────────────── */
+.avatarBtn {
+  width: 64px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 10px 4px 8px;
+  border-radius: 14px;
+  transition: background 0.2s;
+  margin-top: 6px;
+  position: relative;
+  color: var(--text-dim);
+}
+.avatarBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.avatarRing {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--teal);
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 0 14px var(--teal-glow);
+  transition: box-shadow 0.2s;
+}
+.avatarBtn:hover .avatarRing {
+  box-shadow: 0 0 22px rgba(0, 201, 177, 0.5);
+}
+
+.onlineDot {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 9px;
+  height: 9px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+}
