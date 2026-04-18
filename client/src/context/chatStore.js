@@ -7,7 +7,17 @@ const useChatStore = create((set, get) => ({
   messages: {},       // chatId -> Message[]
   typing: {},         // chatId -> { userId, name }[]
   unread: {},         // chatId -> count
+  invitations: [],    // global room invites
   loading: false,
+
+  addInvitation: (invite) => set(state => {
+    if (state.invitations.some(i => i.roomId === invite.roomId)) return {};
+    return { invitations: [invite, ...state.invitations] };
+  }),
+
+  removeInvitation: (roomId) => set(state => ({
+    invitations: state.invitations.filter(i => i.roomId !== roomId)
+  })),
 
   fetchChats: async () => {
     set({ loading: true });
@@ -19,6 +29,16 @@ const useChatStore = create((set, get) => ({
 
   setActiveChat: (chat) => set({ activeChat: chat }),
 
+  openChat: (chat) => {
+    set(state => {
+      const exists = state.chats.some(c => c._id === chat._id);
+      return {
+        chats: exists ? state.chats : [chat, ...state.chats],
+        activeChat: chat,
+      };
+    });
+  },
+
   fetchMessages: async (chatId) => {
     try {
       const res = await api.get(`/chats/${chatId}/messages`);
@@ -29,7 +49,7 @@ const useChatStore = create((set, get) => ({
     } catch {}
   },
 
-  sendMessage: async ({ chatId, senderId, content, type = 'text', fileUrl }) => {
+  sendMessage: async ({ chatId, senderId, content, type = 'text', fileUrl, sticker }) => {
     // Optimistic update
     const tempMsg = {
       _id: 'temp_' + Date.now(),
@@ -38,6 +58,7 @@ const useChatStore = create((set, get) => ({
       content,
       type,
       fileUrl,
+      sticker,
       createdAt: new Date().toISOString(),
       readBy: [senderId],
       isOptimistic: true,
@@ -50,7 +71,7 @@ const useChatStore = create((set, get) => ({
     }));
 
     try {
-      const res = await api.post('/messages', { chatId, content, type, fileUrl });
+      const res = await api.post('/messages', { chatId, content, type, fileUrl, sticker });
       // Replace optimistic
       set(state => ({
         messages: {

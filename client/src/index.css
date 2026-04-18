@@ -31,6 +31,19 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+[data-theme='light'] {
+  --bg-dark: #f0f4f9;
+  --bg-card: #ffffff;
+  --bg-card2: #f8fafc;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --text: #1a202c;
+  --text-dim: #64748b;
+  --border: rgba(0, 201, 177, 0.1);
+  --border2: rgba(0, 0, 0, 0.05);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;

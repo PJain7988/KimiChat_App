@@ -1,173 +1,302 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
-const Chat = require('../models/Chat');
-const { generateToken } = require('../middleware/auth');
+const express    = require('express');
+const router     = express.Router();
+const passport   = require('../config/passport');
+const nodemailer = require('nodemailer');
+const User       = require('../models/User');
+const Chat       = require('../models/Chat');
+const { generateToken, protect } = require('../middleware/auth');
 
-// ── Register ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+   EMAIL — Gmail via nodemailer
+═══════════════════════════════════════════════════════ */
+const mailer = nodemailer.createTransport({
+  service: 'gmail',
+  auth: { user: process.env.EMAIL, pass: process.env.EMAIL_PASS },
+});
+
+const sendOTPEmail = async (to, otp) => {
+  try {
+    await mailer.sendMail({
+      from:    `"KimiChat" <${process.env.EMAIL}>`,
+      to,
+      subject: 'Your KimiChat OTP Code',
+      html: `
+        <div style="font-family:sans-serif;max-width:480px;margin:auto;background:#050d1a;color:#e8f0fe;border-radius:16px;overflow:hidden;">
+          <div style="background:linear-gradient(90deg,#00c9b1,#1a8cff);padding:24px;text-align:center;">
+            <h2 style="margin:0;color:#fff;font-size:22px;">💬 KimiChat</h2>
+          </div>
+          <div style="padding:32px;text-align:center;">
+            <p style="font-size:16px;color:#7a9cc0;margin-bottom:8px;">Your one-time verification code</p>
+            <div style="font-size:42px;font-weight:800;letter-spacing:12px;color:#00c9b1;margin:20px 0;">${otp}</div>
+            <p style="font-size:13px;color:#3d5a78;">Expires in <strong style="color:#e8f0fe;">10 minutes</strong>. Never share this code.</p>
+          </div>
+        </div>`,
+    });
+    console.log(`✅ OTP email sent to ${to}`);
+  } catch (err) {
+    console.error('❌ Email send failed:', err.message);
+    throw err;
+  }
+};
+
+/* ═══════════════════════════════════════════════════════
+   REGISTER
+═══════════════════════════════════════════════════════ */
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, username } = req.body;
 
-    if (!name || !email || !password || !username) {
+    if (!name || !email || !password || !username)
       return res.status(400).json({ success: false, message: 'All fields are required' });
-    }
 
-    const existing = await User.findOne({ $or: [{ email }, { username }] });
-    if (existing) {
-      return res.status(400).json({ success: false, message: 'Email or username already taken' });
-    }
-
-    const user = await User.create({ name, email, password, username });
-
-    // Create AI Chat for new user
-    await Chat.create({
-      name: 'Kimi AI',
-      isAI: true,
-      participants: [user._id],
-      description: 'Your personal AI assistant',
+    const existing = await User.findOne({
+      $or: [{ email: email.toLowerCase() }, { username: username.toLowerCase() }],
     });
 
-    const token = generateToken(user._id);
-    res.status(201).json({ success: true, token, user: user.toPublic() });
+    if (existing)
+      return res.status(400).json({
+        success: false,
+        message: `${existing.email === email.toLowerCase() ? 'Email' : 'Username'} already registered`,
+      });
+
+    const user = await User.create({ name, email: email.toLowerCase(), password, username: username.toLowerCase() });
+    await Chat.create({ name: 'Kimi AI', isAI: true, participants: [user._id], description: 'Your personal AI assistant' });
+
+    res.status(201).json({ success: true, token: generateToken(user._id), user: user.toPublic() });
   } catch (err) {
-    console.error(err);
+    console.error('[register]', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// ── Login with Email ─────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════════ */
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    if (!email || !password)
+      return res.status(400).json({ success: false, message: 'Email and password required' });
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+
+    if (!user || !(await user.comparePassword(password)))
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
     user.isOnline = true;
     await user.save();
 
-    const token = generateToken(user._id);
-    res.json({ success: true, token, user: user.toPublic() });
+    res.json({ success: true, token: generateToken(user._id), user: user.toPublic() });
   } catch (err) {
+    console.error('[login]', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// ── Send OTP ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+   SEND OTP  (email → Gmail | phone → console dev)
+═══════════════════════════════════════════════════════ */
 router.post('/send-otp', async (req, res) => {
   try {
-    const { phone } = req.body;
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+    const { phone, email } = req.body;
+    const identifier = email || phone;
 
-    // In production: integrate Twilio/MSG91
-    console.log(`📱 OTP for ${phone}: ${otp}`);
+    if (!identifier)
+      return res.status(400).json({ success: false, message: 'Phone or email required' });
 
-    let user = await User.findOne({ phone });
+    const otp       = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+    let user = email
+      ? await User.findOne({ email: email.toLowerCase() })
+      : await User.findOne({ phone });
+
     if (!user) {
-      // Pre-register with phone
+      const base     = identifier.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 12);
+      const username = `${base}_${Date.now().toString(36).slice(-4)}`;
       user = await User.create({
-        name: 'KimiChat User',
-        username: 'user_' + Date.now(),
-        email: phone + '@phone.kimichat.app',
-        password: otp + '_temp',
-        phone,
+        name:     'KimiChat User',
+        username,
+        email:    email ? email.toLowerCase() : `${phone}@phone.kimichat.app`,
+        phone:    phone || '',
+        password: `otp_${Date.now()}`,
       });
     }
 
-    user.otp = otp;
+    user.otp       = otp;
     user.otpExpiry = otpExpiry;
     await user.save();
 
-    res.json({ success: true, message: 'OTP sent (check console in dev)', dev_otp: otp });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// ── Verify OTP ───────────────────────────────────────────
-router.post('/verify-otp', async (req, res) => {
-  try {
-    const { phone, otp } = req.body;
-
-    const user = await User.findOne({ phone }).select('+otp +otpExpiry');
-    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
-
-    if (user.otp !== otp || user.otpExpiry < new Date()) {
-      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+    if (email) {
+      await sendOTPEmail(email.toLowerCase(), otp);
+      return res.json({ success: true, message: `OTP sent to ${email}` });
     }
 
-    user.otp = undefined;
-    user.otpExpiry = undefined;
-    user.isOnline = true;
-    await user.save();
-
-    const token = generateToken(user._id);
-    res.json({ success: true, token, user: user.toPublic() });
+    // Phone — log in dev, integrate FAST2SMS / Twilio in prod
+    console.log(`\n📱 OTP for ${phone}: ${otp}\n`);
+    res.json({
+      success: true,
+      message: 'OTP sent to phone',
+      ...(process.env.NODE_ENV === 'development' && { dev_otp: otp }),
+    });
   } catch (err) {
+    console.error('[send-otp]', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// ── Social Auth (Google/Discord/GitHub) ──────────────────
+/* ═══════════════════════════════════════════════════════
+   VERIFY OTP
+═══════════════════════════════════════════════════════ */
+router.post('/verify-otp', async (req, res) => {
+  try {
+    const { phone, email, otp } = req.body;
+
+    if (!otp) return res.status(400).json({ success: false, message: 'OTP required' });
+
+    const query = email ? { email: email.toLowerCase() } : { phone };
+    const user  = await User.findOne(query).select('+otp +otpExpiry');
+
+    if (!user)
+      return res.status(404).json({ success: false, message: 'User not found' });
+
+    if (user.otp !== otp || !user.otpExpiry || user.otpExpiry < new Date())
+      return res.status(400).json({ success: false, message: 'Invalid or expired OTP' });
+
+    user.otp       = undefined;
+    user.otpExpiry = undefined;
+    user.isOnline  = true;
+    await user.save();
+
+    res.json({ success: true, token: generateToken(user._id), user: user.toPublic() });
+  } catch (err) {
+    console.error('[verify-otp]', err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+/* ═══════════════════════════════════════════════════════
+   GOOGLE OAUTH  via Passport
+   Redirect URI → http://localhost:5000/api/auth/google/callback
+═══════════════════════════════════════════════════════ */
+router.get('/google/redirect',
+  passport.authenticate('google', {
+    scope:  ['profile', 'email'],
+    session: false,
+  })
+);
+
+router.get('/google/callback',
+  passport.authenticate('google', {
+    session:         false,
+    failureRedirect: `${process.env.CLIENT_URL}/auth?error=google_failed`,
+  }),
+  (req, res) => {
+    const token = generateToken(req.user._id);
+    console.log(`✅ Google OAuth success: ${req.user.email}`);
+    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+  }
+);
+
+/* ═══════════════════════════════════════════════════════
+   GITHUB OAUTH  via Passport
+   Callback URL → http://localhost:5000/api/auth/github/callback
+═══════════════════════════════════════════════════════ */
+router.get('/github/redirect',
+  passport.authenticate('github', {
+    scope:   ['user:email', 'read:user'],
+    session: false,
+  })
+);
+
+router.get('/github/callback',
+  passport.authenticate('github', {
+    session:         false,
+    failureRedirect: `${process.env.CLIENT_URL}/auth?error=github_failed`,
+  }),
+  (req, res) => {
+    const token = generateToken(req.user._id);
+    console.log(`✅ GitHub OAuth success: ${req.user.email}`);
+    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+  }
+);
+
+/* ═══════════════════════════════════════════════════════
+   DISCORD OAUTH  via Passport
+   Redirect URI → http://localhost:5000/api/auth/discord/callback
+═══════════════════════════════════════════════════════ */
+router.get('/discord/redirect',
+  passport.authenticate('discord', { session: false })
+);
+
+router.get('/discord/callback',
+  passport.authenticate('discord', {
+    session:         false,
+    failureRedirect: `${process.env.CLIENT_URL}/auth?error=discord_failed`,
+  }),
+  (req, res) => {
+    const token = generateToken(req.user._id);
+    console.log(`✅ Discord OAuth success: ${req.user.email}`);
+    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+  }
+);
+
+/* ═══════════════════════════════════════════════════════
+   LEGACY DIRECT SOCIAL  (frontend fallback / testing)
+═══════════════════════════════════════════════════════ */
 router.post('/social', async (req, res) => {
   try {
     const { provider, providerId, name, email, avatar } = req.body;
 
-    let query = {};
-    if (provider === 'google')  query.googleId = providerId;
-    if (provider === 'discord') query.discordId = providerId;
-    if (provider === 'github')  query.githubId = providerId;
+    if (!provider || !providerId)
+      return res.status(400).json({ success: false, message: 'provider and providerId are required' });
 
-    let user = await User.findOne(query);
+    // Reuse passport config's findOrCreate logic by calling it directly
+    const idField = `${provider}Id`;
+    let user = await User.findOne({ [idField]: providerId });
 
-    if (!user && email) {
-      user = await User.findOne({ email });
-    }
+    if (!user && email) user = await User.findOne({ email: email.toLowerCase() });
 
-    if (!user) {
-      const username = (name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now().toString(36)).slice(0, 20);
+    if (user) {
+      user[idField] = providerId;
+      if (avatar && !user.avatar) user.avatar = avatar;
+      user.isOnline = true;
+      await user.save();
+    } else {
+      const base     = (name || 'user').toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 14);
+      const username = `${base}_${Date.now().toString(36).slice(-4)}`;
       user = await User.create({
-        name,
-        email: email || `${providerId}@${provider}.kimichat.app`,
+        name:       name || `${provider} User`,
+        email:      email ? email.toLowerCase() : `${providerId}@${provider}.kimichat.app`,
         username,
-        password: providerId + process.env.JWT_SECRET,
-        avatar,
-        [`${provider}Id`]: providerId,
+        avatar:     avatar || '',
+        [idField]:  providerId,
+        isOnline:   true,
       });
       await Chat.create({ name: 'Kimi AI', isAI: true, participants: [user._id] });
-    } else {
-      user[`${provider}Id`] = providerId;
-      if (avatar && !user.avatar) user.avatar = avatar;
     }
 
-    user.isOnline = true;
-    await user.save();
-
-    const token = generateToken(user._id);
-    res.json({ success: true, token, user: user.toPublic() });
+    res.json({ success: true, token: generateToken(user._id), user: user.toPublic() });
   } catch (err) {
+    console.error('[social]', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// ── Get Me ───────────────────────────────────────────────
-const { protect } = require('../middleware/auth');
-
-router.get('/me', protect, async (req, res) => {
+/* ═══════════════════════════════════════════════════════
+   GET ME  /  LOGOUT
+═══════════════════════════════════════════════════════ */
+router.get('/me', protect, (req, res) => {
   res.json({ success: true, user: req.user.toPublic() });
 });
 
-// ── Logout ───────────────────────────────────────────────
 router.post('/logout', protect, async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.user._id, { isOnline: false, lastSeen: new Date() });
-    res.json({ success: true, message: 'Logged out' });
+    res.json({ success: true, message: 'Logged out successfully' });
   } catch (err) {
+    console.error('[logout]', err.message);
     res.status(500).json({ success: false, message: err.message });
   }
 });

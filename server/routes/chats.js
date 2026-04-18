@@ -99,4 +99,29 @@ router.delete('/:chatId', protect, async (req, res) => {
   }
 });
 
+// ── Create/Get AI chat ───────────────────────────────────────
+router.post('/ai', protect, async (req, res) => {
+  try {
+    let chat = await Chat.findOne({
+      isAI: true,
+      participants: req.user._id,
+    }).populate('participants', 'name username avatar avatarColor');
+
+    if (!chat) {
+      chat = await Chat.create({
+        name: 'Kimi AI Assistant',
+        isAI: true,
+        participants: [req.user._id],
+        avatar: '🤖',
+        description: 'Your personal AI companion for help and conversation.',
+      });
+      chat = await chat.populate('participants', 'name username avatar avatarColor');
+    }
+
+    res.json({ success: true, chat });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

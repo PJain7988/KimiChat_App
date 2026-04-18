@@ -25,6 +25,7 @@ module.exports = (io) => {
     socket.on('user:online', async (userId) => {
       onlineUsers.set(userId, socket.id);
       socket.userId = userId;
+      socket.join(`user:${userId}`); // Join personal room
 
       await User.findByIdAndUpdate(userId, { isOnline: true, socketId: socket.id });
 
@@ -65,35 +66,7 @@ module.exports = (io) => {
         const populated = await message.populate('sender', 'name username avatar avatarColor');
 
         // Emit to all in chat room
-        io.to(`chat:${chatId}`).emit('message:new', populated);
-
-        // Check if AI chat
-        const chat = await Chat.findById(chatId);
-        if (chat?.isAI) {
-          // Simulate AI typing
-          setTimeout(() => {
-            io.to(`chat:${chatId}`).emit('typing:start', { chatId, userId: 'ai', name: 'Kimi AI' });
-          }, 300);
-
-          setTimeout(async () => {
-            io.to(`chat:${chatId}`).emit('typing:stop', { chatId, userId: 'ai' });
-
-            const aiReply = AI_REPLIES[Math.floor(Math.random() * AI_REPLIES.length)];
-            const aiMsg = await Message.create({
-              chat: chatId,
-              sender: senderId, // placeholder – real app uses a bot user
-              content: aiReply,
-              type: 'ai',
-              isAI: true,
-              readBy: [senderId],
-            });
-
-            await Chat.findByIdAndUpdate(chatId, { lastMessage: aiMsg._id });
-
-            const populatedAI = await aiMsg.populate('sender', 'name username avatar avatarColor');
-            io.to(`chat:${chatId}`).emit('message:new', { ...populatedAI.toObject(), isAI: true });
-          }, 1800 + Math.random() * 1000);
-        }
+        io.to(`chat:${chatId}`).emit('message:new', { chatId, message: populated });
 
       } catch (err) {
         socket.emit('error', { message: err.message });
@@ -144,6 +117,11 @@ module.exports = (io) => {
       } catch (err) {
         socket.emit('error', { message: err.message });
       }
+    });
+
+    socket.on('global:invite', (data) => {
+      const { targetUserId } = data;
+      io.to(`user:${targetUserId}`).emit('global:invite', data);
     });
 
     // ── WebRTC Signaling ──────────────────────────────────

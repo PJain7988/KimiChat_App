@@ -4,7 +4,7 @@ import { getSocket } from '../../utils/socket';
 
 const EMOJI_REACTIONS = ['❤️', '😂', '😮', '😢', '👍', '🔥'];
 
-export default function MessageBubble({ message, isMe, showAvatar, isAI }) {
+export default function MessageBubble({ message, isMe, showAvatar, isAI, searchHighlight }) {
   const [showReact, setShowReact] = useState(false);
   const [localReactions, setLocalReactions] = useState(message.reactions || []);
   const [hoveredEmoji, setHoveredEmoji] = useState(null);
@@ -15,6 +15,78 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI }) {
 
   const isDeleted = message.deleted;
   const senderName = message.sender?.name || 'Unknown';
+
+  const renderContent = () => {
+    const rawContent = isDeleted ? '🚫 This message was deleted' : message.content;
+    if (isDeleted || !rawContent) return rawContent;
+
+    // Handle Stickers (from property or parsed from content)
+    let stickerObj = message.sticker;
+    if (!stickerObj && rawContent.startsWith('[sticker:')) {
+      const parts = rawContent.match(/\[sticker:(.+):(.+)\]/);
+      if (parts) stickerObj = { emoji: parts[1], label: parts[2] };
+    }
+
+    if ((message.type === 'sticker' || stickerObj) && stickerObj) {
+      const { emoji, label, bg } = stickerObj;
+      return (
+        <div style={{
+          background: bg || 'rgba(0,201,177,0.12)', borderRadius: 18,
+          padding: '16px 12px 12px', display: 'flex', flexDirection: 'column',
+          alignItems: 'center', gap: 6, width: 100, cursor: 'default',
+          border: '1px solid rgba(0,201,177,0.2)'
+        }}>
+          <span style={{ fontSize: 48, lineHeight: 1 }}>{emoji}</span>
+          <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{label}</span>
+        </div>
+      );
+    }
+
+    // Handle Audio messages
+    if (message.type === 'audio' || rawContent.startsWith('🎤 Voice note') || rawContent.startsWith('🎵 Audio file')) {
+      const isVoice = rawContent.startsWith('🎤');
+      // For now, if there is no fileUrl, we render the text, but let's assume we might have it
+      if (message.fileUrl) {
+        return (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 220 }}>
+            <div style={{ fontSize: 13, color: isMe ? '#000' : 'var(--text-dim)', opacity: 0.8, display: 'flex', alignItems: 'center', gap: 4 }}>
+              {isVoice ? '🎤 Voice Note' : '🎵 Audio File'}
+            </div>
+            <audio src={message.fileUrl} controls style={{ width: '100%', height: 36, borderRadius: 10 }} />
+          </div>
+        );
+      }
+    }
+
+    const urlRegex = /(https?:\/\/[^\s]+)/gi;
+    const isImage = (url) => /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(url) || url.includes('tenor.com');
+
+    // If it's a media URL, render it
+    if (rawContent.match(urlRegex) && isImage(rawContent.trim())) {
+      return (
+        <img 
+          src={rawContent.trim()} 
+          alt="media" 
+          style={{ maxWidth: '100%', borderRadius: 12, marginTop: 4, display: 'block', border: '1px solid var(--border2)' }} 
+        />
+      );
+    }
+
+    if (!searchHighlight) return rawContent;
+    
+    try {
+      const parts = rawContent.split(new RegExp(`(${searchHighlight})`, 'gi'));
+      return parts.map((part, i) => 
+        part.toLowerCase() === searchHighlight.toLowerCase() ? (
+          <span key={i} style={{ backgroundColor: 'rgba(255,255,255,0.3)', color: isMe ? '#000' : 'var(--teal)', borderRadius: 2, padding: '0 2px', fontWeight: 'bold' }}>{part}</span>
+        ) : (
+          part
+        )
+      );
+    } catch (e) {
+      return rawContent;
+    }
+  };
 
   const handleReact = (emoji) => {
     // Optimistic UI update
@@ -130,6 +202,8 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI }) {
           fontSize: 14,
           lineHeight: 1.55,
           wordBreak: 'break-word',
+          boxShadow: isAI ? '0 0 16px rgba(0,201,177,0.15)' : 'none',
+          border: isAI ? '1px solid rgba(0,201,177,0.25)' : 'none',
           background: isDeleted
             ? 'rgba(255,255,255,0.04)'
             : isMe
@@ -143,7 +217,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI }) {
           opacity: isDeleted ? 0.6 : message.isOptimistic ? 0.75 : 1,
           position: 'relative',
         }}>
-          {isDeleted ? '🚫 This message was deleted' : message.content}
+          {renderContent()}
 
           {/* Reactions display on bubble */}
           {Object.values(groupedReactions).length > 0 && (

@@ -97,4 +97,54 @@ router.delete('/:userId', protect, async (req, res) => {
   }
 });
 
+// ── Get Blocked Users ─────────────────────────────────────
+router.get('/blocked', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('blockedUsers', 'name username avatar avatarColor bio kimichatId');
+    res.json({ success: true, blocked: user.blockedUsers || [] });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ── Block User ───────────────────────────────────────────
+router.post('/block/:userId', protect, async (req, res) => {
+  try {
+    const me = await User.findById(req.user._id);
+    if (req.params.userId === req.user._id.toString()) {
+      return res.status(400).json({ success: false, message: 'Cannot block yourself' });
+    }
+
+    // Add to blocked, remove from friends/requests
+    me.blockedUsers.addToSet(req.params.userId);
+    me.friends = me.friends.filter(id => id.toString() !== req.params.userId);
+    me.friendRequests = me.friendRequests.filter(r => r.from.toString() !== req.params.userId);
+    me.sentRequests = me.sentRequests.filter(id => id.toString() !== req.params.userId);
+    
+    await me.save();
+    
+    // Also remove ME from THEIR friends list
+    await User.findByIdAndUpdate(req.params.userId, {
+      $pull: { friends: req.user._id, sentRequests: req.user._id }
+    });
+
+    res.json({ success: true, message: 'User blocked' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ── Unblock User ─────────────────────────────────────────
+router.post('/unblock/:userId', protect, async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.user._id, {
+      $pull: { blockedUsers: req.params.userId }
+    });
+    res.json({ success: true, message: 'User unblocked' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

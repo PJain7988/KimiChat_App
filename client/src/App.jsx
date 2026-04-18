@@ -30,22 +30,28 @@ export default function App() {
         position="top-right"
         toastOptions={{
           style: {
-            background: 'var(--bg-card)',
-            color: 'var(--text)',
-            border: '1px solid var(--border)',
+            background:   'var(--bg-card)',
+            color:        'var(--text)',
+            border:       '1px solid var(--border)',
             borderRadius: '12px',
-            fontFamily: 'var(--font-body)',
-            fontSize: '14px',
+            fontFamily:   'var(--font-body)',
+            fontSize:     '14px',
           },
           success: { iconTheme: { primary: 'var(--teal)', secondary: '#fff' } },
-          error:   { iconTheme: { primary: '#ff4444',      secondary: '#fff' } },
+          error:   { iconTheme: { primary: '#ff4444',     secondary: '#fff' } },
         }}
       />
       <Routes>
         <Route path="/"    element={<Landing />} />
         <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
+
+        {/* OAuth providers redirect back to /auth/callback?token=JWT
+            No guard — user is unauthenticated when they land here.
+            Auth.jsx useEffect detects the token and handles login. */}
+        <Route path="/auth/callback" element={<Auth />} />
+
         <Route path="/app/*" element={<ProtectedRoute><MainApp /></ProtectedRoute>} />
-        <Route path="*"    element={<Navigate to="/" replace />} />
+        <Route path="*"      element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

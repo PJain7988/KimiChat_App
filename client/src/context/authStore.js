@@ -3,13 +3,14 @@ import api from '../utils/api';
 import { initSocket, disconnectSocket } from '../utils/socket';
 
 const useAuthStore = create((set, get) => ({
-  user: JSON.parse(localStorage.getItem('kimi_user') || 'null'),
-  token: localStorage.getItem('kimi_token') || null,
+  user: JSON.parse(localStorage.getItem('kimi_user') || localStorage.getItem('user') || 'null'),
+  token: localStorage.getItem('kimi_token') || localStorage.getItem('token') || null,
   loading: false,
   error: null,
 
   setUser: (user) => {
     localStorage.setItem('kimi_user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user));
     set({ user });
   },
 
@@ -19,7 +20,9 @@ const useAuthStore = create((set, get) => ({
       const res = await api.post('/auth/register', data);
       const { token, user } = res.data;
       localStorage.setItem('kimi_token', token);
+      localStorage.setItem('token', token);
       localStorage.setItem('kimi_user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
       initSocket(user._id);
       set({ token, user, loading: false });
       return { success: true };
@@ -36,7 +39,9 @@ const useAuthStore = create((set, get) => ({
       const res = await api.post('/auth/login', { email, password });
       const { token, user } = res.data;
       localStorage.setItem('kimi_token', token);
+      localStorage.setItem('token', token);
       localStorage.setItem('kimi_user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
       initSocket(user._id);
       set({ token, user, loading: false });
       return { success: true };
@@ -53,7 +58,9 @@ const useAuthStore = create((set, get) => ({
       const res = await api.post('/auth/verify-otp', { phone, otp });
       const { token, user } = res.data;
       localStorage.setItem('kimi_token', token);
+      localStorage.setItem('token', token);
       localStorage.setItem('kimi_user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user));
       initSocket(user._id);
       set({ token, user, loading: false });
       return { success: true };
@@ -68,6 +75,8 @@ const useAuthStore = create((set, get) => ({
     try { await api.post('/auth/logout'); } catch (_) {}
     localStorage.removeItem('kimi_token');
     localStorage.removeItem('kimi_user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     disconnectSocket();
     set({ user: null, token: null });
   },

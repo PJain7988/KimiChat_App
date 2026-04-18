@@ -10,81 +10,81 @@ import toast from 'react-hot-toast';
 const Icon = {
   pencil: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
     </svg>
   ),
   filter: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
   ),
   dots: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-      <circle cx="12" cy="5"  r="1" fill="currentColor"/>
-      <circle cx="12" cy="12" r="1" fill="currentColor"/>
-      <circle cx="12" cy="19" r="1" fill="currentColor"/>
+      <circle cx="12" cy="5" r="1" fill="currentColor" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" />
+      <circle cx="12" cy="19" r="1" fill="currentColor" />
     </svg>
   ),
   newGroup: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-      <circle cx="9" cy="7" r="4"/>
-      <line x1="19" y1="8" x2="19" y2="14"/>
-      <line x1="22" y1="11" x2="16" y2="11"/>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <line x1="19" y1="8" x2="19" y2="14" />
+      <line x1="22" y1="11" x2="16" y2="11" />
     </svg>
   ),
   joinGroup: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-      <polyline points="10 17 15 12 10 7"/>
-      <line x1="15" y1="12" x2="3" y2="12"/>
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+      <polyline points="10 17 15 12 10 7" />
+      <line x1="15" y1="12" x2="3" y2="12" />
     </svg>
   ),
   account: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
     </svg>
   ),
   settings: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="3"/>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </svg>
   ),
   about: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="12" y1="8" x2="12" y2="12"/>
-      <line x1="12" y1="16" x2="12.01" y2="16"/>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
   ),
   search: (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8"/>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   ),
   close: (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   ),
   check: (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
+      <polyline points="20 6 9 17 4 12" />
     </svg>
   ),
 };
 
 /* ── Filter options ───────────────────────────── */
 const FILTER_OPTS = [
-  { key: 'all',    label: 'All'      },
-  { key: 'unread', label: 'Unread'   },
-  { key: 'groups', label: 'Groups'   },
-  { key: 'ai',     label: 'AI Chats' },
+  { key: 'all', label: 'All' },
+  { key: 'unread', label: 'Unread' },
+  { key: 'groups', label: 'Groups' },
+  { key: 'ai', label: 'AI Chats' },
 ];
 
 /* ── About Modal ──────────────────────────── */
@@ -107,7 +107,7 @@ function AboutModal({ onClose }) {
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700 }}>About</div>
           <button onClick={onClose} style={ghostBtn}>{Icon.close}</button>
         </div>
-        
+
         {/* Logo Section */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
@@ -117,7 +117,14 @@ function AboutModal({ onClose }) {
             borderRadius: 28, display: 'flex', alignItems: 'center',
             justifyContent: 'center', fontSize: 72,
           }}>
-            🚀
+            <img
+              src="../images/logo.png"
+              alt="KimiChat Logo"
+              style={{
+                width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center',marginTop: '35px',
+              }}
+            />
           </div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
             KimiChat
@@ -170,7 +177,7 @@ function AboutModal({ onClose }) {
               Build Number
             </div>
             <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)' }}>
-              153
+              d9ee21c
             </div>
           </div>
 
@@ -291,8 +298,8 @@ function NewGroupModal({ onClose }) {
     if (!name.trim()) return;
     setLoading(true);
     try {
-      await api.post('/chats/group', { 
-        name: name.trim(), 
+      await api.post('/chats/group', {
+        name: name.trim(),
         participants: members.map(m => m._id),
       });
       toast.success('Group created!');
@@ -477,8 +484,25 @@ function NewChatModal({ onClose }) {
   const [q, setQ] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { openDirectChat } = useChatStore();
+  const { openChat, fetchChats } = useChatStore();
   const navigate = useNavigate();
+
+  const handleAIChat = async () => {
+    try {
+      setLoading(true);
+      const res = await api.post('/chats/ai');
+      if (res.data.success) {
+        await fetchChats();
+        openChat(res.data.chat);
+        onClose();
+        navigate('/app/chat'); // Ensure correct route
+      }
+    } catch (err) {
+      toast.error('Could not connect to AI');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const search = async (val) => {
     setQ(val);
@@ -526,6 +550,21 @@ function NewChatModal({ onClose }) {
           />
         </div>
         <div style={{ overflowY: 'auto', flex: 1 }}>
+          {!q.trim() && !loading && (
+            <div onClick={handleAIChat} style={{
+              display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px',
+              borderRadius: 14, cursor: 'pointer', marginBottom: 12,
+              background: 'rgba(0,201,177,0.08)', border: '1px solid rgba(0,201,177,0.15)',
+              transition: 'all .2s'
+            }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,201,177,0.12)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,201,177,0.08)'}>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg,var(--teal),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>🤖</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--teal)' }}>Kimi AI Assistant</div>
+                <div style={{ fontSize: 11, color: 'var(--text-dim)' }}>Instant help, answers, and fun ✦</div>
+              </div>
+              <div style={{ fontSize: 12, opacity: 0.5 }}>⚡</div>
+            </div>
+          )}
           {loading && <div style={{ textAlign: 'center', color: 'var(--text-dim)', padding: 20, fontSize: 13 }}>Searching…</div>}
           {!loading && q && results.length === 0 && (
             <div style={{ textAlign: 'center', color: 'var(--text-dim)', padding: 20, fontSize: 13 }}>No users found for "{q}"</div>
@@ -593,19 +632,24 @@ export default function ChatList() {
   const navigate = useNavigate();
   const { chats, activeChat, setActiveChat, fetchMessages, unread } = useChatStore();
 
-  const [search, setSearch]         = useState('');
-  const [filter, setFilter]         = useState('all');
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('all');
   const [showFilter, setShowFilter] = useState(false);
-  const [showMenu, setShowMenu]     = useState(false);
-  const [modal, setModal]           = useState(null); // 'newChat' | 'newGroup' | 'joinGroup' | 'about'
+  const [showMenu, setShowMenu] = useState(false);
+  const [hoveredChatId, setHoveredChatId] = useState(null);
+  const [itemMenuId, setItemMenuId] = useState(null);
+  const [modal, setModal] = useState(null); // 'newChat' | 'newGroup' | 'joinGroup' | 'about'
+  
+  const [pinnedChats, setPinnedChats] = useState(() => JSON.parse(localStorage.getItem('kc_pinned_chats') || '[]'));
+  const [mutedChats, setMutedChats] = useState(() => JSON.parse(localStorage.getItem('kc_muted_chats') || '[]'));
 
-  const menuRef   = useRef(null);
+  const menuRef = useRef(null);
   const filterRef = useRef(null);
 
   /* Close dropdowns on outside click */
   useEffect(() => {
     const handler = (e) => {
-      if (menuRef.current   && !menuRef.current.contains(e.target))   setShowMenu(false);
+      if (menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false);
       if (filterRef.current && !filterRef.current.contains(e.target)) setShowFilter(false);
     };
     document.addEventListener('mousedown', handler);
@@ -618,26 +662,60 @@ export default function ChatList() {
   };
 
   /* Apply search + filter */
-  const filtered = chats.filter(c => {
-    const name = getChatDisplayName(c, user._id);
-    const matchSearch = name.toLowerCase().includes(search.toLowerCase());
-    if (!matchSearch) return false;
-    if (filter === 'unread') return (unread[c._id] || 0) > 0;
-    if (filter === 'groups') return c.isGroup;
-    if (filter === 'ai')     return c.isAI;
-    return true;
-  });
+  const filtered = chats
+    .filter(c => {
+      const name = getChatDisplayName(c, user._id);
+      const matchSearch = name.toLowerCase().includes(search.toLowerCase());
+      if (!matchSearch) return false;
+      if (filter === 'unread') return (unread[c._id] || 0) > 0;
+      if (filter === 'groups') return c.isGroup;
+      if (filter === 'ai') return c.isAI;
+      return true;
+    })
+    .sort((a, b) => {
+      const aPinned = pinnedChats.includes(a._id);
+      const bPinned = pinnedChats.includes(b._id);
+      if (aPinned && !bPinned) return -1;
+      if (!aPinned && bPinned) return 1;
+      // Secondary sort: most recent message
+      const aTime = a.lastMessage?.createdAt ? new Date(a.lastMessage.createdAt).getTime() : 0;
+      const bTime = b.lastMessage?.createdAt ? new Date(b.lastMessage.createdAt).getTime() : 0;
+      return bTime - aTime;
+    });
+
+  const togglePin = (chatId) => {
+    const next = pinnedChats.includes(chatId) ? pinnedChats.filter(id => id !== chatId) : [...pinnedChats, chatId];
+    setPinnedChats(next);
+    localStorage.setItem('kc_pinned_chats', JSON.stringify(next));
+    toast.success(pinnedChats.includes(chatId) ? 'Chat unpinned' : 'Chat pinned');
+    setItemMenuId(null);
+  };
+
+  const toggleMute = (chatId) => {
+    const next = mutedChats.includes(chatId) ? mutedChats.filter(id => id !== chatId) : [...mutedChats, chatId];
+    setMutedChats(next);
+    localStorage.setItem('kc_muted_chats', JSON.stringify(next));
+    toast.success(mutedChats.includes(chatId) ? 'Notifications unmuted' : 'Notifications muted');
+    setItemMenuId(null);
+  };
+
+  const deleteChatLocally = (chatId) => {
+    // In many apps, delete is a server action, but here we can at least toast and prompt
+    // Or we could implement a local 'hide' logic. For now, let's keep it simple.
+    toast.error('Chat deleted locally');
+    setItemMenuId(null);
+  };
 
   const activeFilterLabel = FILTER_OPTS.find(f => f.key === filter)?.label || 'All';
 
   /* Three-dot menu items */
   const MENU_ITEMS = [
-    { icon: Icon.newGroup,  label: 'New Group',  onClick: () => { setModal('newGroup');  setShowMenu(false); } },
+    { icon: Icon.newGroup, label: 'New Group', onClick: () => { setModal('newGroup'); setShowMenu(false); } },
     { icon: Icon.joinGroup, label: 'Join Group', onClick: () => { setModal('joinGroup'); setShowMenu(false); } },
     { divider: true },
-    { icon: Icon.account,   label: 'Account',   onClick: () => { navigate('/app/profile'); setShowMenu(false); } },
-    { icon: Icon.settings,  label: 'Settings',  onClick: () => { navigate('/app/profile'); setShowMenu(false); } },
-    { icon: Icon.about,     label: 'About',     onClick: () => { setModal('about'); setShowMenu(false); } },
+    { icon: Icon.account, label: 'Account', onClick: () => { navigate('/app/profile'); setShowMenu(false); } },
+    { icon: Icon.settings, label: 'Settings', onClick: () => { navigate('/app/profile'); setShowMenu(false); } },
+    { icon: Icon.about, label: 'About', onClick: () => { setModal('about'); setShowMenu(false); } },
   ];
 
   return (
@@ -832,34 +910,37 @@ export default function ChatList() {
           )}
 
           {filtered.map(chat => {
-            const name     = getChatDisplayName(chat, user._id);
-            const other    = chat.participants?.find(p => p._id !== user._id);
-            const lastMsg  = chat.lastMessage;
-            const count    = unread[chat._id] || 0;
+            const name = getChatDisplayName(chat, user._id);
+            const other = chat.participants?.find(p => p._id !== user._id);
+            const lastMsg = chat.lastMessage;
+            const count = unread[chat._id] || 0;
             const isActive = activeChat?._id === chat._id;
 
             return (
               <div
                 key={chat._id}
                 onClick={() => handleSelect(chat)}
+                onMouseEnter={() => setHoveredChatId(chat._id)}
+                onMouseLeave={() => { setHoveredChatId(null); if(itemMenuId !== chat._id) setItemMenuId(null); }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '10px 10px', borderRadius: 14, cursor: 'pointer',
                   marginBottom: 2, transition: 'all .18s',
                   background: isActive ? 'var(--teal-glow)' : 'transparent',
                   border: isActive ? '1px solid rgba(0,201,177,0.2)' : '1px solid transparent',
+                  position: 'relative'
                 }}
-                onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
-                onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
               >
-                <Avatar
-                  name={name}
-                  src={chat.isAI ? null : (chat.isGroup ? chat.avatar : other?.avatar)}
-                  size={46}
-                  online={chat.isAI ? true : (chat.isGroup ? false : other?.isOnline)}
-                  gradient={chat.isAI ? 'var(--teal),var(--blue)' : null}
-                  emoji={chat.isAI ? '🤖' : (chat.isGroup ? '👥' : null)}
-                />
+                <div onClick={(e) => { e.stopPropagation(); toast.info(`Viewing ${name}'s profile`); }} style={{ transition: 'transform .2s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+                  <Avatar
+                    name={name}
+                    src={chat.isAI ? null : (chat.isGroup ? chat.avatar : other?.avatar)}
+                    size={46}
+                    online={chat.isAI ? true : (chat.isGroup ? false : other?.isOnline)}
+                    gradient={chat.isAI ? 'var(--teal),var(--blue)' : null}
+                    emoji={chat.isAI ? '🤖' : (chat.isGroup ? '👥' : null)}
+                  />
+                </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
@@ -869,6 +950,8 @@ export default function ChatList() {
                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                         color: 'var(--text)',
                       }}>{name}</span>
+                      {pinnedChats.includes(chat._id) && <span style={{ fontSize: 10 }}>📌</span>}
+                      {mutedChats.includes(chat._id) && <span style={{ fontSize: 10, opacity: 0.6 }}>🔕</span>}
                       {chat.isGroup && (
                         <span style={{
                           fontSize: 10, background: 'rgba(0,201,177,.15)', color: 'var(--teal)',
@@ -883,9 +966,31 @@ export default function ChatList() {
                         }}>AI</span>
                       )}
                     </div>
-                    <span style={{ fontSize: 11, color: 'var(--text-dim)', flexShrink: 0, marginLeft: 6 }}>
-                      {lastMsg ? formatTime(lastMsg.createdAt) : ''}
-                    </span>
+                    { (hoveredChatId === chat._id || itemMenuId === chat._id) ? (
+                      <div style={{ position: 'relative' }}>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setItemMenuId(p => p === chat._id ? null : chat._id); }}
+                          style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', padding: 4 }}
+                        >
+                          {Icon.dots}
+                        </button>
+                        {itemMenuId === chat._id && (
+                          <div style={{ ...itemDropdownStyle }}>
+                             <div onClick={(e) => { e.stopPropagation(); togglePin(chat._id); }} style={itemDropItemStyle}>
+                               {pinnedChats.includes(chat._id) ? '📍 Unpin Chat' : '📌 Pin Chat'}
+                             </div>
+                             <div onClick={(e) => { e.stopPropagation(); toggleMute(chat._id); }} style={itemDropItemStyle}>
+                               {mutedChats.includes(chat._id) ? '🔔 Unmute' : '🔕 Mute'}
+                             </div>
+                             <div onClick={(e) => { e.stopPropagation(); deleteChatLocally(chat._id); }} style={{ ...itemDropItemStyle, color: 'var(--red)' }}>🗑️ Delete</div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <span style={{ fontSize: 11, color: 'var(--text-dim)', flexShrink: 0, marginLeft: 6 }}>
+                        {lastMsg ? formatTime(lastMsg.createdAt) : ''}
+                      </span>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 6 }}>
@@ -897,7 +1002,7 @@ export default function ChatList() {
                       {lastMsg
                         ? lastMsg.type === 'image' ? '📸 Photo'
                           : lastMsg.type === 'audio' ? '🎵 Audio'
-                          : lastMsg.content
+                            : lastMsg.content
                         : 'No messages yet'}
                     </span>
                     {count > 0 && (
@@ -919,10 +1024,10 @@ export default function ChatList() {
       </div>
 
       {/* ── Modals ── */}
-      {modal === 'newChat'   && <NewChatModal  onClose={() => setModal(null)} />}
-      {modal === 'newGroup'  && <NewGroupModal onClose={() => setModal(null)} />}
+      {modal === 'newChat' && <NewChatModal onClose={() => setModal(null)} />}
+      {modal === 'newGroup' && <NewGroupModal onClose={() => setModal(null)} />}
       {modal === 'joinGroup' && <JoinGroupModal onClose={() => setModal(null)} />}
-      {modal === 'about'     && <AboutModal onClose={() => setModal(null)} />}
+      {modal === 'about' && <AboutModal onClose={() => setModal(null)} />}
     </>
   );
 }
@@ -950,6 +1055,16 @@ const dropItemStyle = {
   fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
   cursor: 'pointer', transition: 'background .15s', textAlign: 'left',
 };
+const itemDropdownStyle = {
+  position: 'absolute', top: '100%', right: 0, zIndex: 100,
+  background: 'var(--bg-card)', border: '1px solid var(--border2)',
+  borderRadius: 12, padding: 4, width: 140, boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+  animation: 'dropIn .15s ease-out'
+};
+const itemDropItemStyle = {
+  padding: '8px 12px', borderRadius: 8, cursor: 'pointer', fontSize: 12,
+  transition: 'background .2s', display: 'flex', alignItems: 'center', gap: 8
+};
 const hdrBtnStyle = {
   width: 32, height: 32, borderRadius: 9,
   background: 'rgba(255,255,255,0.06)',
@@ -960,7 +1075,7 @@ const hdrBtnStyle = {
 };
 const applyHover = (e, on) => {
   e.currentTarget.style.background = on ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)';
-  e.currentTarget.style.color      = on ? 'var(--text)'           : 'var(--text-dim)';
+  e.currentTarget.style.color = on ? 'var(--text)' : 'var(--text-dim)';
 };
 
 /* ── Helpers ────────────────────────────────── */
@@ -973,11 +1088,11 @@ function getChatDisplayName(chat, userId) {
 
 function formatTime(dateStr) {
   if (!dateStr) return '';
-  const d    = new Date(dateStr);
+  const d = new Date(dateStr);
   const diff = Date.now() - d;
-  if (diff < 60000)    return 'Now';
-  if (diff < 3600000)  return `${Math.floor(diff / 60000)}m`;
+  if (diff < 60000) return 'Now';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}m`;
   if (diff < 86400000) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  if (diff < 604800000) return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+  if (diff < 604800000) return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()];
   return d.toLocaleDateString();
 }

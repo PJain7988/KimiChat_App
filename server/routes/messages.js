@@ -3,11 +3,12 @@ const router = express.Router();
 const Message = require('../models/Message');
 const Chat = require('../models/Chat');
 const { protect } = require('../middleware/auth');
+const { triggerAIReply } = require('../services/aiService');
 
 // ── Send Message ─────────────────────────────────────────
 router.post('/', protect, async (req, res) => {
   try {
-    const { chatId, content, type = 'text', fileUrl, replyTo } = req.body;
+    const { chatId, content, type = 'text', fileUrl, sticker, replyTo } = req.body;
 
     const chat = await Chat.findById(chatId);
     if (!chat) return res.status(404).json({ success: false, message: 'Chat not found' });
@@ -18,6 +19,7 @@ router.post('/', protect, async (req, res) => {
       content,
       type,
       fileUrl,
+      sticker,
       replyTo,
       readBy: [req.user._id],
     });
@@ -29,6 +31,14 @@ router.post('/', protect, async (req, res) => {
     });
 
     const populated = await message.populate('sender', 'name username avatar avatarColor');
+    
+    // 🤖 TRIGGER AI REPLY IF APPLICABLE
+    if (chat.isAI && type === 'text') {
+      const io = req.app.get('io');
+      // We don't await this so the user gets their 201 response immediately
+      triggerAIReply(io, chatId, content).catch(err => console.error('AI Reply Error:', err));
+    }
+
     res.status(201).json({ success: true, message: populated });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

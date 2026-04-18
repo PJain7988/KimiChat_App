@@ -7,7 +7,7 @@ const api = axios.create({
 
 // Attach token to every request
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('kimi_token');
+  const token = localStorage.getItem('kimi_token') || localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -19,6 +19,8 @@ api.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem('kimi_token');
       localStorage.removeItem('kimi_user');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.location.href = '/auth';
     }
     return Promise.reject(err);

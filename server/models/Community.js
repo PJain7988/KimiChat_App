@@ -13,7 +13,8 @@ const communitySchema = new mongoose.Schema({
   admins:   [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   members:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 
-  chat:     { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
+  chat:     { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }, // Primary general chat
+  rooms:    [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }], // Sub-groups/rooms
 
   tags:     [String],
   verified: { type: Boolean, default: false },
