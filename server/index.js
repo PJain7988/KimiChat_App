@@ -33,7 +33,7 @@ const requiredEnvVars = [
 
 // Optional OAuth vars - only required if OAuth is enabled
 const optionalEnvVars = [
-  'GOOGLE_CLIENT_id',
+  'GOOGLE_CLIENT_ID',
   'GOOGLE_CLIENT_SECRET',
   'GITHUB_CLIENT_ID',
   'GITHUB_CLIENT_SECRET',
@@ -63,7 +63,7 @@ const server = http.createServer(app);
 // Share io with routes
 app.set('io', null); 
 
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+const CLIENT_URL = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app/';
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
