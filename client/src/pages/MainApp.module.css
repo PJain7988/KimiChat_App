@@ -4,9 +4,16 @@
   background: var(--bg-dark);
   overflow: hidden;
 }
+
 .content {
   flex: 1;
   display: flex;
   overflow: hidden;
   min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    flex-direction: column-reverse;
+  }
 }

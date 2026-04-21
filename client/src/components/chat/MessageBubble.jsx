@@ -142,7 +142,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
       )}
 
       {/* ── Bubble + meta ── */}
-      <div style={{
+      <div className="message-bubble-container" style={{
         maxWidth: '65%', display: 'flex',
         flexDirection: 'column',
         alignItems: isMe ? 'flex-end' : 'flex-start',
@@ -196,7 +196,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
         )}
 
         {/* ── Message bubble ── */}
-        <div style={{
+        <div className="message-bubble" style={{
           padding: '11px 15px',
           borderRadius: isMe ? '18px 4px 18px 18px' : '4px 18px 18px 18px',
           fontSize: 14,

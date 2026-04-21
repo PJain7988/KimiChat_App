@@ -4,16 +4,16 @@ import useAuthStore from '../context/authStore';
 import useChatStore from '../context/chatStore';
 import { getSocket, initSocket } from '../utils/socket';
 
-import Sidebar       from '../components/layout/Sidebar';
-import ChatPanel     from '../components/chat/ChatPanel';
-import GlobalChat    from '../components/global/GlobalChat';
-import StatusPanel   from '../components/status/StatusPanel';
-import FriendsPanel  from '../components/friends/FriendsPanel';
+import Sidebar from '../components/layout/Sidebar';
+import ChatPanel from '../components/chat/ChatPanel';
+import GlobalChat from '../components/global/GlobalChat';
+import StatusPanel from '../components/status/StatusPanel';
+import FriendsPanel from '../components/friends/FriendsPanel';
 import CommunityPanel from '../components/community/CommunityPanel';
-import SearchPanel   from '../components/search/SearchPanel';
-import ProfilePanel  from '../components/profile/ProfilePanel';
-import CallsPanel    from '../components/chat/CallsPanel';
-import CallOverlay   from '../components/ui/CallOverlay';
+import SearchPanel from '../components/search/SearchPanel';
+import ProfilePanel from '../components/profile/ProfilePanel';
+import CallsPanel from '../components/chat/CallsPanel';
+import CallOverlay from '../components/ui/CallOverlay';
 import { toast } from 'react-hot-toast';
 import styles from './MainApp.module.css';
 import { isSameId } from '../utils/idUtils';
@@ -39,7 +39,7 @@ export default function MainApp() {
   // ── CALL SIGNALING RECOVERY & MANAGEMENT ──
   const handleIncomingCall = useCallback((data) => {
     console.log('📬 [SIGNAL] handleIncomingCall triggered with data:', data);
-    
+
     // 0. Ensure we don't handle our own signals (echo)
     if (isSameId(data.from?._id, user?._id)) {
       console.log('🔄 [SIGNAL] Echo ignored');
@@ -49,14 +49,14 @@ export default function MainApp() {
     // 1. Check if actually for us
     const targetId = data.targetUserId ? String(data.targetUserId) : null;
     const myId = user?._id ? String(user._id) : null;
-    
+
     console.log(`🔍 [SIGNAL] Filtering: targetId=${targetId}, myId=${myId}`);
 
     if (targetId && targetId !== myId) {
       console.warn('🙅 [SIGNAL] Ignoring call meant for another recipient:', targetId);
       return;
     }
-    
+
     if (!myId) {
       console.error('❌ [SIGNAL] Received call but user ID is missing from local state!');
     }
@@ -65,7 +65,7 @@ export default function MainApp() {
     if (activeCallRef.current) {
       const busyWithId = activeCallRef.current.user?._id;
       const callerId = data.from?._id;
-      
+
       // If NOT us echoing back, and NOT already talking to this person
       if (!isSameId(callerId, user?._id) && !isSameId(callerId, busyWithId)) {
         console.warn('⚠️ [SIGNAL] Busy - Rejecting incoming call from:', callerId);
@@ -79,15 +79,15 @@ export default function MainApp() {
     }
 
     console.log('🔔 [SIGNAL] Legitimate incoming call from:', data.from?.name);
-    
+
     // 3. Trigger Overlay
-    setActiveCall({ 
-      ...data, 
-      isIncoming: true, 
-      user: data.from, 
+    setActiveCall({
+      ...data,
+      isIncoming: true,
+      user: data.from,
       callerName: data.callerName || data.from?.name,
       targetName: user?.name,
-      status: 'incoming' 
+      status: 'incoming'
     });
 
     // 4. Trigger Professional Toast
@@ -95,29 +95,29 @@ export default function MainApp() {
       <div style={{
         background: '#050c18', color: '#fff', padding: '16px 20px', borderRadius: '18px',
         boxShadow: '0 15px 50px rgba(0,0,0,0.8)', border: '1px solid var(--teal)',
-        display: 'flex', alignItems: 'center', gap: 15, 
+        display: 'flex', alignItems: 'center', gap: 15,
         animation: t.visible ? 'incomingCallSlideIn 0.4s ease-out' : 'incomingCallSlideOut 0.4s ease-in',
         transform: t.visible ? 'translateY(0)' : 'translateY(-20px)',
         opacity: t.visible ? 1 : 0
       }}>
-        <div style={{ position:'relative' }}>
-           <div style={{ 
-             width:44, height:44, borderRadius:'50%', background:'var(--teal)', 
-             display:'flex', alignItems:'center', justifyContent:'center', fontSize:22,
-             boxShadow: '0 0 15px var(--teal)'
-           }}>
-             {data.type === 'video' ? '📹' : '📞'}
-           </div>
+        <div style={{ position: 'relative' }}>
+          <div style={{
+            width: 44, height: 44, borderRadius: '50%', background: 'var(--teal)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
+            boxShadow: '0 0 15px var(--teal)'
+          }}>
+            {data.type === 'video' ? '📹' : '📞'}
+          </div>
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 800, fontSize: 16 }}>{data.from?.name}</div>
-          <div style={{ fontSize: 13, color: '#00d4c8', fontWeight:600 }}>Incoming {data.type} call...</div>
+          <div style={{ fontSize: 13, color: '#00d4c8', fontWeight: 600 }}>Incoming {data.type} call...</div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => { toast.dismiss(t.id); }} style={{ background: 'var(--teal)', border: 'none', color: '#000', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', fontWeight: 800 }}>OPEN</button>
-          <button onClick={() => { 
+          <button onClick={() => {
             const s = getSocket();
-            if(s) s.emit('call:reject', { targetUserId: data.from?._id });
+            if (s) s.emit('call:reject', { targetUserId: data.from?._id });
             setActiveCall(null);
             toast.dismiss(t.id);
           }} style={{ background: '#ff4757', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', fontWeight: 800 }}>MISS</button>
@@ -132,8 +132,8 @@ export default function MainApp() {
 
     const register = () => {
       if (user?._id) {
-         console.log('📡 [REGISTER] Sending user:online for:', user._id);
-         s.emit('user:online', user._id);
+        console.log('📡 [REGISTER] Sending user:online for:', user._id);
+        s.emit('user:online', user._id);
       }
     };
 
@@ -147,13 +147,13 @@ export default function MainApp() {
 
     // ── CORE SIGNALING SUITE ──
     s.on('call:incoming', (data) => {
-       console.log('📩 Signal: Direct/Room incoming call');
-       handleIncomingCall(data);
+      console.log('📩 Signal: Direct/Room incoming call');
+      handleIncomingCall(data);
     });
 
     s.on('call:incoming:broadcast', (data) => {
-       console.log('📩 Signal: Broadcast recovery signal');
-       handleIncomingCall(data);
+      console.log('📩 Signal: Broadcast recovery signal');
+      handleIncomingCall(data);
     });
 
     s.on('call:accepted', (data) => {
@@ -163,8 +163,8 @@ export default function MainApp() {
 
     s.on('call:accepted:internal', (data) => {
       if (String(user?._id) === String(data.targetUserId) && activeCallRef.current?.status === 'calling') {
-         console.log('✅ Signal: Syncing accepted status');
-         setActiveCall(prev => prev ? { ...prev, status: 'connected' } : null);
+        console.log('✅ Signal: Syncing accepted status');
+        setActiveCall(prev => prev ? { ...prev, status: 'connected' } : null);
       }
     });
 
@@ -190,7 +190,7 @@ export default function MainApp() {
     s.on('message:typing', ({ chatId, userId, userName, isTyping }) => {
       setTyping(chatId, { userId, name: userName }, isTyping);
     });
-    
+
     s.on('global:invite', (inv) => addInvitation(inv));
 
     return () => {
@@ -221,17 +221,17 @@ export default function MainApp() {
   const startCall = useCallback((targetUser, type) => {
     console.log('🚀 [START_CALL_V2] Entering startCall logic...');
     if (!targetUser) return toast.error("User profile required to call");
-    
+
     const tid = targetUser._id || targetUser;
-    
+
     // ATOMIC STATE UPDATE - MUST HAPPEN FIRST
     const uniqueSession = `call_${Date.now()}`;
-    const callData = { 
-      user: typeof targetUser === 'object' ? targetUser : { _id: tid, name: 'User' }, 
+    const callData = {
+      user: typeof targetUser === 'object' ? targetUser : { _id: tid, name: 'User' },
       callerName: user?.name || 'Me',
       targetName: (typeof targetUser === 'object' ? targetUser.name : null) || 'User',
-      type, 
-      isIncoming: false, 
+      type,
+      isIncoming: false,
       status: 'calling',
       sessionId: uniqueSession
     };
@@ -245,8 +245,8 @@ export default function MainApp() {
       const s = getSocket();
       if (s) {
         console.log('📡 [START_CALL_V2] Emitting initiate signal');
-        s.emit('call:initiate', { 
-          targetUserId: String(tid), 
+        s.emit('call:initiate', {
+          targetUserId: String(tid),
           type,
           callerName: user?.name,
           targetName: callData.targetName,
@@ -292,14 +292,14 @@ export default function MainApp() {
       <Sidebar activeCall={activeCall} endCall={endCall} />
       <div className={styles.content}>
         <Routes>
-          <Route path="chats"     element={<ChatPanel onStartCall={startCall} />} />
-          <Route path="calls"     element={<CallsPanel onStartCall={startCall} />} />
-          <Route path="global"    element={<GlobalChat />} />
-          <Route path="status"    element={<StatusPanel />} />
-          <Route path="friends"   element={<FriendsPanel onStartCall={startCall} />} />
+          <Route path="chats" element={<ChatPanel onStartCall={startCall} />} />
+          <Route path="calls" element={<CallsPanel onStartCall={startCall} />} />
+          <Route path="global" element={<GlobalChat />} />
+          <Route path="status" element={<StatusPanel />} />
+          <Route path="friends" element={<FriendsPanel onStartCall={startCall} />} />
           <Route path="community" element={<CommunityPanel />} />
-          <Route path="search"    element={<SearchPanel onStartCall={startCall} />} />
-          <Route path="profile"   element={<ProfilePanel />} />
+          <Route path="search" element={<SearchPanel onStartCall={startCall} />} />
+          <Route path="profile" element={<ProfilePanel />} />
         </Routes>
       </div>
 

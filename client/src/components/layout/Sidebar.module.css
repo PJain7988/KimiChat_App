@@ -233,3 +233,51 @@
   border: 2px solid var(--bg-card);
   box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
 }
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    padding: 0 10px;
+    border-right: none;
+    border-top: 1px solid var(--border2);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logoWrap, .divider, .spacer, .navLabel {
+    display: none;
+  }
+
+  .nav {
+    flex-direction: row;
+    width: auto;
+    flex: 1;
+    justify-content: space-around;
+    padding: 0;
+  }
+
+  .bottomNav {
+    flex-direction: row;
+    width: auto;
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .navBtn, .avatarBtn {
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  .activeBar {
+    bottom: 0;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+  }
+}

@@ -16,74 +16,74 @@ const EMOJI_CATEGORIES = [
   {
     id: 'smileys', label: '😊', title: 'Smileys & People',
     emojis: [
-      '😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','🥰','😘',
-      '😗','😙','😚','🙂','🤗','🤩','🤔','🤨','😐','😑','😶','🙄','😏','😣','😥',
-      '😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓','😔',
-      '😕','🙃','🤑','😲','☹️','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨',
-      '😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','🥴','😠','😡','🤬','😷',
-      '🤒','🤕','🤢','🤮','🤧','😇','🥳','🥸','🤠','🥺','👻','💀','☠️','👽','🤖',
+      '😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '🥰', '😘',
+      '😗', '😙', '😚', '🙂', '🤗', '🤩', '🤔', '🤨', '😐', '😑', '😶', '🙄', '😏', '😣', '😥',
+      '😮', '🤐', '😯', '😪', '😫', '🥱', '😴', '😌', '😛', '😜', '😝', '🤤', '😒', '😓', '😔',
+      '😕', '🙃', '🤑', '😲', '☹️', '🙁', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨',
+      '😩', '🤯', '😬', '😰', '😱', '🥵', '🥶', '😳', '🤪', '😵', '🥴', '😠', '😡', '🤬', '😷',
+      '🤒', '🤕', '🤢', '🤮', '🤧', '😇', '🥳', '🥸', '🤠', '🥺', '👻', '💀', '☠️', '👽', '🤖',
     ],
   },
   {
     id: 'gestures', label: '👋', title: 'Gestures & Body',
     emojis: [
-      '👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉',
-      '👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝',
-      '🙏','✍️','💅','🤳','💪','🦾','🦵','🦶','👂','🦻','👃','👀','👁️','👅','👄',
+      '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉',
+      '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝',
+      '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦵', '🦶', '👂', '🦻', '👃', '👀', '👁️', '👅', '👄',
     ],
   },
   {
     id: 'animals', label: '🐶', title: 'Animals & Nature',
     emojis: [
-      '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵',
-      '🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄',
-      '🐝','🐛','🦋','🐌','🐞','🐜','🦟','🦗','🦂','🐢','🐍','🦎','🐙','🦑','🦐',
-      '🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊','🐆','🐅','🦓','🦍','🦧',
+      '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵',
+      '🙈', '🙉', '🙊', '🐔', '🐧', '🐦', '🐤', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄',
+      '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦟', '🦗', '🦂', '🐢', '🐍', '🦎', '🐙', '🦑', '🦐',
+      '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐆', '🐅', '🦓', '🦍', '🦧',
     ],
   },
   {
     id: 'food', label: '🍕', title: 'Food & Drink',
     emojis: [
-      '🍕','🍔','🌮','🌯','🥗','🍜','🍝','🍛','🍣','🍱','🍤','🍙','🍚','🍘','🍥',
-      '🥮','🍢','🧆','🥚','🍳','🥞','🧇','🥓','🥩','🍗','🍖','🌭','🍟','🧀','🥪',
-      '🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬','🍭','🍮','🍯','🍷',
-      '🍸','🍹','🧉','🍺','🍻','🥂','🥃','🧃','🧋','☕','🍵','🧊','🥤','🍶','🍾',
+      '🍕', '🍔', '🌮', '🌯', '🥗', '🍜', '🍝', '🍛', '🍣', '🍱', '🍤', '🍙', '🍚', '🍘', '🍥',
+      '🥮', '🍢', '🧆', '🥚', '🍳', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🌭', '🍟', '🧀', '🥪',
+      '🍦', '🍧', '🍨', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍷',
+      '🍸', '🍹', '🧉', '🍺', '🍻', '🥂', '🥃', '🧃', '🧋', '☕', '🍵', '🧊', '🥤', '🍶', '🍾',
     ],
   },
   {
     id: 'travel', label: '🚀', title: 'Travel & Places',
     emojis: [
-      '🚗','🚕','🚙','🚌','🏎️','🚓','🚑','🚒','🛻','🚚','🚜','🏍️','🛵','🚲','🛴',
-      '🛹','⛵','🚤','🛥️','🛳️','⛴️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚀',
-      '🛸','🎡','🎢','🎠','🌍','🌎','🌏','🌐','🗺️','🧭','🏔️','⛰️','🌋','🗻','🏕️',
-      '🏖️','🏜️','🏝️','🏟️','🏛️','🏗️','🧱','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥',
+      '🚗', '🚕', '🚙', '🚌', '🏎️', '🚓', '🚑', '🚒', '🛻', '🚚', '🚜', '🏍️', '🛵', '🚲', '🛴',
+      '🛹', '⛵', '🚤', '🛥️', '🛳️', '⛴️', '🚢', '✈️', '🛩️', '🛫', '🛬', '🪂', '💺', '🚁', '🚀',
+      '🛸', '🎡', '🎢', '🎠', '🌍', '🌎', '🌏', '🌐', '🗺️', '🧭', '🏔️', '⛰️', '🌋', '🗻', '🏕️',
+      '🏖️', '🏜️', '🏝️', '🏟️', '🏛️', '🏗️', '🧱', '🏘️', '🏚️', '🏠', '🏡', '🏢', '🏣', '🏤', '🏥',
     ],
   },
   {
     id: 'objects', label: '💡', title: 'Objects',
     emojis: [
-      '💡','🔦','🕯️','💰','💎','⚖️','🔑','🗝️','🔨','🪓','⛏️','🛠️','🔧','🔩','⚙️',
-      '🔗','⛓️','🪝','🧲','🪜','🧱','🪞','🪟','🛋️','🪑','🚽','🚿','🛁','🧴','🧷',
-      '🧹','🧺','🧻','🪣','🧼','🪥','🧽','🪒','🧯','🛒','📦','📫','📬','📭','📮',
-      '📓','📔','📒','📕','📗','📘','📙','📚','📖','🔖','💰','💵','💸','💳','🧾',
+      '💡', '🔦', '🕯️', '💰', '💎', '⚖️', '🔑', '🗝️', '🔨', '🪓', '⛏️', '🛠️', '🔧', '🔩', '⚙️',
+      '🔗', '⛓️', '🪝', '🧲', '🪜', '🧱', '🪞', '🪟', '🛋️', '🪑', '🚽', '🚿', '🛁', '🧴', '🧷',
+      '🧹', '🧺', '🧻', '🪣', '🧼', '🪥', '🧽', '🪒', '🧯', '🛒', '📦', '📫', '📬', '📭', '📮',
+      '📓', '📔', '📒', '📕', '📗', '📘', '📙', '📚', '📖', '🔖', '💰', '💵', '💸', '💳', '🧾',
     ],
   },
   {
     id: 'symbols', label: '❤️', title: 'Symbols & Hearts',
     emojis: [
-      '❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗',
-      '💖','💘','💝','💟','☮️','✝️','☯️','✡️','🔯','☸️','♻️','✅','❌','⭕','🛑',
-      '⛔','📛','🚫','💯','💢','♨️','🔞','📵','🔕','⚠️','🔰','🆚','💮','🉐','㊙️',
-      '⁉️','❓','❔','❕','‼️','🔃','🔄','🔙','🔚','🔛','🔜','🔝','⚡','🌟','💫',
+      '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗',
+      '💖', '💘', '💝', '💟', '☮️', '✝️', '☯️', '✡️', '🔯', '☸️', '♻️', '✅', '❌', '⭕', '🛑',
+      '⛔', '📛', '🚫', '💯', '💢', '♨️', '🔞', '📵', '🔕', '⚠️', '🔰', '🆚', '💮', '🉐', '㊙️',
+      '⁉️', '❓', '❔', '❕', '‼️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝', '⚡', '🌟', '💫',
     ],
   },
   {
     id: 'activities', label: '⚽', title: 'Activities & Sports',
     emojis: [
-      '⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🥊',
-      '🥋','🎽','🛹','🛼','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂','🏋️','🤼','🤸','⛹️',
-      '🤺','🏇','🧘','🏄','🏊','🤽','🚣','🧗','🚵','🚴','🏆','🥇','🥈','🥉','🎖️',
-      '🎗️','🎫','🎟️','🎪','🤹','🎭','🩰','🎨','🖼️','🎬','🎤','🎧','🎼','🎵','🎶',
+      '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🥊',
+      '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️', '🤼', '🤸', '⛹️',
+      '🤺', '🏇', '🧘', '🏄', '🏊', '🤽', '🚣', '🧗', '🚵', '🚴', '🏆', '🥇', '🥈', '🥉', '🎖️',
+      '🎗️', '🎫', '🎟️', '🎪', '🤹', '🎭', '🩰', '🎨', '🖼️', '🎬', '🎤', '🎧', '🎼', '🎵', '🎶',
     ],
   },
 ];
@@ -92,69 +92,69 @@ const STICKER_PACKS = [
   {
     id: 'reactions', label: '🎭', title: 'Reactions',
     stickers: [
-      { id: 's1',  emoji: '😂', label: 'LOL',        bg: '#FFE566' },
-      { id: 's2',  emoji: '😍', label: 'Love it!',   bg: '#FFB3C1' },
-      { id: 's3',  emoji: '🔥', label: 'Fire!',      bg: '#FF7043' },
-      { id: 's4',  emoji: '💯', label: '100%',       bg: '#69F0AE' },
-      { id: 's5',  emoji: '👏', label: 'Clap!',      bg: '#B39DDB' },
-      { id: 's6',  emoji: '🤯', label: 'Mind blown', bg: '#F48FB1' },
-      { id: 's7',  emoji: '😎', label: 'Cool!',      bg: '#80DEEA' },
-      { id: 's8',  emoji: '🥳', label: 'Party!',     bg: '#FFF176' },
-      { id: 's9',  emoji: '😭', label: 'Crying',     bg: '#90CAF9' },
-      { id: 's10', emoji: '🤣', label: 'ROFL',       bg: '#A5D6A7' },
-      { id: 's11', emoji: '❤️', label: 'Love',       bg: '#EF9A9A' },
-      { id: 's12', emoji: '✨', label: 'Wow!',       bg: '#CE93D8' },
+      { id: 's1', emoji: '😂', label: 'LOL', bg: '#FFE566' },
+      { id: 's2', emoji: '😍', label: 'Love it!', bg: '#FFB3C1' },
+      { id: 's3', emoji: '🔥', label: 'Fire!', bg: '#FF7043' },
+      { id: 's4', emoji: '💯', label: '100%', bg: '#69F0AE' },
+      { id: 's5', emoji: '👏', label: 'Clap!', bg: '#B39DDB' },
+      { id: 's6', emoji: '🤯', label: 'Mind blown', bg: '#F48FB1' },
+      { id: 's7', emoji: '😎', label: 'Cool!', bg: '#80DEEA' },
+      { id: 's8', emoji: '🥳', label: 'Party!', bg: '#FFF176' },
+      { id: 's9', emoji: '😭', label: 'Crying', bg: '#90CAF9' },
+      { id: 's10', emoji: '🤣', label: 'ROFL', bg: '#A5D6A7' },
+      { id: 's11', emoji: '❤️', label: 'Love', bg: '#EF9A9A' },
+      { id: 's12', emoji: '✨', label: 'Wow!', bg: '#CE93D8' },
     ],
   },
   {
     id: 'animals', label: '🐾', title: 'Animals',
     stickers: [
-      { id: 'a1',  emoji: '🐶', label: 'Doggo',     bg: '#FFCC80' },
-      { id: 'a2',  emoji: '🐱', label: 'Kitty',     bg: '#F8BBD9' },
-      { id: 'a3',  emoji: '🐸', label: 'Froggy',    bg: '#C8E6C9' },
-      { id: 'a4',  emoji: '🦊', label: 'Fox',       bg: '#FFAB91' },
-      { id: 'a5',  emoji: '🐼', label: 'Panda',     bg: '#CFD8DC' },
-      { id: 'a6',  emoji: '🦄', label: 'Unicorn',   bg: '#E1BEE7' },
-      { id: 'a7',  emoji: '🐨', label: 'Koala',     bg: '#B0BEC5' },
-      { id: 'a8',  emoji: '🦁', label: 'Lion',      bg: '#FFE082' },
-      { id: 'a9',  emoji: '🐧', label: 'Penguin',   bg: '#B3E5FC' },
-      { id: 'a10', emoji: '🐻', label: 'Bear',      bg: '#D7CCC8' },
+      { id: 'a1', emoji: '🐶', label: 'Doggo', bg: '#FFCC80' },
+      { id: 'a2', emoji: '🐱', label: 'Kitty', bg: '#F8BBD9' },
+      { id: 'a3', emoji: '🐸', label: 'Froggy', bg: '#C8E6C9' },
+      { id: 'a4', emoji: '🦊', label: 'Fox', bg: '#FFAB91' },
+      { id: 'a5', emoji: '🐼', label: 'Panda', bg: '#CFD8DC' },
+      { id: 'a6', emoji: '🦄', label: 'Unicorn', bg: '#E1BEE7' },
+      { id: 'a7', emoji: '🐨', label: 'Koala', bg: '#B0BEC5' },
+      { id: 'a8', emoji: '🦁', label: 'Lion', bg: '#FFE082' },
+      { id: 'a9', emoji: '🐧', label: 'Penguin', bg: '#B3E5FC' },
+      { id: 'a10', emoji: '🐻', label: 'Bear', bg: '#D7CCC8' },
       { id: 'a11', emoji: '🦋', label: 'Butterfly', bg: '#B2EBF2' },
-      { id: 'a12', emoji: '🐙', label: 'Octopus',   bg: '#F48FB1' },
+      { id: 'a12', emoji: '🐙', label: 'Octopus', bg: '#F48FB1' },
     ],
   },
   {
     id: 'vibes', label: '🌈', title: 'Good Vibes',
     stickers: [
-      { id: 'v1',  emoji: '🌈', label: 'Rainbow', bg: '#FFF9C4' },
-      { id: 'v2',  emoji: '⭐', label: 'Star',    bg: '#FFF176' },
-      { id: 'v3',  emoji: '🌸', label: 'Blossom', bg: '#FCE4EC' },
-      { id: 'v4',  emoji: '🍀', label: 'Lucky',   bg: '#DCEDC8' },
-      { id: 'v5',  emoji: '🎉', label: 'Party',   bg: '#F8BBD9' },
-      { id: 'v6',  emoji: '🎵', label: 'Music',   bg: '#E8EAF6' },
-      { id: 'v7',  emoji: '💫', label: 'Dizzy',   bg: '#E3F2FD' },
-      { id: 'v8',  emoji: '🌊', label: 'Wave',    bg: '#B3E5FC' },
-      { id: 'v9',  emoji: '🌙', label: 'Moon',    bg: '#EDE7F6' },
-      { id: 'v10', emoji: '☀️', label: 'Sun',     bg: '#FFF8E1' },
-      { id: 'v11', emoji: '🌺', label: 'Flower',  bg: '#FCE4EC' },
-      { id: 'v12', emoji: '🎸', label: 'Guitar',  bg: '#F3E5F5' },
+      { id: 'v1', emoji: '🌈', label: 'Rainbow', bg: '#FFF9C4' },
+      { id: 'v2', emoji: '⭐', label: 'Star', bg: '#FFF176' },
+      { id: 'v3', emoji: '🌸', label: 'Blossom', bg: '#FCE4EC' },
+      { id: 'v4', emoji: '🍀', label: 'Lucky', bg: '#DCEDC8' },
+      { id: 'v5', emoji: '🎉', label: 'Party', bg: '#F8BBD9' },
+      { id: 'v6', emoji: '🎵', label: 'Music', bg: '#E8EAF6' },
+      { id: 'v7', emoji: '💫', label: 'Dizzy', bg: '#E3F2FD' },
+      { id: 'v8', emoji: '🌊', label: 'Wave', bg: '#B3E5FC' },
+      { id: 'v9', emoji: '🌙', label: 'Moon', bg: '#EDE7F6' },
+      { id: 'v10', emoji: '☀️', label: 'Sun', bg: '#FFF8E1' },
+      { id: 'v11', emoji: '🌺', label: 'Flower', bg: '#FCE4EC' },
+      { id: 'v12', emoji: '🎸', label: 'Guitar', bg: '#F3E5F5' },
     ],
   },
   {
     id: 'food', label: '🍔', title: 'Food Mood',
     stickers: [
-      { id: 'f1',  emoji: '🍕', label: 'Pizza',    bg: '#FFE0B2' },
-      { id: 'f2',  emoji: '🍔', label: 'Burger',   bg: '#D7CCC8' },
-      { id: 'f3',  emoji: '🍣', label: 'Sushi',    bg: '#B3E5FC' },
-      { id: 'f4',  emoji: '☕', label: 'Coffee',   bg: '#EFEBE9' },
-      { id: 'f5',  emoji: '🎂', label: 'Cake',     bg: '#FCE4EC' },
-      { id: 'f6',  emoji: '🍩', label: 'Donut',    bg: '#FFF9C4' },
-      { id: 'f7',  emoji: '🍦', label: 'Ice cream',bg: '#E8F5E9' },
-      { id: 'f8',  emoji: '🌮', label: 'Taco',     bg: '#FFF3E0' },
-      { id: 'f9',  emoji: '🍰', label: 'Slice',    bg: '#FCE4EC' },
-      { id: 'f10', emoji: '🧁', label: 'Cupcake',  bg: '#EDE7F6' },
+      { id: 'f1', emoji: '🍕', label: 'Pizza', bg: '#FFE0B2' },
+      { id: 'f2', emoji: '🍔', label: 'Burger', bg: '#D7CCC8' },
+      { id: 'f3', emoji: '🍣', label: 'Sushi', bg: '#B3E5FC' },
+      { id: 'f4', emoji: '☕', label: 'Coffee', bg: '#EFEBE9' },
+      { id: 'f5', emoji: '🎂', label: 'Cake', bg: '#FCE4EC' },
+      { id: 'f6', emoji: '🍩', label: 'Donut', bg: '#FFF9C4' },
+      { id: 'f7', emoji: '🍦', label: 'Ice cream', bg: '#E8F5E9' },
+      { id: 'f8', emoji: '🌮', label: 'Taco', bg: '#FFF3E0' },
+      { id: 'f9', emoji: '🍰', label: 'Slice', bg: '#FCE4EC' },
+      { id: 'f10', emoji: '🧁', label: 'Cupcake', bg: '#EDE7F6' },
       { id: 'f11', emoji: '🍭', label: 'Lollipop', bg: '#F8BBD9' },
-      { id: 'f12', emoji: '🥤', label: 'Drink',    bg: '#E3F2FD' },
+      { id: 'f12', emoji: '🥤', label: 'Drink', bg: '#E3F2FD' },
     ],
   },
 ];
@@ -184,8 +184,8 @@ async function transcribeAudio(blob) {
 // MEDIA PICKER — Emoji | GIF | Stickers  (WhatsApp style)
 // ─────────────────────────────────────────────────────────────────
 function MediaPicker({ onEmoji, onSticker, onClose }) {
-  const [tab,         setTab]         = useState('emoji');
-  const [emojiCat,    setEmojiCat]    = useState('smileys');
+  const [tab, setTab] = useState('emoji');
+  const [emojiCat, setEmojiCat] = useState('smileys');
   const [stickerPack, setStickerPack] = useState('reactions');
   const [emojiSearch, setEmojiSearch] = useState('');
   const [recentEmojis, setRecentEmojis] = useState(() => {
@@ -243,8 +243,8 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
         display: 'flex', borderBottom: '1px solid var(--border2,#1e3050)',
         padding: '6px 10px 0', gap: 2, alignItems: 'flex-end', flexShrink: 0,
       }}>
-        <TAB_BTN id="emoji"   label="😊 Emoji"    />
-        <TAB_BTN id="sticker" label="🎭 Stickers"  />
+        <TAB_BTN id="emoji" label="😊 Emoji" />
+        <TAB_BTN id="sticker" label="🎭 Stickers" />
         <button onClick={onClose} style={{
           marginLeft: 'auto', width: 28, height: 28, borderRadius: '50%',
           border: 'none', background: 'rgba(255,255,255,0.07)',
@@ -252,8 +252,8 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           alignSelf: 'center', transition: 'all .2s',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background='rgba(255,71,87,0.2)'; e.currentTarget.style.color='#ff4757'; }}
-        onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.07)'; e.currentTarget.style.color='var(--text-dim)'; }}>
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,71,87,0.2)'; e.currentTarget.style.color = '#ff4757'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'var(--text-dim)'; }}>
           ✕
         </button>
       </div>
@@ -272,8 +272,8 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
                 padding: '7px 12px', color: 'var(--text,#e8f0fe)',
                 fontSize: 13, outline: 'none', fontFamily: 'inherit',
               }}
-              onFocus={e  => e.target.style.borderColor = 'var(--teal,#00d4c8)'}
-              onBlur={e   => e.target.style.borderColor = 'var(--border2,#1e3050)'}
+              onFocus={e => e.target.style.borderColor = 'var(--teal,#00d4c8)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border2,#1e3050)'}
             />
           </div>
 
@@ -302,15 +302,15 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
           }}>
             {displayEmojis.length > 0
               ? displayEmojis.map((em, i) => (
-                  <button key={i} className="p-emoji"
-                    onClick={() => pickEmoji(em)} title={em}
-                    style={{
-                      background: 'transparent', border: 'none', fontSize: 22,
-                      cursor: 'pointer', padding: '5px 2px', borderRadius: 8,
-                      transition: 'all .15s', lineHeight: 1,
-                    }}
-                  >{em}</button>
-                ))
+                <button key={i} className="p-emoji"
+                  onClick={() => pickEmoji(em)} title={em}
+                  style={{
+                    background: 'transparent', border: 'none', fontSize: 22,
+                    cursor: 'pointer', padding: '5px 2px', borderRadius: 8,
+                    transition: 'all .15s', lineHeight: 1,
+                  }}
+                >{em}</button>
+              ))
               : (
                 <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '28px 0', color: 'var(--text-dim)', fontSize: 13 }}>
                   {emojiCat === 'recent' ? '🕐 No recent emojis yet' : 'No results found'}
@@ -350,8 +350,8 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
                 transition: 'transform .2s, box-shadow .2s',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
               }}
-              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.35)'}
-              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)'}
+                onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.35)'}
+                onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)'}
               >
                 <span style={{ fontSize: 34, lineHeight: 1, pointerEvents: 'none' }}>{s.emoji}</span>
                 <span style={{ fontSize: 10, color: 'rgba(0,0,0,0.55)', fontWeight: 700, textAlign: 'center', lineHeight: 1.2, pointerEvents: 'none' }}>
@@ -370,18 +370,18 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
 // AUDIO RECORDER — live waveform + Whisper transcription
 // ─────────────────────────────────────────────────────────────────
 function AudioRecorder({ onSend, onCancel }) {
-  const [phase,      setPhase]      = useState('idle');   // idle | recording | preview | transcribing
-  const [duration,   setDuration]   = useState(0);
-  const [audioUrl,   setAudioUrl]   = useState(null);
-  const [audioBlob,  setAudioBlob]  = useState(null);
+  const [phase, setPhase] = useState('idle');   // idle | recording | preview | transcribing
+  const [duration, setDuration] = useState(0);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [audioBlob, setAudioBlob] = useState(null);
   const [transcript, setTranscript] = useState('');
-  const [bars,       setBars]       = useState(Array(30).fill(4));
-  const [error,      setError]      = useState('');
+  const [bars, setBars] = useState(Array(30).fill(4));
+  const [error, setError] = useState('');
 
-  const mediaRef    = useRef(null);
-  const chunksRef   = useRef([]);
-  const timerRef    = useRef(null);
-  const animRef     = useRef(null);
+  const mediaRef = useRef(null);
+  const chunksRef = useRef([]);
+  const timerRef = useRef(null);
+  const animRef = useRef(null);
   const analyserRef = useRef(null);
   const audioCtxRef = useRef(null);
 
@@ -407,9 +407,9 @@ function AudioRecorder({ onSend, onCancel }) {
     setError('');
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioCtxRef.current  = new (window.AudioContext || window.webkitAudioContext)();
-      const src            = audioCtxRef.current.createMediaStreamSource(stream);
-      analyserRef.current  = audioCtxRef.current.createAnalyser();
+      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      const src = audioCtxRef.current.createMediaStreamSource(stream);
+      analyserRef.current = audioCtxRef.current.createAnalyser();
       analyserRef.current.fftSize = 64;
       src.connect(analyserRef.current);
 
@@ -431,7 +431,7 @@ function AudioRecorder({ onSend, onCancel }) {
       setPhase('recording');
       setDuration(0);
       timerRef.current = setInterval(() => setDuration(d => d + 1), 1000);
-      animRef.current  = requestAnimationFrame(animateWave);
+      animRef.current = requestAnimationFrame(animateWave);
     } catch {
       setError('Microphone access denied. Please allow microphone in browser settings.');
     }
@@ -569,17 +569,17 @@ export default function ChatPanel({ onStartCall }) {
   const { user } = useAuthStore();
   const { chats, activeChat, messages, typing, fetchChats, fetchMessages, sendMessage, setActiveChat } = useChatStore();
 
-  const [input,         setInput]         = useState('');
-  const [isTyping,      setIsTyping]       = useState(false);
-  const [logoErr,       setLogoErr]        = useState(false);
-  const [showPicker,    setShowPicker]     = useState(false);
-  const [showAudio,     setShowAudio]      = useState(false);
-  const [showSearch,    setShowSearch]     = useState(false);
-  const [searchQuery,   setSearchQuery]    = useState('');
-  const [showProfile,   setShowProfile]    = useState(false);
-  const [showOptions,   setShowOptions]    = useState(false);
-  const [attachedFile,  setAttachedFile]   = useState(null);
-  const [attachedMedia, setAttachedMedia]  = useState(null);
+  const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [logoErr, setLogoErr] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [showAudio, setShowAudio] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showProfile, setShowProfile] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [attachedFile, setAttachedFile] = useState(null);
+  const [attachedMedia, setAttachedMedia] = useState(null);
 
   // Management States
   const [mutedChats, setMutedChats] = useState(() => JSON.parse(localStorage.getItem('kc_muted_chats') || '[]'));
@@ -621,18 +621,18 @@ export default function ChatPanel({ onStartCall }) {
 
   const messagesEndRef = useRef(null);
   const typingTimerRef = useRef(null);
-  const fileInputRef   = useRef(null);
-  const imageInputRef  = useRef(null);
-  const audioInputRef  = useRef(null);
-  const textareaRef    = useRef(null);
-  const pickerRef      = useRef(null);
-  const socket         = getSocket();
+  const fileInputRef = useRef(null);
+  const imageInputRef = useRef(null);
+  const audioInputRef = useRef(null);
+  const textareaRef = useRef(null);
+  const pickerRef = useRef(null);
+  const socket = getSocket();
 
   // ── Fetching ──
   useEffect(() => { fetchChats(); }, [fetchChats]);
-  useEffect(() => { 
+  useEffect(() => {
     if (activeChat?._id) {
-      fetchMessages(activeChat._id); 
+      fetchMessages(activeChat._id);
       // Join socket room for real-time updates
       if (socket) {
         socket.emit('chat:join', activeChat._id);
@@ -716,7 +716,7 @@ export default function ChatPanel({ onStartCall }) {
     setInput(''); setShowPicker(false); setAttachedFile(null); setAttachedMedia(null);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
     if (socket) { clearTimeout(typingTimerRef.current); setIsTyping(false); socket.emit('message:typing', { chatId: activeChat._id, isTyping: false }); }
-    
+
     try {
       await sendMessage({ chatId: activeChat._id, senderId: user._id, content, type, fileUrl, sticker });
     } catch (err) {
@@ -733,7 +733,7 @@ export default function ChatPanel({ onStartCall }) {
     const end = textareaRef.current?.selectionEnd ?? input.length;
     const nextVal = input.substring(0, start) + em + input.substring(end);
     setInput(nextVal);
-    
+
     // Focus back and move cursor
     setTimeout(() => {
       if (textareaRef.current) {
@@ -749,12 +749,12 @@ export default function ChatPanel({ onStartCall }) {
       return;
     }
     const content = `[sticker:${sticker.emoji}:${sticker.label}]`;
-    sendMessage({ 
-      chatId: activeChat._id, 
-      senderId: user._id, 
-      content, 
-      type: 'sticker', 
-      sticker 
+    sendMessage({
+      chatId: activeChat._id,
+      senderId: user._id,
+      content,
+      type: 'sticker',
+      sticker
     }).catch(err => {
       console.error('Sticker send error:', err);
       toast.error('Failed to send sticker');
@@ -783,7 +783,7 @@ export default function ChatPanel({ onStartCall }) {
   };
 
   const typingUsers = (typing[activeChat?._id] ?? []).filter(t => t.userId !== user?._id);
-  const canSend     = !!(input.trim() || attachedMedia || attachedFile);
+  const canSend = !!(input.trim() || attachedMedia || attachedFile);
 
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden' }}>
@@ -791,32 +791,70 @@ export default function ChatPanel({ onStartCall }) {
         @keyframes shimmer    { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
         @keyframes pulse      { 0%,100%{opacity:1} 50%{opacity:.45} }
         @keyframes typingDot  { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+        
+        @media (max-width: 768px) {
+          .chat-sidebar {
+            width: 100% !important;
+            display: ${activeChat ? 'none' : 'flex'} !important;
+          }
+          .chat-main {
+            width: 100% !important;
+            display: ${activeChat ? 'flex' : 'none'} !important;
+          }
+          .mobile-back-btn {
+            display: block !important;
+          }
+          .mobile-hide {
+            display: none !important;
+          }
+          .message-bubble-container {
+            max-width: 85% !important;
+          }
+        }
+        @media (max-width: 500px) {
+          .message-area { padding: 10px 8px !important; }
+          .message-input-wrap { padding: 8px 10px 10px !important; }
+          .tool-bar { gap: 2px !important; }
+          .mobile-micro-hide { display: none !important; }
+        }
       `}</style>
 
       {/* Hidden file inputs */}
-      <input ref={fileInputRef}  type="file"              style={{ display:'none' }} onChange={e => handleFileChange(e, 'file')} />
-      <input ref={imageInputRef} type="file" accept="image/*,video/*" style={{ display:'none' }} onChange={e => handleFileChange(e, 'image')} />
-      <input ref={audioInputRef} type="file" accept="audio/*"      style={{ display:'none' }} onChange={e => handleFileChange(e, 'audio')} />
+      <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'file')} />
+      <input ref={imageInputRef} type="file" accept="image/*,video/*" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'image')} />
+      <input ref={audioInputRef} type="file" accept="audio/*" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'audio')} />
 
-      <ChatList />
+      <ChatList className="chat-sidebar" />
 
-      {/* Main Chat Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
+      <div className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
         {!activeChat ? (
           /* ── Empty state ── */
-          <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:16, color:'var(--text-dim)' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: 'var(--text-dim)' }}>
             {!logoErr
-              ? <img src="/images/logo.png" alt="KimiChat" onError={() => setLogoErr(true)} style={{ width:72, height:72, borderRadius:20, objectFit:'contain', filter:'drop-shadow(0 0 18px rgba(0,201,177,.45))' }} />
-              : <div style={{ width:72, height:72, borderRadius:20, background:'linear-gradient(135deg,var(--teal),var(--blue))', display:'flex', alignItems:'center', justifyContent:'center', fontSize:34, boxShadow:'0 0 28px rgba(0,201,177,.35)' }}>💬</div>
+              ? <img src="/images/logo.png" alt="KimiChat" onError={() => setLogoErr(true)} style={{ width: 72, height: 72, borderRadius: 20, objectFit: 'contain', filter: 'drop-shadow(0 0 18px rgba(0,201,177,.45))' }} />
+              : <div style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg,var(--teal),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 34, boxShadow: '0 0 28px rgba(0,201,177,.35)' }}>💬</div>
             }
-            <div style={{ fontFamily:'var(--font-display)', fontSize:20, fontWeight:700, color:'var(--text)' }}>Select a conversation</div>
-            <div style={{ fontSize:14 }}>Choose from your chats or start a new one</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>Select a conversation</div>
+            <div style={{ fontSize: 14 }}>Choose from your chats or start a new one</div>
           </div>
         ) : (
           <>
             {/* ── Header ── */}
-            <div style={{ padding:'12px 20px', background:'var(--bg-card)', borderBottom:'1px solid var(--border2)', display:'flex', alignItems:'center', gap:12, flexShrink:0 }}>
-              <div 
+            <div style={{ padding: '12px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+              
+              {/* Mobile Back Button */}
+              <button 
+                onClick={() => setActiveChat(null)}
+                style={{
+                  display: 'none', // Hidden by default, shown by media query below
+                  background: 'transparent', border: 'none', color: 'var(--teal)',
+                  fontSize: 22, cursor: 'pointer', padding: '0 8px 0 0',
+                }}
+                className="mobile-back-btn"
+              >
+                ←
+              </button>
+              <div
                 style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0, cursor: 'pointer' }}
                 onClick={() => setShowProfile(true)}
               >
@@ -824,18 +862,18 @@ export default function ChatPanel({ onStartCall }) {
                   online={activeChat.isAI ? true : getOtherUser(activeChat)?.isOnline}
                   gradient={activeChat.isAI ? 'var(--teal),var(--blue)' : null}
                   emoji={activeChat.isAI ? '🤖' : null} />
-                <div style={{ flex:1, minWidth:0 }}>
-                  <div style={{ fontFamily:'var(--font-display)', fontWeight:700, fontSize:16, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {getChatName(activeChat)}
                   </div>
-                  <div style={{ fontSize:12, color: getOtherUser(activeChat)?.isOnline || activeChat.isAI ? 'var(--green)' : 'var(--text-dim)', display:'flex', alignItems:'center', gap:4 }}>
+                  <div style={{ fontSize: 12, color: getOtherUser(activeChat)?.isOnline || activeChat.isAI ? 'var(--green)' : 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: 4 }}>
                     {activeChat.isAI && <span>🤖</span>}
                     {getChatStatus(activeChat)}
                   </div>
                 </div>
               </div>
-              
-              <div style={{ display:'flex', gap:8, flexShrink:0 }}>
+
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
                 {!activeChat.isGroup && !activeChat.isAI && (
                   <>
                     {(() => {
@@ -843,7 +881,7 @@ export default function ChatPanel({ onStartCall }) {
                       const isFriend = user?.friends?.includes(other?._id);
                       if (other && !isFriend) {
                         return (
-                          <button 
+                          <button
                             onClick={async () => {
                               try {
                                 await api.post(`/friends/request/${other._id}`);
@@ -852,14 +890,14 @@ export default function ChatPanel({ onStartCall }) {
                                 toast.error(err.response?.data?.message || 'Failed to send request');
                               }
                             }}
-                            style={{ 
-                              padding: '8px 16px', 
-                              borderRadius: 10, 
-                              background: 'var(--teal-glow)', 
-                              border: '1px solid var(--teal)', 
-                              color: 'var(--teal)', 
-                              fontSize: 13, 
-                              fontWeight: 700, 
+                            style={{
+                              padding: '8px 16px',
+                              borderRadius: 10,
+                              background: 'var(--teal-glow)',
+                              border: '1px solid var(--teal)',
+                              color: 'var(--teal)',
+                              fontSize: 13,
+                              fontWeight: 700,
                               cursor: 'pointer',
                               marginRight: 4
                             }}
@@ -870,31 +908,31 @@ export default function ChatPanel({ onStartCall }) {
                       }
                       return null;
                     })()}
-                    <HeaderBtn 
-                      icon="📞" 
-                      title="Audio Call" 
+                    <HeaderBtn
+                      icon="📞"
+                      title="Audio Call"
                       onClick={() => {
                         console.log('📞 HeaderBtn: Audio Call Clicked');
                         toast('Initiating audio call...', { icon: '📞' });
                         onStartCall?.(getOtherUser(activeChat), 'audio');
-                      }} 
+                      }}
                     />
-                    <HeaderBtn 
-                      icon="📹" 
-                      title="Video Call" 
+                    <HeaderBtn
+                      icon="📹"
+                      title="Video Call"
                       onClick={() => {
                         console.log('📹 HeaderBtn: Video Call Clicked');
                         toast('Initiating video call...', { icon: '📹' });
                         onStartCall?.(getOtherUser(activeChat), 'video');
-                      }} 
+                      }}
                     />
                   </>
                 )}
-                <HeaderBtn icon="🔍" title="Search in chat" active={showSearch} onClick={() => { setShowSearch(p => !p); if(showSearch) setSearchQuery(''); }} />
-                
+                <HeaderBtn icon="🔍" title="Search in chat" active={showSearch} onClick={() => { setShowSearch(p => !p); if (showSearch) setSearchQuery(''); }} />
+
                 <div className="options-btn-container" style={{ position: 'relative' }}>
                   <HeaderBtn icon="⋯" title="More options" onClick={() => setShowOptions(p => !p)} />
-                   {showOptions && (
+                  {showOptions && (
                     <div style={{
                       position: 'absolute', right: 0, top: '100%', marginTop: 8,
                       background: 'var(--bg-card)', border: '1px solid var(--border2)',
@@ -902,15 +940,15 @@ export default function ChatPanel({ onStartCall }) {
                       boxShadow: '0 8px 24px rgba(0,0,0,0.4)', padding: '6px 0',
                       animation: 'pickerUp 0.15s ease-out'
                     }}>
-                       <div className="dropdown-item" onClick={() => { setShowProfile(true); setShowOptions(false); }} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14 }}>Contact Info</div>
-                       <div className="dropdown-item" onClick={togglePin} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14 }}>
-                         {pinnedChats.includes(activeChat._id) ? '📍 Unpin conversation' : '📌 Pin conversation'}
-                       </div>
-                       <div className="dropdown-item" onClick={toggleMute} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14 }}>
-                         {mutedChats.includes(activeChat._id) ? '🔔 Unmute notifications' : '🔕 Mute notifications'}
-                       </div>
-                       <div style={{ height: 1, background: 'var(--border2)', margin: '4px 0' }} />
-                       <div className="dropdown-item" onClick={clearChat} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14, color: 'var(--red)' }}>Clear Chat</div>
+                      <div className="dropdown-item" onClick={() => { setShowProfile(true); setShowOptions(false); }} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14 }}>Contact Info</div>
+                      <div className="dropdown-item" onClick={togglePin} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14 }}>
+                        {pinnedChats.includes(activeChat._id) ? '📍 Unpin conversation' : '📌 Pin conversation'}
+                      </div>
+                      <div className="dropdown-item" onClick={toggleMute} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14 }}>
+                        {mutedChats.includes(activeChat._id) ? '🔔 Unmute notifications' : '🔕 Mute notifications'}
+                      </div>
+                      <div style={{ height: 1, background: 'var(--border2)', margin: '4px 0' }} />
+                      <div className="dropdown-item" onClick={clearChat} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14, color: 'var(--red)' }}>Clear Chat</div>
                     </div>
                   )}
                 </div>
@@ -922,7 +960,7 @@ export default function ChatPanel({ onStartCall }) {
               <div style={{ padding: '10px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, zIndex: 5 }}>
                 <div style={{ position: 'relative', flex: 1 }}>
                   <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)', fontSize: 14 }}>🔍</span>
-                  <input 
+                  <input
                     autoFocus
                     placeholder="Search in conversation..."
                     value={searchQuery}
@@ -941,14 +979,14 @@ export default function ChatPanel({ onStartCall }) {
             )}
 
             {/* ── Messages ── */}
-            <div style={{ flex:1, overflowY:'auto', padding:'20px 16px', display:'flex', flexDirection:'column', gap:4 }}>
+            <div className="message-area" style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
               {activeMsgs.length === 0 && (
-                <div style={{ textAlign:'center', padding:'40px 20px', color:'var(--text-dim)' }}>
-                  <div style={{ fontSize:48, marginBottom:12 }}>{activeChat.isAI ? '🤖' : '👋'}</div>
-                  <div style={{ fontFamily:'var(--font-display)', fontSize:16, fontWeight:600, color:'var(--text)', marginBottom:6 }}>
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-dim)' }}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>{activeChat.isAI ? '🤖' : '👋'}</div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>
                     {activeChat.isAI ? "Hi! I'm Kimi AI" : `Say hi to ${getChatName(activeChat)}`}
                   </div>
-                  <div style={{ fontSize:13 }}>
+                  <div style={{ fontSize: 13 }}>
                     {activeChat.isAI ? "Ask me anything — I'm here to help 24/7!" : 'Send your first message below'}
                   </div>
                 </div>
@@ -957,38 +995,38 @@ export default function ChatPanel({ onStartCall }) {
                 .filter(msg => isMsgVisible(msg))
                 .filter(msg => !showSearch || !searchQuery.trim() || msg.content?.toLowerCase().includes(searchQuery.toLowerCase()))
                 .map((msg, i, arr) => {
-                const prevId = i > 0 ? (arr[i-1].sender?._id ?? arr[i-1].sender) : null;
-                const thisId = msg.sender?._id ?? msg.sender;
-                return (
-                  <MessageBubble key={msg._id ?? i} message={msg}
-                    isMe={msg.sender?._id === user?._id || msg.sender === user?._id}
-                    showAvatar={thisId !== prevId}
-                    isAI={msg.isAI || msg.type === 'ai' || activeChat.isAI}
-                    searchHighlight={searchQuery.trim()} />
-                );
-              })}
+                  const prevId = i > 0 ? (arr[i - 1].sender?._id ?? arr[i - 1].sender) : null;
+                  const thisId = msg.sender?._id ?? msg.sender;
+                  return (
+                    <MessageBubble key={msg._id ?? i} message={msg}
+                      isMe={msg.sender?._id === user?._id || msg.sender === user?._id}
+                      showAvatar={thisId !== prevId}
+                      isAI={msg.isAI || msg.type === 'ai' || activeChat.isAI}
+                      searchHighlight={searchQuery.trim()} />
+                  );
+                })}
               {typingUsers.length > 0 && (
-                <div style={{ display:'flex', alignItems:'center', gap:10, paddingLeft:4 }}>
-                  <div style={{ width:30, height:30, borderRadius:'50%', background:'var(--bg-card2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, flexShrink:0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingLeft: 4 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--bg-card2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0 }}>
                     {activeChat.isAI ? '🤖' : (typingUsers[0]?.name?.[0] ?? '?')}
                   </div>
-                  <div style={{ background:'var(--bg-card2)', borderRadius:'4px 18px 18px 18px', padding:'10px 16px', display:'flex', gap:4, alignItems:'center' }}>
-                    {[0,1,2].map(j => <div key={j} style={{ width:7, height:7, borderRadius:'50%', background:'var(--text-dim)', animation:`typingDot 1.2s ease-in-out infinite ${j*.2}s` }} />)}
+                  <div style={{ background: 'var(--bg-card2)', borderRadius: '4px 18px 18px 18px', padding: '10px 16px', display: 'flex', gap: 4, alignItems: 'center' }}>
+                    {[0, 1, 2].map(j => <div key={j} style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--text-dim)', animation: `typingDot 1.2s ease-in-out infinite ${j * .2}s` }} />)}
                   </div>
-                  <span style={{ fontSize:11, color:'var(--text-dim)' }}>{typingUsers[0]?.name ?? 'Someone'} is typing…</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>{typingUsers[0]?.name ?? 'Someone'} is typing…</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             {/* ── Input area ── */}
-            <div style={{ padding:'10px 16px 14px', background:'var(--bg-card)', borderTop:'1px solid var(--border2)', flexShrink:0, position:'relative' }}>
+            <div style={{ padding: '10px 16px 14px', background: 'var(--bg-card)', borderTop: '1px solid var(--border2)', flexShrink: 0, position: 'relative' }}>
 
               {/* Audio recorder */}
               {showAudio && <AudioRecorder onSend={handleAudioSend} onCancel={() => setShowAudio(false)} />}
 
               {/* Picker (emoji/gif/sticker) */}
-              <div ref={pickerRef} className="picker-container" style={{ position:'relative' }}>
+              <div ref={pickerRef} className="picker-container" style={{ position: 'relative' }}>
                 {showPicker && (
                   <MediaPicker
                     onEmoji={handleEmojiPick}
@@ -1000,11 +1038,11 @@ export default function ChatPanel({ onStartCall }) {
 
               {/* File preview chip */}
               {attachedFile && (
-                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8, background:'rgba(255,255,255,0.05)', borderRadius:8, padding:'6px 10px', fontSize:12, color:'var(--text-dim)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, background: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: '6px 10px', fontSize: 12, color: 'var(--text-dim)' }}>
                   <span>{attachedFile.type === 'image' ? '🖼️' : '📎'}</span>
-                  <span style={{ flex:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{attachedFile.name}</span>
-                  <span style={{ flexShrink:0 }}>{attachedFile.size}</span>
-                  <button onClick={() => setAttachedFile(null)} style={{ background:'transparent', border:'none', color:'var(--text-dim)', cursor:'pointer', fontSize:14, padding:0, lineHeight:1 }}>✕</button>
+                  <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{attachedFile.name}</span>
+                  <span style={{ flexShrink: 0 }}>{attachedFile.size}</span>
+                  <button onClick={() => setAttachedFile(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: 14, padding: 0, lineHeight: 1 }}>✕</button>
                 </div>
               )}
 
@@ -1013,52 +1051,56 @@ export default function ChatPanel({ onStartCall }) {
               {/* GIF picker removal */}
 
               {/* Toolbar */}
-              <div style={{ display:'flex', gap:6, marginBottom:8, alignItems:'center' }}>
+              <div className="tool-bar" style={{ display: 'flex', gap: 6, marginBottom: 8, alignItems: 'center' }}>
                 {/* 😊 opens Emoji/GIF/Sticker picker */}
                 <ToolBtn icon="😊" title="Emoji / Stickers" active={showPicker}
                   activeColor="var(--teal,#00d4c8)" activeBg="rgba(0,201,177,0.15)"
                   onClick={() => { setShowPicker(p => !p); setShowAudio(false); }} />
 
-                <ToolBtn icon="📎" title="Attach File"    onClick={() => fileInputRef.current?.click()} />
-                <ToolBtn icon="📸" title="Image / Video"  onClick={() => imageInputRef.current?.click()} />
+                <ToolBtn icon="📎" title="Attach File" onClick={() => fileInputRef.current?.click()} />
+                <div className="mobile-micro-hide">
+                   <ToolBtn icon="📸" title="Image / Video" onClick={() => imageInputRef.current?.click()} />
+                </div>
 
                 {/* 🎤 opens audio recorder */}
                 <ToolBtn icon="🎤" title="Voice Note" active={showAudio}
                   activeColor="#ff4757" activeBg="rgba(255,71,87,0.15)"
                   onClick={() => { setShowAudio(p => !p); setShowPicker(false); }} />
 
-                <ToolBtn icon="🎵" title="Audio File" onClick={() => audioInputRef.current?.click()} />
+                <div className="mobile-micro-hide">
+                   <ToolBtn icon="🎵" title="Audio File" onClick={() => audioInputRef.current?.click()} />
+                </div>
               </div>
 
               {/* Textarea + send */}
-              <div style={{ display:'flex', gap:10, alignItems:'flex-end' }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
                 <textarea
                   ref={textareaRef} value={input}
                   onChange={handleTyping} onKeyDown={handleKeyDown}
                   placeholder={`Message ${getChatName(activeChat)}…`}
                   rows={1}
                   style={{
-                    flex:1, background:'rgba(255,255,255,0.06)',
-                    border:'1.5px solid var(--border2,#1e3050)', borderRadius:14,
-                    padding:'12px 16px', color:'var(--text,#e8f0fe)', fontSize:14,
-                    fontFamily:'var(--font-body)', outline:'none',
-                    resize:'none', maxHeight:120, transition:'border-color .2s',
-                    lineHeight:1.5, overflowY:'auto',
+                    flex: 1, background: 'rgba(255,255,255,0.06)',
+                    border: '1.5px solid var(--border2,#1e3050)', borderRadius: 14,
+                    padding: '12px 16px', color: 'var(--text,#e8f0fe)', fontSize: 14,
+                    fontFamily: 'var(--font-body)', outline: 'none',
+                    resize: 'none', maxHeight: 120, transition: 'border-color .2s',
+                    lineHeight: 1.5, overflowY: 'auto',
                   }}
-                  onFocus={e => e.target.style.borderColor='var(--teal,#00d4c8)'}
-                  onBlur={e  => e.target.style.borderColor='var(--border2,#1e3050)'}
+                  onFocus={e => e.target.style.borderColor = 'var(--teal,#00d4c8)'}
+                  onBlur={e => e.target.style.borderColor = 'var(--border2,#1e3050)'}
                 />
                 <button
                   onClick={() => canSend && (attachedMedia?.type === 'gif' ? handleSend(`[gif:${attachedMedia.data.url}]`) : handleSend())}
                   disabled={!canSend}
                   title="Send (Enter)"
                   style={{
-                    width:44, height:44, borderRadius:12, border:'none', flexShrink:0,
+                    width: 44, height: 44, borderRadius: 12, border: 'none', flexShrink: 0,
                     cursor: canSend ? 'pointer' : 'not-allowed',
                     background: canSend ? 'linear-gradient(135deg,var(--teal,#00d4c8),var(--blue,#0085ff))' : 'rgba(255,255,255,0.06)',
-                    color: canSend ? '#fff' : 'var(--text-dim)', fontSize:18,
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                    transition:'all .2s', opacity: canSend ? 1 : 0.45,
+                    color: canSend ? '#fff' : 'var(--text-dim)', fontSize: 18,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all .2s', opacity: canSend ? 1 : 0.45,
                     boxShadow: canSend ? '0 0 14px rgba(0,201,177,0.3)' : 'none',
                   }}
                 >➤</button>
@@ -1070,10 +1112,10 @@ export default function ChatPanel({ onStartCall }) {
 
       {/* ── Contact Profile Sidebar ── */}
       {showProfile && activeChat && (
-        <ContactProfile 
-          chat={activeChat} 
-          contact={getOtherUser(activeChat)} 
-          onClose={() => setShowProfile(false)} 
+        <ContactProfile
+          chat={activeChat}
+          contact={getOtherUser(activeChat)}
+          onClose={() => setShowProfile(false)}
           messages={activeMsgs}
         />
       )}
@@ -1084,7 +1126,7 @@ export default function ChatPanel({ onStartCall }) {
 // ── Small reusable toolbar button ────────────
 function ToolBtn({ icon, title, onClick, active, activeColor, activeBg }) {
   const ac = activeColor || 'var(--teal,#00d4c8)';
-  const ab = activeBg    || 'rgba(0,201,177,0.15)';
+  const ab = activeBg || 'rgba(0,201,177,0.15)';
   return (
     <button title={title} onClick={onClick} style={{
       padding: '6px 11px', borderRadius: 9,
@@ -1094,8 +1136,8 @@ function ToolBtn({ icon, title, onClick, active, activeColor, activeBg }) {
       fontSize: 18, cursor: 'pointer', transition: 'all .2s',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
     }}
-    onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor=ac; e.currentTarget.style.color=ac; } }}
-    onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor='var(--border2,#1e3050)'; e.currentTarget.style.color='var(--text-dim,#8fa8c8)'; } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = ac; e.currentTarget.style.color = ac; } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border2,#1e3050)'; e.currentTarget.style.color = 'var(--text-dim,#8fa8c8)'; } }}
     >{icon}</button>
   );
 }
@@ -1104,14 +1146,14 @@ function ToolBtn({ icon, title, onClick, active, activeColor, activeBg }) {
 function HeaderBtn({ icon, title, onClick }) {
   return (
     <button title={title} onClick={onClick} style={{
-      width:38, height:38, borderRadius:10,
-      background:'rgba(255,255,255,0.06)', border:'1px solid transparent',
-      color:'var(--text)', fontSize:17, cursor:'pointer',
-      display:'flex', alignItems:'center', justifyContent:'center',
-      transition:'all .2s', flexShrink:0,
+      width: 38, height: 38, borderRadius: 10,
+      background: 'rgba(255,255,255,0.06)', border: '1px solid transparent',
+      color: 'var(--text)', fontSize: 17, cursor: 'pointer',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      transition: 'all .2s', flexShrink: 0,
     }}
-    onMouseEnter={e => { e.currentTarget.style.background='var(--teal-glow,rgba(0,201,177,.12))'; e.currentTarget.style.borderColor='var(--teal)'; e.currentTarget.style.color='var(--teal)'; }}
-    onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor='transparent'; e.currentTarget.style.color='var(--text)'; }}
+      onMouseEnter={e => { e.currentTarget.style.background = 'var(--teal-glow,rgba(0,201,177,.12))'; e.currentTarget.style.borderColor = 'var(--teal)'; e.currentTarget.style.color = 'var(--teal)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'transparent'; e.currentTarget.style.color = 'var(--text)'; }}
     >{icon}</button>
   );
 }

@@ -173,7 +173,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
       <div style={containerStyle}>
         {/* User Profile Info */}
         <div style={{ textAlign: 'center', marginBottom: 40, zIndex: 10 }}>
-          <div style={avatarContainerStyle}>
+          <div className="calling-avatar" style={avatarContainerStyle}>
             <Avatar 
               name={call.isIncoming ? call.callerName : (call.targetName || call.user?.name)} 
               src={call.isIncoming ? call.from?.avatar : call.user?.avatar} 
@@ -181,7 +181,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
             />
             {status !== 'connected' && <div className="pulse-ring" />}
           </div>
-          <h1 style={nameStyle}>
+          <h1 className="calling-name" style={nameStyle}>
             {call.isIncoming ? (call.callerName || 'Incoming Call') : (call.targetName || call.user?.name || 'User')}
           </h1>
           <p style={statusTextStyle}>
@@ -211,7 +211,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+            <div className="calling-controls" style={{ display: 'flex', gap: 30, justifyContent: 'center', marginBottom: 20 }}>
               <button onClick={toggleMute} style={{ ...smallBtn, background: muted ? '#ff4757' : 'rgba(255,255,255,0.1)' }}>
                 {muted ? '🔇' : '🎤'}
               </button>

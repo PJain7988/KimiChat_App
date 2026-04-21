@@ -152,6 +152,10 @@ const useChatStore = create((set, get) => ({
       return { callLogs: newLogs };
     });
   },
+  clearCallLogs: () => {
+    localStorage.removeItem('kc_call_logs');
+    set({ callLogs: [] });
+  },
 }));
 
 export default useChatStore;

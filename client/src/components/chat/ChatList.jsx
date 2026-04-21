@@ -627,7 +627,7 @@ const cancelBtnStyle = {
 /* ══════════════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════════════ */
-export default function ChatList() {
+export default function ChatList({ className }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const { chats, activeChat, setActiveChat, fetchMessages, unread } = useChatStore();
@@ -726,7 +726,7 @@ export default function ChatList() {
         @keyframes dropIn  { from{opacity:0;transform:translateY(-6px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
       `}</style>
 
-      <div style={{
+      <div className={className} style={{
         width: 320, background: 'var(--bg-card2)',
         borderRight: '1px solid var(--border2)',
         display: 'flex', flexDirection: 'column', flexShrink: 0,

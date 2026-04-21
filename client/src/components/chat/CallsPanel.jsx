@@ -7,7 +7,7 @@ import useChatStore from '../../context/chatStore';
  * WhatsApp style call log interface
  */
 export default function CallsPanel({ onStartCall }) {
-  const { callLogs: logs } = useChatStore();
+  const { callLogs: logs, clearCallLogs } = useChatStore();
 
   const [filter, setFilter] = useState('all'); // all | missed
 
@@ -27,13 +27,19 @@ export default function CallsPanel({ onStartCall }) {
       background: 'var(--bg-dark)',
       overflow: 'hidden'
     }}>
+      <style>{`
+        @media (max-width: 600px) {
+          .calls-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px; }
+          .calls-list { padding: 0 12px !important; }
+        }
+      `}</style>
       {/* Header */}
       <div style={{
         padding: '20px 24px',
         background: 'var(--bg-card)',
         borderBottom: '1px solid var(--border2)'
       }}>
-        <div style={{
+        <div className="calls-header" style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -74,6 +80,20 @@ export default function CallsPanel({ onStartCall }) {
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}>Missed</button>
+            <button 
+              onClick={() => {
+                if (window.confirm('Clear all call history?')) clearCallLogs();
+              }}
+              style={{
+                padding: '6px 16px',
+                borderRadius: 20,
+                border: '1px solid var(--border)',
+                background: 'transparent',
+                color: 'var(--red)',
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}>Clear History</button>
           </div>
         </div>
       </div>
@@ -85,7 +105,7 @@ export default function CallsPanel({ onStartCall }) {
         padding: '12px 0'
       }}>
         {filteredLogs.length > 0 ? (
-          <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px' }}>
+          <div className="calls-list" style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px' }}>
             {filteredLogs.map((log, i) => (
               <CallRow key={i} log={log} onStartCall={onStartCall} />
             ))}
