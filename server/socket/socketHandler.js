@@ -23,25 +23,21 @@ module.exports = (io) => {
 
     // ── User comes online ─────────────────────────────────
     socket.on('user:online', async (rawUserId) => {
-      if (!rawUserId) {
-        console.error('❌ [SOCKET] user:online called without userId');
-        return;
-      }
       const userId = String(rawUserId);
       onlineUsers.set(userId, socket.id);
+      
+      // 💎 BROAD SIGNALING (Multiple Patterns)
+      socket.join(`user:${userId}`);
+      socket.join(userId); 
+      socket.join('authenticated-users');
       
       socket.data.userId = userId; 
       socket.userId = userId; 
       
-      const userRoom = `user:${userId}`;
-      socket.join(userRoom); 
-
       await User.findByIdAndUpdate(userId, { isOnline: true, socketId: socket.id });
-
       io.emit('user:status', { userId, isOnline: true });
-      console.log(`✅ [SOCKET] User ${userId} is online and joined room: ${userRoom}`);
-      
       socket.emit('socket:registered', { userId });
+      console.log(`📡 [SOCKET] User ${userId} joined signaling rooms.`);
     });
 
     // ── Join chat rooms ───────────────────────────────────
@@ -137,81 +133,83 @@ module.exports = (io) => {
     // ── WebRTC Signaling ──────────────────────────────────
     socket.on('call:initiate', async ({ targetUserId, type }) => {
       const targetId = String(targetUserId);
-      const callerId = String(socket.userId);
+      const callerId = String(socket.userId || socket.data?.userId);
       
-      console.log(`📞 [CALL] ${callerId} is calling ${targetId} (type: ${type})`);
+      // Prevent self-calling
+      if (targetId === callerId) {
+        console.warn(`🛑 [CALL] User ${callerId} tried to call themselves.`);
+        return socket.emit('error', { message: "You cannot call yourself." });
+      }
+
+      console.log(`📞 [CALL] Initiate: ${callerId} calling ${targetId} (${type})`);
 
       const caller = await User.findById(callerId).select('_id name username avatar avatarColor');
       if (caller) {
-        // Emit to target user's room
-        // 1. Try Room-based delivery (Primary)
-        const targetRoom = `user:${targetId}`;
-        console.log(`📡 [CALL] Attempting primary delivery to room: ${targetRoom}`);
-        io.to(targetRoom).emit('call:incoming', { from: caller, type });
-
-        // 2. Fallback: Search all sockets for the matching userId property
-        // This handles cases where room joining might have failed or lagged
+        let sentCount = 0;
         const allSockets = await io.fetchSockets();
-        let fallbackSent = 0;
+        
         for (const s of allSockets) {
-          if (String(s.userId) === targetId || String(s.data?.userId) === targetId) {
-            console.log(`🔗 [CALL] Fallback match found on socket ${s.id}. Sending signal...`);
-            io.to(s.id).emit('call:incoming', { from: caller, type });
-            fallbackSent++;
+          const sid = String(s.data?.userId || s.userId || "");
+          if (sid === targetId) {
+            console.log(`📡 [CALL] Direct emission to PJ (Socket: ${s.id})`);
+            s.emit('call:incoming', { from: caller.toPublic(), type });
+            sentCount++;
           }
         }
 
-        // 3. Ultimate Fallback: Broadcast to EVERYONE (Diagnostic Only - Remove after testing)
-        // console.log('📢 [DIAGNOSTIC] Broadcasting to ALL sockets as fallback');
-        // io.emit('call:incoming', { from: caller, type, isGlobalBroadcast: true });
+        // Multiple fallback rooms for maximum reliability
+        const signalData = { from: caller.toPublic(), type, targetUserId: targetId };
+        
+        const room1 = `user:${targetId}`;
+        const room2 = targetId;
+        
+        const count1 = io.sockets.adapter.rooms.get(room1)?.size || 0;
+        const count2 = io.sockets.adapter.rooms.get(room2)?.size || 0;
+        
+        console.log(`📡 [CALL] Emitting to PJ rooms: ${room1}(${count1}), ${room2}(${count2})`);
+        
+        io.to(room1).emit('call:incoming', signalData);
+        io.to(room2).emit('call:incoming', signalData);
+        
+        // Final fallback: App-wide signal
+        io.emit('call:incoming:broadcast', signalData);
 
-        if (fallbackSent === 0) {
-          console.warn(`⚠️ [CALL] No active sockets found for user ${targetId} via room or property search. Target may be offline.`);
-          // Silent debug broadcast to help identify if client is listening at all
-          io.emit('call:debug', { targetId, from: caller.name });
-        } else {
-          console.log(`✅ [CALL] Signal delivered via ${fallbackSent} socket matches`);
+        if (sentCount === 0) {
+          console.warn(`⚠️ [CALL] PJ (user ${targetId}) has no active direct sockets.`);
         }
       } else {
-        console.error(`❌ [CALL] Caller ${callerId} not found in database`);
-        socket.emit('error', { message: 'Signaling error: Caller not found' });
+        socket.emit('error', { message: 'Signaling error: Caller profile not found' });
       }
     });
 
     socket.on('call:accept', ({ targetUserId }) => {
       const targetId = String(targetUserId);
-      console.log(`✅ [CALL] Accepted by recipient, notifying caller: ${targetId}`);
-      io.to(`user:${targetId}`).emit('call:accepted', { fromUserId: socket.userId });
+      console.log(`✅ [CALL] Accepted by PJ for ${targetId}`);
+      const acceptance = { fromUserId: socket.userId };
+      io.to(`user:${targetId}`).emit('call:accepted', acceptance);
+      io.to(targetId).emit('call:accepted', acceptance);
+      io.emit('call:accepted:internal', { targetUserId: targetId, ...acceptance });
     });
 
     socket.on('call:reject', ({ targetUserId }) => {
       const targetId = String(targetUserId);
-      console.log(`❌ [CALL] Rejected by recipient, notifying caller: ${targetId}`);
-      io.to(`user:${targetId}`).emit('call:rejected', { fromUserId: socket.userId });
+      console.log(`❌ SIGNAL: Rejected call for ${targetId}`);
+      io.to(`user:${targetUserId}`).emit('call:rejected');
     });
 
     socket.on('call:end', ({ targetUserId }) => {
       const targetId = String(targetUserId);
-      console.log(`📴 [CALL] Ended, notifying other party: ${targetId}`);
-      io.to(`user:${targetId}`).emit('call:ended', { fromUserId: socket.userId });
+      console.log(`📴 SIGNAL: Ended call for ${targetId}`);
+      io.to(`user:${targetId}`).emit('call:ended');
     });
 
-    // WebRTC offer/answer/ice
-    socket.on('webrtc:offer', ({ targetSocketId, targetUserId, offer }) => {
+    // Unified WebRTC Signaling
+    socket.on('call:signal', ({ targetUserId, targetSocketId, signal }) => {
       const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
-      console.log(`📤 RTC Offer to ${room}`);
-      io.to(room).emit('webrtc:offer', { offer, fromSocketId: socket.id, fromUserId: socket.userId });
-    });
-
-    socket.on('webrtc:answer', ({ targetSocketId, targetUserId, answer }) => {
-      const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
-      console.log(`📥 RTC Answer to ${room}`);
-      io.to(room).emit('webrtc:answer', { answer });
-    });
-
-    socket.on('webrtc:ice', ({ targetSocketId, targetUserId, candidate }) => {
-      const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
-      io.to(room).emit('webrtc:ice', { candidate });
+      console.log(`📡 [RTC] Signal forwarded from ${socket.userId} to ${room}`);
+      io.to(room).emit('call:signal', { signal, fromUserId: socket.userId, fromSocketId: socket.id });
+      // Also bridge to the non-prefixed room for extra reliability
+      if (targetUserId) io.to(String(targetUserId)).emit('call:signal', { signal, fromUserId: socket.userId });
     });
 
     // ── Status updates ────────────────────────────────────

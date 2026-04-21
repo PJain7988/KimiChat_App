@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../context/authStore';
 import useChatStore from '../context/chatStore';
@@ -14,14 +14,15 @@ import SearchPanel   from '../components/search/SearchPanel';
 import ProfilePanel  from '../components/profile/ProfilePanel';
 import CallsPanel    from '../components/chat/CallsPanel';
 import CallOverlay   from '../components/ui/CallOverlay';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import styles from './MainApp.module.css';
+import { isSameId } from '../utils/idUtils';
 
 export default function MainApp() {
   const { user } = useAuthStore();
-  const { addIncomingMessage, setTyping, updateChatLastMsg, addInvitation, unread } = useChatStore();
+  const { addIncomingMessage, setTyping, updateChatLastMsg, addInvitation, addCallLog } = useChatStore();
   const [activeCall, setActiveCall] = useState(null);
-  const activeCallRef = React.useRef(null);
+  const activeCallRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,307 +36,217 @@ export default function MainApp() {
     }
   }, []);
 
-  // 🔄 Socket Instance Management
-  const [socket, setSocket] = useState(null);
+  // ── CALL SIGNALING RECOVERY & MANAGEMENT ──
+  const handleIncomingCall = useCallback((data) => {
+    console.log('📬 [SIGNAL] handleIncomingCall triggered with data:', data);
+    
+    // 1. Check if actually for us
+    const targetId = data.targetUserId ? String(data.targetUserId) : null;
+    const myId = user?._id ? String(user._id) : null;
+    
+    console.log(`🔍 [SIGNAL] Filtering: targetId=${targetId}, myId=${myId}`);
 
-  useEffect(() => {
-    if (user?._id) {
-       const s = getSocket() || initSocket(user._id);
-       setSocket(s);
+    if (targetId && targetId !== myId) {
+      console.warn('🙅 [SIGNAL] Ignoring call meant for another recipient:', targetId);
+      return;
     }
+    
+    if (!myId) {
+      console.error('❌ [SIGNAL] Received call but user ID is missing from local state!');
+    }
+
+    // 2. Reject if busy
+    if (activeCallRef.current) {
+      console.warn('⚠️ [SIGNAL] Busy - Rejecting incoming call');
+      const s = getSocket();
+      if (s) s.emit('call:reject', { targetUserId: data.from?._id });
+      return;
+    }
+
+    console.log('🔔 [SIGNAL] Legitimate incoming call from:', data.from?.name);
+    
+    // 3. Trigger Overlay
+    setActiveCall({ ...data, isIncoming: true, user: data.from, status: 'incoming' });
+
+    // 4. Trigger Professional Toast
+    toast.custom((t) => (
+      <div style={{
+        background: '#050c18', color: '#fff', padding: '16px 20px', borderRadius: '18px',
+        boxShadow: '0 15px 50px rgba(0,0,0,0.8)', border: '1px solid var(--teal)',
+        display: 'flex', alignItems: 'center', gap: 15, 
+        animation: t.visible ? 'incomingCallSlideIn 0.4s ease-out' : 'incomingCallSlideOut 0.4s ease-in',
+        transform: t.visible ? 'translateY(0)' : 'translateY(-20px)',
+        opacity: t.visible ? 1 : 0
+      }}>
+        <div style={{ position:'relative' }}>
+           <div style={{ 
+             width:44, height:44, borderRadius:'50%', background:'var(--teal)', 
+             display:'flex', alignItems:'center', justifyContent:'center', fontSize:22,
+             boxShadow: '0 0 15px var(--teal)'
+           }}>
+             {data.type === 'video' ? '📹' : '📞'}
+           </div>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 800, fontSize: 16 }}>{data.from?.name}</div>
+          <div style={{ fontSize: 13, color: '#00d4c8', fontWeight:600 }}>Incoming {data.type} call...</div>
+        </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={() => { toast.dismiss(t.id); }} style={{ background: 'var(--teal)', border: 'none', color: '#000', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', fontWeight: 800 }}>OPEN</button>
+          <button onClick={() => { 
+            const s = getSocket();
+            if(s) s.emit('call:reject', { targetUserId: data.from?._id });
+            setActiveCall(null);
+            toast.dismiss(t.id);
+          }} style={{ background: '#ff4757', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: '10px', cursor: 'pointer', fontWeight: 800 }}>MISS</button>
+        </div>
+      </div>
+    ), { duration: 25000 });
   }, [user?._id]);
 
   useEffect(() => {
-    if (!socket) return;
-    const s = socket;
+    const s = getSocket() || initSocket(user?._id);
+    if (!s) return;
 
     const register = () => {
       if (user?._id) {
-          console.log('📡 [SOCKET] Sending user:online for:', user._id);
-          s.emit('user:online', user._id);
+         console.log('📡 [REGISTER] Sending user:online for:', user._id);
+         s.emit('user:online', user._id);
       }
     };
 
     if (s.connected) register();
     s.on('connect', register);
 
-    // Handshake confirmation
+    // Call signaling handshake confirmed
     s.on('socket:registered', ({ userId }) => {
-      console.log('✅ [SOCKET] Registered for calls & messages:', userId);
+      console.log('✅ [SOCKET] Handshake Successful:', userId);
     });
 
-    // 🕵️ Diagnostic: Listen for the server's reachability debug signal
-    s.on('call:debug', (info) => {
-      if (info.targetId === user?._id) {
-        console.warn(`🕵️ [DIAGNOSTIC] Server is TRYING to call you (sent by ${info.from}), but you didn't receive the direct signal! Check rooms.`);
-        toast.error(`Missed signal from ${info.from}. Connection might be unstable.`, { id: 'diag' });
+    // ── CORE SIGNALING SUITE ──
+    s.on('call:incoming', (data) => {
+       console.log('📩 Signal: Direct/Room incoming call');
+       handleIncomingCall(data);
+    });
+
+    s.on('call:incoming:broadcast', (data) => {
+       console.log('📩 Signal: Broadcast recovery signal');
+       handleIncomingCall(data);
+    });
+
+    s.on('call:accepted', (data) => {
+      console.log('✅ Signal: Call accepted by peer');
+      setActiveCall(prev => prev ? { ...prev, status: 'connected' } : null);
+    });
+
+    s.on('call:accepted:internal', (data) => {
+      if (String(user?._id) === String(data.targetUserId) && activeCallRef.current?.status === 'calling') {
+         console.log('✅ Signal: Syncing accepted status');
+         setActiveCall(prev => prev ? { ...prev, status: 'connected' } : null);
       }
     });
 
-    s.onAny((event, ...args) => {
-      console.log(`🔌 [SOCKET] Event: ${event}`, args);
+    s.on('call:rejected', () => {
+      console.log('❌ Signal: Call rejected');
+      if (activeCallRef.current) saveCallLog(activeCallRef.current, 'rejected');
+      setActiveCall(null);
     });
 
-    // Request Browser Notification Permission
-    if (Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
+    s.on('call:ended', () => {
+      console.log('📴 Signal: Call ended');
+      if (activeCallRef.current) saveCallLog(activeCallRef.current, 'ended');
+      setActiveCall(null);
+    });
 
+    // Chat/Message listeners...
     s.on('message:new', ({ chatId, message }) => {
-      console.log('📬 Message via Socket:', { chatId, message });
       const id = chatId || message.chat?._id || message.chat;
-      
-      const isMe = message.sender?._id === user._id || message.sender === user._id;
-
       addIncomingMessage(message);
       updateChatLastMsg(id, message);
-
-      // 🔔 WhatsApp Style Notification
-      if (!isMe) {
-        const senderName = message.sender?.name || 'New Message';
-        const content = message.type === 'text' ? message.content : `Sent a ${message.type}`;
-        
-        // 1. Toast Notification
-        toast((t) => (
-          <div onClick={() => { navigate(`/app/chats`); toast.dismiss(t.id); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg,var(--teal),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>💬</div>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 13 }}>{senderName}</div>
-              <div style={{ fontSize: 12, opacity: 0.8, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{content}</div>
-            </div>
-          </div>
-        ), { position: 'top-right', duration: 4000 });
-
-        // 2. Browser Notification (if permission granted and window not focused)
-        if (Notification.permission === 'granted' && document.visibilityState !== 'visible') {
-          new Notification(senderName, {
-            body: content,
-            icon: '/images/logo.png' // Ensure this exists or use a fallback
-          });
-        }
-
-        // 3. Audio Ping
-        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3');
-        audio.volume = 0.4;
-        audio.play().catch(() => {});
-      }
     });
 
     s.on('message:typing', ({ chatId, userId, userName, isTyping }) => {
       setTyping(chatId, { userId, name: userName }, isTyping);
     });
-
-    s.on('call:incoming', (data) => {
-      console.log('🔔 [SIGNAL] Incoming call signal received from:', data.from?.name);
-      
-      // Auto-reject if already in a call
-      if (activeCallRef.current) {
-        console.warn('⚠️ Busy: Auto-rejecting incoming call');
-        s.emit('call:reject', { targetUserId: data.from?._id });
-        return;
-      }
-
-      const incomingCall = { 
-        ...data, 
-        isIncoming: true, 
-        user: data.from, 
-        status: 'incoming' 
-      };
-
-      // Save initial log as "missed" (will be updated if accepted or ended)
-      saveCallLog(incomingCall, 'missed');
-      
-      setActiveCall(incomingCall);
-      
-      // WhatsApp Style Toast (Optional, as CallOverlay also shows it)
-      toast.custom((t) => (
-        <div style={{
-          background: '#1e293b', color: '#fff', padding: '12px 16px', borderRadius: '12px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.5)', border: '1px solid #334155',
-          display: 'flex', alignItems: 'center', gap: 12, animation: t.visible ? 'fadeIn 0.3s' : 'fadeOut 0.3s'
-        }}>
-          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg,var(--teal),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>📞</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 700, fontSize: 14 }}>{data.from?.name}</div>
-            <div style={{ fontSize: 12, opacity: 0.7 }}>Incoming {data.type} call...</div>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={() => { endCall(); toast.dismiss(t.id); }} style={{ background: '#ef4444', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>Decline</button>
-            <button onClick={() => { acceptCall(); toast.dismiss(t.id); }} style={{ background: '#10b981', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>Accept</button>
-          </div>
-        </div>
-      ), { duration: 15000 });
-    });
-
-    s.on('call:accepted', (data) => {
-      console.log('✅ Call Accepted by other party');
-      setActiveCall(prev => {
-        if (!prev) return null;
-        const updated = { ...prev, status: 'connected' };
-        saveCallLog(updated, 'connected');
-        return updated;
-      });
-    });
-
-    s.on('call:rejected', () => {
-      console.log('❌ Call Rejected by other party');
-      if (activeCallRef.current) {
-        saveCallLog(activeCallRef.current, 'rejected');
-      }
-      setActiveCall(null);
-      toast.error('Call rejected');
-    });
     
-    s.on('call:ended', ({ fromUserId }) => {
-      console.log('📴 Call Ended by other party');
-      if (activeCallRef.current) {
-        // If it was an incoming call that never progressed past 'incoming', it's MISSED
-        const finalStatus = (activeCallRef.current.isIncoming && activeCallRef.current.status === 'incoming') 
-          ? 'missed' 
-          : 'ended';
-        saveCallLog(activeCallRef.current, finalStatus);
-      }
-      setActiveCall(null);
-      toast.dismiss();
-    });
-    
-    s.on('global:invite', (inv) => {
-      addInvitation(inv);
-      import('react-hot-toast').then(({ toast }) => {
-        toast((t) => (
-          <span onClick={() => { navigate('/app/global'); toast.dismiss(t.id); }} style={{ cursor: 'pointer' }}>
-            📬 <b>{inv.senderName}</b> invited you to <b>{inv.roomName}</b>. Click to view!
-          </span>
-        ), { duration: 6000, position: 'top-right' });
-      });
-    });
+    s.on('global:invite', (inv) => addInvitation(inv));
 
     return () => {
       s.off('connect', register);
       s.off('socket:registered');
-      s.off('call:debug');
-      s.off('message:new');
-      s.off('message:typing');
       s.off('call:incoming');
+      s.off('call:incoming:broadcast');
       s.off('call:accepted');
+      s.off('call:accepted:internal');
       s.off('call:rejected');
       s.off('call:ended');
+      s.off('message:new');
+      s.off('message:typing');
       s.off('global:invite');
     };
-  }, [socket, user?._id, addIncomingMessage, setTyping, updateChatLastMsg, addInvitation, navigate]);
-
-  // 🔔 Reactive Tab Title with Unread Count
-  useEffect(() => {
-    const totalUnread = Object.values(unread).reduce((a, b) => a + b, 0);
-    document.title = totalUnread > 0 ? `(${totalUnread}) KimiChat` : 'KimiChat';
-  }, [unread]);
+  }, [user?._id, handleIncomingCall, addIncomingMessage, setTyping, updateChatLastMsg, addInvitation]);
 
   const saveCallLog = (call, status) => {
-    try {
-      if (!call?.user) return;
-      let logs = JSON.parse(localStorage.getItem('kc_call_logs') || '[]');
-      
-      // Use a consistent ID for the call sequence if available, or fall back to timestamp
-      const logId = call.callId || call.timestamp || new Date().toISOString();
-      
-      // Filter out previous versions of this specific call log to update it
-      logs = logs.filter(l => l.id !== logId);
-
-      let finalStatus = status;
-      if (status === 'ended' || status === 'connected') finalStatus = 'completed';
-      if (status === 'rejected') finalStatus = 'declined';
-      // 'missed' stays 'missed'
-
-      const newLog = {
-        id: logId,
-        user: call.user,
-        type: call.type,
-        direction: call.isIncoming ? 'incoming' : 'outgoing',
-        status: finalStatus,
-        timestamp: call.timestamp || new Date().toISOString()
-      };
-      
-      localStorage.setItem('kc_call_logs', JSON.stringify([newLog, ...logs].slice(0, 50)));
-      window.dispatchEvent(new Event('storage'));
-    } catch (err) {
-      console.error('Failed to save call log:', err);
-    }
+    addCallLog({
+      user: call.user,
+      type: call.type,
+      status: status,
+      direction: call.isIncoming ? 'incoming' : 'outgoing',
+      timestamp: new Date().toISOString()
+    });
   };
 
   const startCall = (targetUser, type) => {
     if (!targetUser) return;
     const tid = String(targetUser._id);
-    console.log('📞 Initiating call to:', tid);
+    console.log('☎️ CALLING:', tid);
     
-    const callData = { 
-      user: targetUser, 
-      type, 
-      isIncoming: false, 
-      status: 'calling',
-      timestamp: new Date().toISOString()
-    };
-    
-    saveCallLog(callData, 'outgoing');
+    const callData = { user: targetUser, type, isIncoming: false, status: 'calling' };
     setActiveCall(callData);
-    
-    const socket = getSocket();
-    if (socket) {
-      socket.emit('call:initiate', { targetUserId: tid, type });
-    }
-  };
-
-  const acceptCall = () => {
-    const currentCall = activeCallRef.current;
-    if (!currentCall) {
-      console.warn('⚠️ Cannot accept call: no active call in ref');
-      return;
-    }
-    console.log('✅ Accepting call from:', currentCall.user._id);
-    const updated = { ...currentCall, status: 'connected' };
-    setActiveCall(updated);
-    saveCallLog(updated, 'connected');
-    const socket = getSocket();
-    if (socket) socket.emit('call:accept', { targetUserId: String(currentCall.user._id) });
-  };
-
-  const rejectCall = () => {
-    const currentCall = activeCallRef.current;
-    if (currentCall?.user?._id) {
-      console.log('❌ Rejecting call from:', currentCall.user._id);
-      const socket = getSocket();
-      if (socket) socket.emit('call:reject', { targetUserId: String(currentCall.user._id) });
-      saveCallLog(currentCall, 'rejected');
-    }
-    setActiveCall(null);
+    const s = getSocket();
+    if (s) s.emit('call:initiate', { targetUserId: tid, type });
   };
 
   const endCall = () => {
-    const currentCall = activeCallRef.current;
-    if (currentCall?.user?._id) {
-      console.log('📵 Ending call with:', currentCall.user._id);
-      const socket = getSocket();
-      if (socket) socket.emit('call:end', { targetUserId: String(currentCall.user._id) });
-      saveCallLog(currentCall, 'ended');
-    }
+    if (!activeCall) return;
+    const s = getSocket();
+    if (s) s.emit('call:end', { targetUserId: String(activeCall.user._id) });
+    saveCallLog(activeCall, 'ended');
+    setActiveCall(null);
+  };
+
+  const acceptCall = () => {
+    if (!activeCall) return;
+    console.log('✅ Accepting call...');
+    setActiveCall(prev => ({ ...prev, status: 'connected' }));
+    const s = getSocket();
+    if (s) s.emit('call:accept', { targetUserId: String(activeCall.user._id) });
+  };
+
+  const rejectCall = () => {
+    if (!activeCall) return;
+    const s = getSocket();
+    if (s) s.emit('call:reject', { targetUserId: String(activeCall.user._id) });
+    saveCallLog(activeCall, 'missed'); // Log as missed if rejected
     setActiveCall(null);
   };
 
   return (
     <div className={styles.wrap}>
-      <Toaster position="top-right" />
       <Sidebar />
       <div className={styles.content}>
         <Routes>
-          <Route path="chats/*"   element={<ChatPanel onStartCall={startCall} />} />
+          <Route path="chats"     element={<ChatPanel onStartCall={startCall} />} />
           <Route path="calls"     element={<CallsPanel onStartCall={startCall} />} />
           <Route path="global"    element={<GlobalChat />} />
           <Route path="status"    element={<StatusPanel />} />
           <Route path="friends"   element={<FriendsPanel onStartCall={startCall} />} />
           <Route path="community" element={<CommunityPanel />} />
-          <Route path="search"    element={<SearchPanel />} />
+          <Route path="search"    element={<SearchPanel onStartCall={startCall} />} />
           <Route path="profile"   element={<ProfilePanel />} />
         </Routes>
       </div>
+
 
       {activeCall && (
         <CallOverlay

@@ -142,6 +142,16 @@ const useChatStore = create((set, get) => ({
       ).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)),
     }));
   },
+
+  // Calls logic
+  callLogs: JSON.parse(localStorage.getItem('kc_call_logs') || '[]'),
+  addCallLog: (log) => {
+    set(state => {
+      const newLogs = [log, ...state.callLogs].slice(0, 50);
+      localStorage.setItem('kc_call_logs', JSON.stringify(newLogs));
+      return { callLogs: newLogs };
+    });
+  },
 }));
 
 export default useChatStore;

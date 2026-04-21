@@ -7,7 +7,8 @@ import Avatar from '../ui/Avatar';
 import MessageBubble from './MessageBubble';
 import ChatList from './ChatList';
 import ContactProfile from './ContactProfile';
-import { toast } from 'sonner';
+import { toast } from 'react-hot-toast';
+import { getChatOtherUser } from '../../utils/idUtils';
 // ─────────────────────────────────────────────────────────────────
 // EMOJI DATA — 8 categories, 200+ emojis
 // ─────────────────────────────────────────────────────────────────
@@ -87,9 +88,6 @@ const EMOJI_CATEGORIES = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// STICKER PACKS
-// ─────────────────────────────────────────────────────────────────
 const STICKER_PACKS = [
   {
     id: 'reactions', label: '🎭', title: 'Reactions',
@@ -661,8 +659,7 @@ export default function ChatPanel({ onStartCall }) {
 
   // ── Helpers ──
   const getOtherUser = useCallback((chat) => {
-    if (!chat || chat.isGroup || chat.isAI) return null;
-    return chat.participants?.find(p => p._id !== user?._id) ?? null;
+    return getChatOtherUser(chat, user?._id);
   }, [user?._id]);
 
   const getChatName = useCallback((chat) => {

@@ -1,32 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Avatar from '../ui/Avatar';
+import useChatStore from '../../context/chatStore';
 
 /**
  * CallsPanel Component - Displays call history
  * WhatsApp style call log interface
  */
 export default function CallsPanel({ onStartCall }) {
-  // Simulate call logs (in a real app, these would come from the backend or a log store)
-  const [logs, setLogs] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('kc_call_logs') || '[]');
-    } catch {
-      return [];
-    }
-  });
+  const { callLogs: logs } = useChatStore();
 
   const [filter, setFilter] = useState('all'); // all | missed
-
-  // Refresh logs when localStorage changes
-  useEffect(() => {
-    const handleStorage = () => {
-      try {
-        setLogs(JSON.parse(localStorage.getItem('kc_call_logs') || '[]'));
-      } catch (e) {}
-    };
-    window.addEventListener('storage', handleStorage);
-    return () => window.removeEventListener('storage', handleStorage);
-  }, []);
 
   const filteredLogs = useMemo(() => {
     if (filter === 'missed') {
