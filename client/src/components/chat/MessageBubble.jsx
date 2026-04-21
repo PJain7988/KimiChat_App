@@ -20,7 +20,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
     const rawContent = isDeleted ? '🚫 This message was deleted' : message.content;
     if (isDeleted || !rawContent) return rawContent;
 
-    // Handle Stickers (from property or parsed from content)
+     
     let stickerObj = message.sticker;
     if (!stickerObj && rawContent.startsWith('[sticker:')) {
       const parts = rawContent.match(/\[sticker:(.+):(.+)\]/);
@@ -42,10 +42,10 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
       );
     }
 
-    // Handle Audio messages
+     
     if (message.type === 'audio' || rawContent.startsWith('🎤 Voice note') || rawContent.startsWith('🎵 Audio file')) {
       const isVoice = rawContent.startsWith('🎤');
-      // For now, if there is no fileUrl, we render the text, but let's assume we might have it
+       
       if (message.fileUrl) {
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 220 }}>
@@ -61,7 +61,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
     const urlRegex = /(https?:\/\/[^\s]+)/gi;
     const isImage = (url) => /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(url) || url.includes('tenor.com');
 
-    // If it's a media URL, render it
+     
     if (rawContent.match(urlRegex) && isImage(rawContent.trim())) {
       return (
         <img 
@@ -89,25 +89,25 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
   };
 
   const handleReact = (emoji) => {
-    // Optimistic UI update
+     
     setLocalReactions(prev => {
       const existing = prev.find(r => r.emoji === emoji);
       if (existing) {
-        // toggle off if same emoji clicked twice
+         
         return prev.filter(r => r.emoji !== emoji);
       }
       return [...prev.filter(r => r.isMe !== true), { emoji, isMe: true, count: 1 }];
     });
     setShowReact(false);
 
-    // Emit to socket
+     
     const socket = getSocket();
     if (socket && message._id && !message._id.startsWith('temp_')) {
       socket.emit('message:react', { messageId: message._id, emoji });
     }
   };
 
-  // Group reactions by emoji with count
+   
   const groupedReactions = localReactions.reduce((acc, r) => {
     const key = r.emoji;
     if (!acc[key]) acc[key] = { emoji: key, count: 0, isMe: false };
@@ -126,7 +126,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
       onMouseEnter={() => setShowReact(true)}
       onMouseLeave={() => { setShowReact(false); setHoveredEmoji(null); }}
     >
-      {/* ── Avatar ── */}
+      { }
       {!isMe && (
         <div style={{ width: 30, flexShrink: 0 }}>
           {showAvatar && (
@@ -141,14 +141,14 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
         </div>
       )}
 
-      {/* ── Bubble + meta ── */}
+      { }
       <div className="message-bubble-container" style={{
         maxWidth: '65%', display: 'flex',
         flexDirection: 'column',
         alignItems: isMe ? 'flex-end' : 'flex-start',
       }}>
 
-        {/* AI label */}
+        { }
         {isAI && showAvatar && !isMe && (
           <div style={{
             fontSize: 10, fontWeight: 700, marginBottom: 3,
@@ -159,7 +159,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
           </div>
         )}
 
-        {/* ── Reaction picker bar ── */}
+        { }
         {showReact && !isDeleted && (
           <div style={{
             display: 'flex', gap: 2, marginBottom: 6,
@@ -195,7 +195,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
           </div>
         )}
 
-        {/* ── Message bubble ── */}
+        { }
         <div className="message-bubble" style={{
           padding: '11px 15px',
           borderRadius: isMe ? '18px 4px 18px 18px' : '4px 18px 18px 18px',
@@ -218,7 +218,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
         }}>
           {renderContent()}
 
-          {/* Reactions display on bubble */}
+          { }
           {Object.values(groupedReactions).length > 0 && (
             <div style={{
               display: 'flex', gap: 4, marginTop: 8,
@@ -267,7 +267,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
           )}
         </div>
 
-        {/* ── Time + read receipt ── */}
+        { }
         <div style={{
           fontSize: 10, color: 'var(--text-dim)', marginTop: 3,
           display: 'flex', alignItems: 'center', gap: 4,

@@ -2,14 +2,11 @@ import React, { useState, useMemo } from 'react';
 import Avatar from '../ui/Avatar';
 import useChatStore from '../../context/chatStore';
 
-/**
- * CallsPanel Component - Displays call history
- * WhatsApp style call log interface
- */
+ 
 export default function CallsPanel({ onStartCall }) {
   const { callLogs: logs, clearCallLogs } = useChatStore();
 
-  const [filter, setFilter] = useState('all'); // all | missed
+  const [filter, setFilter] = useState('all');  
 
   const filteredLogs = useMemo(() => {
     if (filter === 'missed') {
@@ -33,7 +30,7 @@ export default function CallsPanel({ onStartCall }) {
           .calls-list { padding: 0 12px !important; }
         }
       `}</style>
-      {/* Header */}
+      { }
       <div style={{
         padding: '20px 24px',
         background: 'var(--bg-card)',
@@ -98,7 +95,7 @@ export default function CallsPanel({ onStartCall }) {
         </div>
       </div>
 
-      {/* List */}
+      { }
       <div style={{
         flex: 1,
         overflowY: 'auto',

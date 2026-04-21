@@ -7,7 +7,7 @@ export default function Landing() {
 
   return (
     <div className={styles.wrap}>
-      {/* Orbs */}
+      { }
       <div className={styles.orbs}>
         <div className={`${styles.orb} ${styles.orb1}`} />
         <div className={`${styles.orb} ${styles.orb2}`} />
@@ -15,7 +15,7 @@ export default function Landing() {
       </div>
 
       <div className={`${styles.content} animate-fade-up`}>
-        {/* Logo */}
+        { }
         <div className={styles.logoRow}>
           <img 
             src="/images/logo.png"
@@ -34,12 +34,8 @@ export default function Landing() {
           all powered by <strong>Kimi AI</strong>.
         </p>
 
-        {/* Feature pills */}
-        {/* <div className={styles.pills}>
-          {['🤖 AI Chat','🌐 Global Rooms','👥 Friends','🏘️ Communities','📞 Video Calls','📸 Status'].map(f => (
-            <span key={f} className={styles.pill}>{f}</span>
-          ))}
-        </div> */}
+        { }
+        { }
 
         <div className={styles.btnGroup}>
           <button className={styles.btnPrimary} onClick={() => navigate('/auth')}>

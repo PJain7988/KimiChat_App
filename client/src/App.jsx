@@ -45,9 +45,7 @@ export default function App() {
         <Route path="/"    element={<Landing />} />
         <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
 
-        {/* OAuth providers redirect back to /auth/callback?token=JWT
-            No guard — user is unauthenticated when they land here.
-            Auth.jsx useEffect detects the token and handles login. */}
+        { }
         <Route path="/auth/callback" element={<Auth />} />
 
         <Route path="/app/*" element={<ProtectedRoute><MainApp /></ProtectedRoute>} />

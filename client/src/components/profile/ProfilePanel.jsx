@@ -73,7 +73,7 @@ export default function ProfilePanel() {
     dataSaver: user?.settings?.dataSaver ?? false,
   });
   
-  const [subSection, setSubSection] = useState(null); // For privacy pickers
+  const [subSection, setSubSection] = useState(null);  
   const [blocked, setBlocked] = useState([]);
   const [devices, setDevices] = useState([
     { id: 1, name: 'Windows Workstation', location: 'Current Session', active: true, icon: '🖥️' },
@@ -85,7 +85,7 @@ export default function ProfilePanel() {
   const [clearingCache, setClearingCache] = useState(false);
   const [cacheProgress, setCacheProgress] = useState(0);
 
-  // ✅ FIX: Sync form and preview states with user data
+   
   React.useEffect(() => {
     if (user && !editing) {
       setForm({
@@ -107,26 +107,26 @@ export default function ProfilePanel() {
     }
   }, [user, editing]);
 
-  // ✅ Clear subSection when changing activeSection to prevent blank views
+   
   React.useEffect(() => {
     setSubSection(null);
   }, [activeSection]);
 
-  // ✅ Apply Theme & Accent Color globally in real-time
+   
   React.useEffect(() => {
     const root = document.documentElement;
     
-    // 1. Apply Theme
+     
     let actualTheme = settingsForm.theme;
     if (actualTheme === 'system') {
       actualTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     }
     root.setAttribute('data-theme', actualTheme);
 
-    // 2. Apply Accent Color
+     
     root.style.setProperty('--teal', settingsForm.accentColor);
     
-    // Update Dimmed Teal for buttons/hovers
+     
     const dimColor = settingsForm.accentColor + 'dd'; 
     root.style.setProperty('--teal-dim', dimColor);
     root.style.setProperty('--teal-glow', settingsForm.accentColor + '2e');
@@ -142,7 +142,7 @@ export default function ProfilePanel() {
   const saveProfile = async () => {
     setSaving(true);
     try {
-      // Validate required fields
+       
       if (!form.name.trim()) {
         toast.error('Display name is required');
         setSaving(false);
@@ -230,7 +230,7 @@ export default function ProfilePanel() {
       if (res.data.success) {
         toast.success('User unblocked');
         fetchBlocked();
-        // Update local user too if needed
+         
         if (user) {
           setUser({ ...user, blockedUsers: user.blockedUsers.filter(uid => uid !== id) });
         }
@@ -242,7 +242,7 @@ export default function ProfilePanel() {
     setClearingCache(true);
     setCacheProgress(0);
     
-    // Simulate professional optimization sequence
+     
     let prog = 0;
     const interval = setInterval(() => {
       prog += Math.random() * 15;
@@ -325,7 +325,7 @@ export default function ProfilePanel() {
       <div style={{ maxWidth: 720, margin: '0 auto' }}>
 
         <div style={{ height: 220, position: 'relative', overflow: 'hidden', background: 'var(--bg-card)' }}>
-          {/* 1. Actual Image Layer */}
+          { }
           <div style={{
             position: 'absolute',
             inset: 0,
@@ -340,7 +340,7 @@ export default function ProfilePanel() {
             transition: 'all 0.4s ease'
           }} />
 
-          {/* 2. Glass Overlay */}
+          { }
           <div style={{ 
             position: 'absolute', 
             inset: 0, 
@@ -349,7 +349,7 @@ export default function ProfilePanel() {
             zIndex: 1
           }} />
 
-          {/* 3. Action Buttons */}
+          { }
           <div style={{ position: 'absolute', inset: 0, zIndex: 2 }}>
             {!editing ? (
               <button 
@@ -405,7 +405,7 @@ export default function ProfilePanel() {
           </div>
         </div>
 
-        {/* Avatar Section */}
+        { }
         <div style={{ padding: '0 32px', position: 'relative', zIndex: 10 }}>
           <div style={{ position: 'absolute', top: -55, left: 32, zIndex: 11 }}>
             <div style={{ 
@@ -437,7 +437,7 @@ export default function ProfilePanel() {
             )}
           </div>
 
-          {/* User Info */}
+          { }
           <div style={{ paddingTop: 60, paddingBottom: 8 }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
               <div>
@@ -447,7 +447,7 @@ export default function ProfilePanel() {
               </div>
             </div>
 
-            {/* Status Message */}
+            { }
             {user?.statusMessage && (
               <div style={{
                 padding: '10px 14px',
@@ -463,12 +463,12 @@ export default function ProfilePanel() {
               </div>
             )}
 
-            {/* Bio */}
+            { }
             <p style={{ fontSize: 14, color: 'var(--text-dim)', lineHeight: 1.7, marginBottom: 24 }}>
               {user?.bio || '✨ No bio yet. Click edit to add one!'}
             </p>
 
-            {/* Stats Grid */}
+            { }
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 32 }}>
               {[
                 { label: 'Friends', value: friendCount, icon: '👥' },
@@ -503,12 +503,12 @@ export default function ProfilePanel() {
               ))}
             </div>
 
-            {/* Settings Header */}
+            { }
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, marginBottom: 16, color: 'var(--text)' }}>
               ⚙️ Settings & Preferences
             </h2>
 
-            {/* Settings List */}
+            { }
             {SETTINGS.map((s, i) => (
               <div key={i} onClick={s.onClick}
                 style={{
@@ -558,7 +558,7 @@ export default function ProfilePanel() {
 
          <div style={{ height: 40 }} />
 
-      {/* Enhanced Edit Modal */}
+      { }
       {editing && (
         <div style={{
           position: 'fixed',
@@ -582,7 +582,7 @@ export default function ProfilePanel() {
             maxHeight: '90vh',
             overflowY: 'auto'
           }}>
-            {/* Header */}
+            { }
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -619,7 +619,7 @@ export default function ProfilePanel() {
               </button>
             </div>
 
-            {/* Avatar Section */}
+            { }
             <div style={{ marginBottom: 28 }}>
               <label style={{
                 display: 'block',
@@ -679,7 +679,7 @@ export default function ProfilePanel() {
                   style={{ display: 'none' }}
                 />
 
-                {/* Avatar Color Picker */}
+                { }
                 <div style={{ marginBottom: 16 }}>
                   <p style={{ fontSize: 12, color: 'var(--text-dim)', marginBottom: 10 }}>Avatar Color</p>
                   <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -702,7 +702,7 @@ export default function ProfilePanel() {
               </div>
             </div>
 
-            {/* Basic Info */}
+            { }
             <div style={{ marginBottom: 24 }}>
               <label style={{
                 display: 'block',
@@ -770,7 +770,7 @@ export default function ProfilePanel() {
               </div>
             </div>
 
-            {/* Status Section */}
+            { }
             <div style={{ marginBottom: 24 }}>
               <label style={{
                 display: 'block',
@@ -834,7 +834,7 @@ export default function ProfilePanel() {
               </div>
             </div>
 
-            {/* Background Customization */}
+            { }
             <div style={{ marginBottom: 28 }}>
               <label style={{
                 display: 'block',
@@ -846,7 +846,7 @@ export default function ProfilePanel() {
                 letterSpacing: '.5px'
               }}>🎨 Profile Background</label>
 
-              {/* Background Preview */}
+              { }
               <div style={{
                 width: '100%',
                 height: 120,
@@ -875,7 +875,7 @@ export default function ProfilePanel() {
                 </div>
               </div>
 
-              {/* Background Type Selection */}
+              { }
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
                 <button
                   onClick={() => setForm(f => ({ ...f, backgroundType: 'gradient' }))}
@@ -909,7 +909,7 @@ export default function ProfilePanel() {
                 </button>
               </div>
 
-              {/* Gradient Presets */}
+              { }
               {form.backgroundType === 'gradient' && (
                 <div style={{ marginBottom: 12 }}>
                   <p style={{ fontSize: 11, color: 'var(--text-dim)', marginBottom: 8, fontWeight: 600 }}>Preset Gradients</p>
@@ -953,7 +953,7 @@ export default function ProfilePanel() {
                 </div>
               )}
 
-              {/* Image Upload */}
+              { }
               {form.backgroundType === 'image' && (
                 <button onClick={() => backgroundInputRef.current?.click()}
                   style={{
@@ -989,7 +989,7 @@ export default function ProfilePanel() {
               />
             </div>
 
-            {/* Music Section */}
+            { }
             <div style={{ marginBottom: 24 }}>
               <label style={{
                 display: 'block',
@@ -1084,7 +1084,7 @@ export default function ProfilePanel() {
               />
             </div>
 
-            {/* Read-only Fields */}
+            { }
             <div style={{ marginBottom: 28 }}>
               <div style={{ marginBottom: 16 }}>
                 <label style={{
@@ -1135,7 +1135,7 @@ export default function ProfilePanel() {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            { }
             <div style={{ display: 'flex', gap: 12 }}>
               <button onClick={() => setEditing(false)} style={{
                 flex: 1,
@@ -1338,7 +1338,7 @@ export default function ProfilePanel() {
 
               {activeSection === 'appearance' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-                  {/* Theme Selector */}
+                  { }
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, display: 'block' }}>Interface Theme</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
@@ -1359,7 +1359,7 @@ export default function ProfilePanel() {
                     </div>
                   </div>
 
-                  {/* Accent Color */}
+                  { }
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, display: 'block' }}>Accent Color</label>
                     <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -1375,7 +1375,7 @@ export default function ProfilePanel() {
                     </div>
                   </div>
 
-                  {/* Advanced Toggles */}
+                  { }
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     {[
                       { label: 'Glassmorphism Effects', desc: 'Enable blur & transparency', key: 'glassmorphism' },
@@ -1393,7 +1393,7 @@ export default function ProfilePanel() {
                     ))}
                   </div>
 
-                  {/* Bubble Style */}
+                  { }
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, display: 'block' }}>Chat Bubble Style</label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
@@ -1410,7 +1410,7 @@ export default function ProfilePanel() {
                     </div>
                   </div>
 
-                  {/* Font Scale */}
+                  { }
                   <div>
                     <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, display: 'block' }}>Text Scale: {settingsForm.fontScale}</label>
                     <input type="range" min="80" max="120" step="10" value={parseInt(settingsForm.fontScale)} 
@@ -1513,9 +1513,9 @@ export default function ProfilePanel() {
                       </div>
                       
                       <div style={{ width: '100%', aspectRatio: '1/1', background: '#000', borderRadius: 16, position: 'relative', border: '1px solid var(--border2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                         {/* Simulated Camera View */}
+                         { }
                          <div style={{ position: 'absolute', inset: 40, border: `2px solid ${settingsForm.accentColor}44`, borderRadius: 12 }}>
-                            {/* Scanning Line */}
+                            { }
                             <div style={{ 
                               position: 'absolute', top: 0, left: 0, width: '100%', height: 2, 
                               background: settingsForm.accentColor, boxShadow: `0 0 15px ${settingsForm.accentColor}`,

@@ -7,7 +7,7 @@ import api from '../../utils/api';
 import Avatar from '../ui/Avatar';
 import { toast } from 'react-hot-toast';
 
-/* ── Invite Modal ───────────────────────── */
+ 
 function InviteModal({ room, onClose, socket, sender }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -101,7 +101,7 @@ function InviteModal({ room, onClose, socket, sender }) {
   );
 }
 
-/* ── Poll Modal ────────────────────────────── */
+ 
 function PollModal({ onClose, onSubmit }) {
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
@@ -160,7 +160,7 @@ function PollModal({ onClose, onSubmit }) {
   );
 }
 
-/* ── Members Modal ─────────────────────────── */
+ 
 function MembersModal({ room, onClose }) {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -245,7 +245,7 @@ function MembersModal({ room, onClose }) {
   );
 }
 
-/* ── Room Info Modal ────────────────────────── */
+ 
 function RoomInfoModal({ room, onClose }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(5,13,26,0.9)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
@@ -290,7 +290,7 @@ function RoomInfoModal({ room, onClose }) {
   );
 }
 
-/* ── Invitations Modal ────────────────────── */
+ 
 function InvitationsModal({ invites, onAccept, onDecline, onClose }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(5,13,26,0.9)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
@@ -331,7 +331,7 @@ function InvitationsModal({ invites, onAccept, onDecline, onClose }) {
   );
 }
 
-/* ── Exit Confirmation Modal ─────────────── */
+ 
 function ExitConfirmModal({ roomName, onConfirm, onClose }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(5,13,26,0.95)', backdropFilter: 'blur(16px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
@@ -348,7 +348,7 @@ function ExitConfirmModal({ roomName, onConfirm, onClose }) {
   );
 }
 
-/* ── Create Room Modal ──────────────────────────── */
+ 
 function CreateRoomModal({ onClose, onCreate }) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -555,10 +555,10 @@ export default function GlobalChat() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Simulate upload for now by creating a local URL
+     
     const reader = new FileReader();
     reader.onload = () => {
-      sendMsg(reader.result); // In a real app, you'd upload to S3/Cloudinary and send the URL
+      sendMsg(reader.result);  
       toast.success(`${file.type.startsWith('image/') ? 'Photo' : 'File'} sent!`);
     };
     reader.readAsDataURL(file);
@@ -897,7 +897,7 @@ export default function GlobalChat() {
         />
       )}
       
-      {/* Rooms Sidebar */}
+      { }
       <div style={{ width: 260, background: 'var(--bg-card2)', borderRight: '1px solid var(--border2)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
         <div style={{ padding: '20px 16px 12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -953,9 +953,9 @@ export default function GlobalChat() {
         </div>
       </div>
  
-      {/* Chat Area */}
+      { }
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
-        {/* Header */}
+        { }
         <div style={{ padding: '14px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 12 }}>
           {activeRoom && (
             <>
@@ -1008,12 +1008,12 @@ export default function GlobalChat() {
           </div>
         )}
 
-        {/* Welcome bar */}
+        { }
         <div style={{ margin: '12px 16px 0', padding: '10px 14px', background: 'linear-gradient(90deg,rgba(0,201,177,.1),rgba(26,140,255,.1))', borderLeft: '3px solid var(--teal)', borderRadius: '0 10px 10px 0', fontSize: 13, color: 'var(--text-dim)' }}>
           Welcome to <strong style={{ color: 'var(--teal)' }}>{activeRoom?.name || 'Global Chat'}</strong> — Be respectful & have fun! 🌍
         </div>
 
-        {/* Messages */}
+        { }
         <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {loading && <div style={{ textAlign: 'center', color: 'var(--text-dim)', fontSize: 13 }}>Loading…</div>}
           {filteredMessages.map((msg, i) => {
@@ -1045,7 +1045,7 @@ export default function GlobalChat() {
           <div ref={endRef} />
         </div>
 
-        {/* Input */}
+        { }
         <div style={{ padding: '12px 16px', background: 'var(--bg-card)', borderTop: '1px solid var(--border2)' }}>
           <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
             {['📸 Photo', '📎 File', '📊 Poll', '🎤 Voice'].map(b => (

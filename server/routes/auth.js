@@ -6,9 +6,7 @@ const User       = require('../models/User');
 const Chat       = require('../models/Chat');
 const { generateToken, protect } = require('../middleware/auth');
 
-/* ═══════════════════════════════════════════════════════
-   EMAIL — Gmail via nodemailer
-═══════════════════════════════════════════════════════ */
+ 
 const mailer = nodemailer.createTransport({
   service: 'gmail',
   auth: { user: process.env.EMAIL, pass: process.env.EMAIL_PASS },
@@ -39,9 +37,7 @@ const sendOTPEmail = async (to, otp) => {
   }
 };
 
-/* ═══════════════════════════════════════════════════════
-   REGISTER
-═══════════════════════════════════════════════════════ */
+ 
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, username } = req.body;
@@ -69,9 +65,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-/* ═══════════════════════════════════════════════════════
-   LOGIN
-═══════════════════════════════════════════════════════ */
+ 
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -94,9 +88,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-/* ═══════════════════════════════════════════════════════
-   SEND OTP  (email → Gmail | phone → console dev)
-═══════════════════════════════════════════════════════ */
+ 
 router.post('/send-otp', async (req, res) => {
   try {
     const { phone, email } = req.body;
@@ -133,7 +125,7 @@ router.post('/send-otp', async (req, res) => {
       return res.json({ success: true, message: `OTP sent to ${email}` });
     }
 
-    // Phone — log in dev, integrate FAST2SMS / Twilio in prod
+     
     console.log(`\n📱 OTP for ${phone}: ${otp}\n`);
     res.json({
       success: true,
@@ -146,9 +138,7 @@ router.post('/send-otp', async (req, res) => {
   }
 });
 
-/* ═══════════════════════════════════════════════════════
-   VERIFY OTP
-═══════════════════════════════════════════════════════ */
+ 
 router.post('/verify-otp', async (req, res) => {
   try {
     const { phone, email, otp } = req.body;
@@ -176,10 +166,7 @@ router.post('/verify-otp', async (req, res) => {
   }
 });
 
-/* ═══════════════════════════════════════════════════════
-   GOOGLE OAUTH  via Passport
-   Redirect URI → https://kimichat-app.onrender.com/api/auth/google/callback
-═══════════════════════════════════════════════════════ */
+ 
 router.get('/google/redirect',
   passport.authenticate('google', {
     scope:  ['profile', 'email'],
@@ -199,10 +186,7 @@ router.get('/google/callback',
   }
 );
 
-/* ═══════════════════════════════════════════════════════
-   GITHUB OAUTH  via Passport
-   Callback URL → https://kimichat-app.onrender.com/api/auth/github/callback
-═══════════════════════════════════════════════════════ */
+ 
 router.get('/github/redirect',
   passport.authenticate('github', {
     scope:   ['user:email', 'read:user'],
@@ -222,10 +206,7 @@ router.get('/github/callback',
   }
 );
 
-/* ═══════════════════════════════════════════════════════
-   DISCORD OAUTH  via Passport
-   Redirect URI → https://kimichat-app.onrender.com/api/auth/discord/callback
-═══════════════════════════════════════════════════════ */
+ 
 router.get('/discord/redirect',
   passport.authenticate('discord', { session: false })
 );
@@ -242,9 +223,7 @@ router.get('/discord/callback',
   }
 );
 
-/* ═══════════════════════════════════════════════════════
-   LEGACY DIRECT SOCIAL  (frontend fallback / testing)
-═══════════════════════════════════════════════════════ */
+ 
 router.post('/social', async (req, res) => {
   try {
     const { provider, providerId, name, email, avatar } = req.body;
@@ -252,7 +231,7 @@ router.post('/social', async (req, res) => {
     if (!provider || !providerId)
       return res.status(400).json({ success: false, message: 'provider and providerId are required' });
 
-    // Reuse passport config's findOrCreate logic by calling it directly
+     
     const idField = `${provider}Id`;
     let user = await User.findOne({ [idField]: providerId });
 
@@ -284,9 +263,7 @@ router.post('/social', async (req, res) => {
   }
 });
 
-/* ═══════════════════════════════════════════════════════
-   GET ME  /  LOGOUT
-═══════════════════════════════════════════════════════ */
+ 
 router.get('/me', protect, (req, res) => {
   res.json({ success: true, user: req.user.toPublic() });
 });

@@ -4,10 +4,10 @@ const GlobalMessage = require('../models/GlobalMessage');
 const GlobalRoom = require('../models/GlobalRoom');
 const { protect } = require('../middleware/auth');
 
-// ── Get joined global rooms ──────────────────────────────
+ 
 router.get('/rooms', protect, async (req, res) => {
   try {
-    // 1. Ensure default rooms exist and are public
+     
     const defaultRooms = [
       { id: 'general',    name: 'General',      emoji: '🌍', type: 'public', membersCount: 2847 },
       { id: 'tech-talk',  name: 'Tech Talk',    emoji: '💻', type: 'public', membersCount: 1203 },
@@ -20,7 +20,7 @@ router.get('/rooms', protect, async (req, res) => {
       await GlobalRoom.findOneAndUpdate(
         { id: dr.id },
         { 
-          $set: { type: 'public' }, // Force public visibility
+          $set: { type: 'public' },  
           $setOnInsert: { 
             name: dr.name, 
             emoji: dr.emoji, 
@@ -31,7 +31,7 @@ router.get('/rooms', protect, async (req, res) => {
       );
     }
 
-    // 2. Return all public rooms + rooms user is a member of
+     
     const rooms = await GlobalRoom.find({ 
       $or: [
         { type: 'public' },
@@ -45,12 +45,12 @@ router.get('/rooms', protect, async (req, res) => {
   }
 });
 
-// ── Create a new global room ─────────────────────────────
+ 
 router.post('/rooms', protect, async (req, res) => {
   try {
     const { name, emoji, id, description, category, type, isNSFW, slowMode } = req.body;
     
-    // Generate simple ID from name if not provided
+     
     const roomId = id || name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
     
     const existing = await GlobalRoom.findOne({ id: roomId });
@@ -76,7 +76,7 @@ router.post('/rooms', protect, async (req, res) => {
   }
 });
 
-// ── Get room members ─────────────────────────────────────
+ 
 router.get('/rooms/:roomId/members', protect, async (req, res) => {
   try {
     const room = await GlobalRoom.findOne({ id: req.params.roomId }).populate('members', 'name username avatar avatarColor');
@@ -98,19 +98,19 @@ router.get('/rooms/:roomId/members', protect, async (req, res) => {
   }
 });
 
-// ── Delete a room (Owner only) ───────────────────────────
+ 
 router.delete('/rooms/:roomId', protect, async (req, res) => {
   try {
     const room = await GlobalRoom.findOne({ id: req.params.roomId });
     if (!room) return res.status(404).json({ success: false, message: 'Room not found' });
     
-    // Check ownership
+     
     if (room.createdBy?.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Only the room creator can delete this room' });
     }
 
     await GlobalRoom.deleteOne({ id: req.params.roomId });
-    // Also delete messages
+     
     await GlobalMessage.deleteMany({ room: req.params.roomId });
     
     res.json({ success: true, message: 'Room and all messages deleted' });
@@ -119,13 +119,13 @@ router.delete('/rooms/:roomId', protect, async (req, res) => {
   }
 });
 
-// ── Join a room ──────────────────────────────────────────
+ 
 router.post('/rooms/:roomId/join', protect, async (req, res) => {
   try {
     const room = await GlobalRoom.findOne({ id: req.params.roomId });
     if (!room) return res.status(404).json({ success: false, message: 'Room not found' });
     
-    // Check if already a member
+     
     if (room.members.includes(req.user._id)) {
       return res.json({ success: true, message: 'Already a member', room });
     }

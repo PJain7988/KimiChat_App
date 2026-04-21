@@ -5,7 +5,7 @@ const Chat = require('../models/Chat');
 const { protect } = require('../middleware/auth');
 const upload = require('../config/multer');
 
-// ── Get communities ──────────────────────────────────────
+ 
 router.get('/', protect, async (req, res) => {
   try {
     const { q, category } = req.query;
@@ -24,7 +24,7 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// ── Get my communities ───────────────────────────────────
+ 
 router.get('/mine', protect, async (req, res) => {
   try {
     const communities = await Community.find({ members: req.user._id })
@@ -36,7 +36,7 @@ router.get('/mine', protect, async (req, res) => {
   }
 });
 
-// ── Create community ─────────────────────────────────────
+ 
 router.post('/', protect, upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'banner', maxCount: 1 }
@@ -79,7 +79,7 @@ router.post('/', protect, upload.fields([
   }
 });
 
-// ── Join community ───────────────────────────────────────
+ 
 router.post('/:id/join', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id);
@@ -103,7 +103,7 @@ router.post('/:id/join', protect, async (req, res) => {
   }
 });
 
-// ── Add member manually ──────────────────────────────────
+ 
 router.post('/:id/add-member', protect, async (req, res) => {
   try {
     const { username } = req.body;
@@ -134,7 +134,7 @@ router.post('/:id/add-member', protect, async (req, res) => {
   }
 });
 
-// ── Get single community ─────────────────────────────────
+ 
 router.get('/:id', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id)
@@ -148,13 +148,13 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// ── Kick member ──────────────────────────────────────────
+ 
 router.post('/:id/kick/:userId', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id);
     if (!community) return res.status(404).json({ success: false, message: 'Not found' });
 
-    // Check if requester is admin
+     
     if (!community.admins.includes(req.user._id) && community.creator.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
@@ -163,7 +163,7 @@ router.post('/:id/kick/:userId', protect, async (req, res) => {
     community.memberCount = community.members.length;
     await community.save();
 
-    // Also remove from chats
+     
     await Chat.findByIdAndUpdate(community.chat, { $pull: { participants: req.params.userId } });
     if (community.rooms?.length) {
       await Chat.updateMany({ _id: { $in: community.rooms } }, { $pull: { participants: req.params.userId } });
@@ -175,7 +175,7 @@ router.post('/:id/kick/:userId', protect, async (req, res) => {
   }
 });
 
-// ── Add Room (Group) ──────────────────────────────────────
+ 
 router.post('/:id/rooms', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id);
@@ -189,7 +189,7 @@ router.post('/:id/rooms', protect, async (req, res) => {
     const room = await Chat.create({
       name,
       isGroup: true,
-      participants: community.members, // All community members join the room by default
+      participants: community.members,  
       admins: [req.user._id],
     });
 
@@ -202,7 +202,7 @@ router.post('/:id/rooms', protect, async (req, res) => {
   }
 });
 
-// ── Update rules ─────────────────────────────────────────
+ 
 router.patch('/:id/rules', protect, async (req, res) => {
   try {
     const { rules } = req.body;

@@ -1,26 +1,23 @@
-// middleware/auth.js
+ 
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-/**
- * ✅ PROTECT MIDDLEWARE - Verify JWT token and load user
- * Required for protected routes
- */
+ 
 const protect = async (req, res, next) => {
   try {
     let token;
 
-    // 1️⃣ Get token from Authorization header
+     
     if (req.headers.authorization?.startsWith('Bearer ')) {
       token = req.headers.authorization.split(' ')[1];
     }
 
-    // 2️⃣ OR get token from cookies
+     
     if (!token && req.cookies?.token) {
       token = req.cookies.token;
     }
 
-    // 3️⃣ No token found
+     
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -28,7 +25,7 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // 4️⃣ Verify token signature and expiry
+     
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -51,12 +48,12 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // 5️⃣ Get user from database (exclude sensitive fields)
+     
     req.user = await User.findById(decoded.id).select(
       '-password -otp -otpExpiry -__v'
     );
 
-    // 6️⃣ Check if user still exists
+     
     if (!req.user) {
       return res.status(401).json({
         success: false,
@@ -64,7 +61,7 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // 7️⃣ Check if user is active/not deleted
+     
     if (req.user.isDeleted === true || req.user.isActive === false) {
       return res.status(401).json({
         success: false,
@@ -72,7 +69,7 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // ✅ All checks passed, proceed to next middleware
+     
     next();
   } catch (err) {
     console.error('❌ Auth error:', err.message);
@@ -83,16 +80,12 @@ const protect = async (req, res, next) => {
   }
 };
 
-/**
- * ✅ OPTIONAL AUTH MIDDLEWARE (NEW)
- * Doesn't throw error if no token - sets req.user if valid token exists
- * Useful for public routes that can be personalized for logged-in users
- */
+ 
 const optionalAuth = async (req, res, next) => {
   try {
     let token;
 
-    // Get token from header or cookies
+     
     if (req.headers.authorization?.startsWith('Bearer ')) {
       token = req.headers.authorization.split(' ')[1];
     }
@@ -101,7 +94,7 @@ const optionalAuth = async (req, res, next) => {
       token = req.cookies.token;
     }
 
-    // If token exists, try to verify and load user
+     
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -109,12 +102,12 @@ const optionalAuth = async (req, res, next) => {
           '-password -otp -otpExpiry -__v'
         );
 
-        // Set flag indicating user is authenticated
+         
         if (req.user) {
           req.isAuthenticated = true;
         }
       } catch (err) {
-        // Token invalid but continue anyway (optional auth)
+         
         console.warn('⚠️  Optional auth token invalid:', err.message);
         req.isAuthenticated = false;
       }
@@ -122,25 +115,21 @@ const optionalAuth = async (req, res, next) => {
       req.isAuthenticated = false;
     }
 
-    // Continue to next middleware regardless of token validity
+     
     next();
   } catch (err) {
     console.error('❌ Optional auth error:', err.message);
-    // Still continue - optional auth shouldn't block
+     
     req.isAuthenticated = false;
     next();
   }
 };
 
-/**
- * ✅ CHECK OWNERSHIP MIDDLEWARE (NEW)
- * Verify that user owns the resource
- * Usage: router.delete('/:id', protect, isOwner('userId'), deleteHandler)
- */
+ 
 const isOwner = (resourceUserIdField = 'user') => {
   return (req, res, next) => {
     try {
-      // Must be authenticated to check ownership
+       
       if (!req.user) {
         return res.status(401).json({
           success: false,
@@ -148,22 +137,22 @@ const isOwner = (resourceUserIdField = 'user') => {
         });
       }
 
-      // Get resource user ID from various sources
+       
       const resourceUserId =
-        req.params[resourceUserIdField] || // From URL params
-        req.body[resourceUserIdField] || // From request body
-        req.body.user || // Alternative body field
-        req.params.userId || // Alternative param
-        req.body.userId; // Alternative body
+        req.params[resourceUserIdField] ||  
+        req.body[resourceUserIdField] ||  
+        req.body.user ||  
+        req.params.userId ||  
+        req.body.userId;  
 
-      // If no resource user ID found, check direct ownership in params
+       
       if (!resourceUserId) {
         console.warn('⚠️  Resource user ID not found in request');
-        // Assume current user is the owner if no specific field
+         
         return next();
       }
 
-      // Compare user IDs as strings
+       
       const currentUserId = req.user._id.toString();
       const resourceOwnerIdStr = resourceUserId.toString();
 
@@ -174,7 +163,7 @@ const isOwner = (resourceUserIdField = 'user') => {
         });
       }
 
-      // ✅ User owns the resource
+       
       next();
     } catch (err) {
       console.error('❌ Ownership check error:', err.message);
@@ -186,11 +175,7 @@ const isOwner = (resourceUserIdField = 'user') => {
   };
 };
 
-/**
- * ✅ CHECK ADMIN MIDDLEWARE (NEW)
- * Verify that user is an admin
- * Usage: router.delete('/users/:id', protect, isAdmin, deleteUserHandler)
- */
+ 
 const isAdmin = (req, res, next) => {
   try {
     if (!req.user) {
@@ -200,7 +185,7 @@ const isAdmin = (req, res, next) => {
       });
     }
 
-    // Check if user has admin role
+     
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -218,11 +203,7 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-/**
- * ✅ GENERATE TOKEN
- * Create JWT token for user
- * Usage: const token = generateToken(user._id);
- */
+ 
 const generateToken = (userId) => {
   if (!userId) {
     throw new Error('User ID is required to generate token');
@@ -243,11 +224,7 @@ const generateToken = (userId) => {
   }
 };
 
-/**
- * ✅ VERIFY TOKEN (without loading user)
- * Just verify if token is valid
- * Usage: const decoded = verifyToken(token);
- */
+ 
 const verifyToken = (token) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

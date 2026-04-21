@@ -4,10 +4,7 @@ import useAuthStore from '../../context/authStore';
 import useChatStore from '../../context/chatStore';
 import styles from './Sidebar.module.css';
 
-/**
- * Sidebar Navigation Component
- * ✅ Fixed: Accessibility, proper state management, error handling
- */
+ 
 
 const NAV = [
   {
@@ -154,7 +151,7 @@ export default function Sidebar(props) {
   const { unread } = useChatStore();
   const [logoError, setLogoError] = useState(false);
 
-  // ✅ FIX: Safe unread calculation
+   
   const totalUnread = useMemo(() => {
     if (!unread || typeof unread !== 'object') return 0;
     return Object.values(unread).reduce((sum, count) => {
@@ -163,13 +160,13 @@ export default function Sidebar(props) {
     }, 0);
   }, [unread]);
 
-  // ✅ FIX: Memoized isActive check
+   
   const isActive = useCallback((path) => {
     if (!location?.pathname) return false;
     return location.pathname.includes(`/app/${path}`);
   }, [location?.pathname]);
 
-  // ✅ FIX: Safe initials calculation
+   
   const initials = useMemo(() => {
     if (!user?.name || typeof user.name !== 'string') return 'K';
     return user.name
@@ -210,7 +207,7 @@ export default function Sidebar(props) {
       role="navigation"
       aria-label="Main navigation">
 
-      {/* ── Logo ── */}
+      { }
       <div
         className={styles.logoWrap}
         onClick={handleLogoClick}
@@ -247,10 +244,10 @@ export default function Sidebar(props) {
         )}
       </div>
 
-      {/* ── Divider ── */}
+      { }
       <div className={styles.divider} aria-hidden="true" />
 
-      {/* ── Active Call Indicator ── */}
+      { }
       {activeCall && (
         <div style={{
           margin: '10px 8px', padding: '12px 8px', borderRadius: 16,
@@ -274,7 +271,7 @@ export default function Sidebar(props) {
         </div>
       )}
 
-      {/* ── Nav ── */}
+      { }
       <nav className={styles.nav} aria-label="Main menu">
         {NAV.map(({ path, icon, label }) => {
           const active = isActive(path);
@@ -289,18 +286,18 @@ export default function Sidebar(props) {
               aria-label={`${label}${hasUnread ? `, ${totalUnread} unread messages` : ''}`}
               title={label}>
 
-              {/* Active indicator bar */}
+              { }
               {active && <span className={styles.activeBar} aria-hidden="true" />}
 
-              {/* Icon */}
+              { }
               <span className={styles.navIcon} aria-hidden="true">
                 {icon}
               </span>
 
-              {/* Label */}
+              { }
               <span className={styles.navLabel}>{label}</span>
 
-              {/* Unread badge */}
+              { }
               {hasUnread && (
                 <span
                   className={styles.badge}
@@ -315,10 +312,10 @@ export default function Sidebar(props) {
 
       <div className={styles.spacer} />
 
-      {/* ── Settings ── */}
+      { }
       <div className={styles.bottomNav} role="navigation" aria-label="Secondary menu">
 
-        {/* Settings Button */}
+        { }
         <button
           className={`${styles.navBtn} ${isActive('profile') ? styles.navActive : ''}`}
           onClick={() => handleNavClick('profile')}
@@ -343,7 +340,7 @@ export default function Sidebar(props) {
           <span className={styles.navLabel}>Settings</span>
         </button>
 
-        {/* ── Avatar ── */}
+        { }
         <button
           className={styles.avatarBtn}
           onClick={handleProfileClick}

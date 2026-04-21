@@ -6,9 +6,7 @@ import api from '../../utils/api';
 import Avatar from '../ui/Avatar';
 import toast from 'react-hot-toast';
 
-/**
- * SearchPanel Component - Global discovery and search interface
- */
+ 
 
 const TABS = ['All', 'People', 'Groups', 'Communities'];
 
@@ -93,7 +91,7 @@ export default function SearchPanel() {
     try {
       await api.post(`/community/${id}/join`);
       
-      // ✅ Dynamic update: Add community to local user state
+       
       if (user) {
         const updatedUser = {
           ...user,
@@ -102,7 +100,7 @@ export default function SearchPanel() {
         setUser(updatedUser);
       }
       
-      // ✅ Dynamic update: Refresh group/chat list for accurate counts
+       
       fetchChats();
       
       toast.success(`Joined ${name}! ✨`);

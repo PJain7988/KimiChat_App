@@ -6,7 +6,7 @@ import Avatar from '../ui/Avatar';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
 
-/* ── SVG icon helpers ─────────────────────────── */
+ 
 const Icon = {
   pencil: (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -79,7 +79,7 @@ const Icon = {
   ),
 };
 
-/* ── Filter options ───────────────────────────── */
+ 
 const FILTER_OPTS = [
   { key: 'all', label: 'All' },
   { key: 'unread', label: 'Unread' },
@@ -87,7 +87,7 @@ const FILTER_OPTS = [
   { key: 'ai', label: 'AI Chats' },
 ];
 
-/* ── About Modal ──────────────────────────── */
+ 
 function AboutModal({ onClose }) {
   return (
     <div style={{
@@ -102,13 +102,13 @@ function AboutModal({ onClose }) {
         animation: 'modalIn .25s cubic-bezier(.34,1.56,.64,1)',
         display: 'flex', flexDirection: 'column', overflowY: 'auto',
       }}>
-        {/* Header */}
+        { }
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700 }}>About</div>
           <button onClick={onClose} style={ghostBtn}>{Icon.close}</button>
         </div>
 
-        {/* Logo Section */}
+        { }
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
             width: 140, height: 140, margin: '0 auto 16px',
@@ -134,9 +134,9 @@ function AboutModal({ onClose }) {
           </div>
         </div>
 
-        {/* Info Fields */}
+        { }
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 24 }}>
-          {/* Name */}
+          { }
           <div style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border2)',
@@ -151,7 +151,7 @@ function AboutModal({ onClose }) {
             </div>
           </div>
 
-          {/* Version */}
+          { }
           <div style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border2)',
@@ -166,7 +166,7 @@ function AboutModal({ onClose }) {
             </div>
           </div>
 
-          {/* Build Number */}
+          { }
           <div style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border2)',
@@ -181,7 +181,7 @@ function AboutModal({ onClose }) {
             </div>
           </div>
 
-          {/* Build Date */}
+          { }
           <div style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border2)',
@@ -196,7 +196,7 @@ function AboutModal({ onClose }) {
             </div>
           </div>
 
-          {/* Contact Support */}
+          { }
           <div style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border2)',
@@ -217,7 +217,7 @@ function AboutModal({ onClose }) {
             </a>
           </div>
 
-          {/* Developer */}
+          { }
           <div style={{
             background: 'rgba(255,255,255,0.04)',
             border: '1.5px solid var(--border2)',
@@ -233,7 +233,7 @@ function AboutModal({ onClose }) {
           </div>
         </div>
 
-        {/* Footer */}
+        { }
         <div style={{
           textAlign: 'center', fontSize: 12, color: 'var(--text-dim)',
           borderTop: '1px solid var(--border2)', paddingTop: 16, marginTop: 'auto',
@@ -252,7 +252,7 @@ function AboutModal({ onClose }) {
           </div>
         </div>
 
-        {/* Close Button */}
+        { }
         <button onClick={onClose} style={{
           ...primaryBtnStyle,
           width: '100%', marginTop: 20,
@@ -262,7 +262,7 @@ function AboutModal({ onClose }) {
   );
 }
 
-/* ── New Group Modal ──────────────────────────── */
+ 
 function NewGroupModal({ onClose }) {
   const [name, setName] = useState('');
   const [searchQ, setSearchQ] = useState('');
@@ -354,7 +354,7 @@ function NewGroupModal({ onClose }) {
           />
         </div>
 
-        {/* Search results */}
+        { }
         {(searchLoading || searchResults.length > 0) && (
           <div style={{
             background: 'rgba(255,255,255,0.03)',
@@ -385,7 +385,7 @@ function NewGroupModal({ onClose }) {
           </div>
         )}
 
-        {/* Selected members */}
+        { }
         {members.length > 0 && (
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-dim)', marginBottom: 8 }}>
@@ -424,7 +424,7 @@ function NewGroupModal({ onClose }) {
   );
 }
 
-/* ── Join Group Modal ─────────────────────────── */
+ 
 function JoinGroupModal({ onClose }) {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -479,7 +479,7 @@ function JoinGroupModal({ onClose }) {
   );
 }
 
-/* ── New Chat Modal ───────────────────────────── */
+ 
 function NewChatModal({ onClose }) {
   const [q, setQ] = useState('');
   const [results, setResults] = useState([]);
@@ -495,7 +495,7 @@ function NewChatModal({ onClose }) {
         await fetchChats();
         openChat(res.data.chat);
         onClose();
-        navigate('/app/chat'); // Ensure correct route
+        navigate('/app/chat');  
       }
     } catch (err) {
       toast.error('Could not connect to AI');
@@ -590,7 +590,7 @@ function NewChatModal({ onClose }) {
   );
 }
 
-/* ── Shared micro styles ──────────────────────── */
+ 
 const ghostBtn = {
   width: 30, height: 30, borderRadius: 8,
   background: 'rgba(255,255,255,0.06)', border: 'none',
@@ -624,9 +624,7 @@ const cancelBtnStyle = {
   fontSize: 14, fontWeight: 600, cursor: 'pointer',
 };
 
-/* ══════════════════════════════════════════════
-   MAIN COMPONENT
-══════════════════════════════════════════════ */
+ 
 export default function ChatList({ className }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -638,7 +636,7 @@ export default function ChatList({ className }) {
   const [showMenu, setShowMenu] = useState(false);
   const [hoveredChatId, setHoveredChatId] = useState(null);
   const [itemMenuId, setItemMenuId] = useState(null);
-  const [modal, setModal] = useState(null); // 'newChat' | 'newGroup' | 'joinGroup' | 'about'
+  const [modal, setModal] = useState(null);  
   
   const [pinnedChats, setPinnedChats] = useState(() => JSON.parse(localStorage.getItem('kc_pinned_chats') || '[]'));
   const [mutedChats, setMutedChats] = useState(() => JSON.parse(localStorage.getItem('kc_muted_chats') || '[]'));
@@ -646,7 +644,7 @@ export default function ChatList({ className }) {
   const menuRef = useRef(null);
   const filterRef = useRef(null);
 
-  /* Close dropdowns on outside click */
+   
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false);
@@ -661,7 +659,7 @@ export default function ChatList({ className }) {
     fetchMessages(chat._id);
   };
 
-  /* Apply search + filter */
+   
   const filtered = chats
     .filter(c => {
       const name = getChatDisplayName(c, user._id);
@@ -677,7 +675,7 @@ export default function ChatList({ className }) {
       const bPinned = pinnedChats.includes(b._id);
       if (aPinned && !bPinned) return -1;
       if (!aPinned && bPinned) return 1;
-      // Secondary sort: most recent message
+       
       const aTime = a.lastMessage?.createdAt ? new Date(a.lastMessage.createdAt).getTime() : 0;
       const bTime = b.lastMessage?.createdAt ? new Date(b.lastMessage.createdAt).getTime() : 0;
       return bTime - aTime;
@@ -700,15 +698,15 @@ export default function ChatList({ className }) {
   };
 
   const deleteChatLocally = (chatId) => {
-    // In many apps, delete is a server action, but here we can at least toast and prompt
-    // Or we could implement a local 'hide' logic. For now, let's keep it simple.
+     
+     
     toast.error('Chat deleted locally');
     setItemMenuId(null);
   };
 
   const activeFilterLabel = FILTER_OPTS.find(f => f.key === filter)?.label || 'All';
 
-  /* Three-dot menu items */
+   
   const MENU_ITEMS = [
     { icon: Icon.newGroup, label: 'New Group', onClick: () => { setModal('newGroup'); setShowMenu(false); } },
     { icon: Icon.joinGroup, label: 'Join Group', onClick: () => { setModal('joinGroup'); setShowMenu(false); } },
@@ -720,7 +718,7 @@ export default function ChatList({ className }) {
 
   return (
     <>
-      {/* ── Keyframes for modals ── */}
+      { }
       <style>{`
         @keyframes modalIn { from{opacity:0;transform:scale(.94) translateY(8px)} to{opacity:1;transform:scale(1) translateY(0)} }
         @keyframes dropIn  { from{opacity:0;transform:translateY(-6px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
@@ -733,7 +731,7 @@ export default function ChatList({ className }) {
         height: '100%', overflow: 'hidden',
       }}>
 
-        {/* ── Header ── */}
+        { }
         <div style={{
           padding: '18px 16px 12px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -745,7 +743,7 @@ export default function ChatList({ className }) {
 
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
 
-            {/* ── Pencil → New Chat ── */}
+            { }
             <button
               title="New Chat"
               onClick={() => setModal('newChat')}
@@ -756,7 +754,7 @@ export default function ChatList({ className }) {
               {Icon.pencil}
             </button>
 
-            {/* ── Filter ── */}
+            { }
             <div ref={filterRef} style={{ position: 'relative' }}>
               <button
                 title="Filter chats"
@@ -784,7 +782,7 @@ export default function ChatList({ className }) {
                 )}
               </button>
 
-              {/* Filter dropdown */}
+              { }
               {showFilter && (
                 <div style={dropdownStyle}>
                   <div style={dropLabel}>Filter by</div>
@@ -806,7 +804,7 @@ export default function ChatList({ className }) {
               )}
             </div>
 
-            {/* ── Three dots ── */}
+            { }
             <div ref={menuRef} style={{ position: 'relative' }}>
               <button
                 title="More options"
@@ -822,7 +820,7 @@ export default function ChatList({ className }) {
                 {Icon.dots}
               </button>
 
-              {/* Dropdown menu */}
+              { }
               {showMenu && (
                 <div style={dropdownStyle}>
                   {MENU_ITEMS.map((item, i) =>
@@ -846,7 +844,7 @@ export default function ChatList({ className }) {
           </div>
         </div>
 
-        {/* ── Active filter pill ── */}
+        { }
         {filter !== 'all' && (
           <div style={{ padding: '0 16px 10px', display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{
@@ -866,7 +864,7 @@ export default function ChatList({ className }) {
           </div>
         )}
 
-        {/* ── Search ── */}
+        { }
         <div style={{ margin: '0 16px 12px', position: 'relative', flexShrink: 0 }}>
           <span style={{
             position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
@@ -895,7 +893,7 @@ export default function ChatList({ className }) {
           )}
         </div>
 
-        {/* ── Chat list ── */}
+        { }
         <div style={{ flex: 1, overflowY: 'auto', padding: '0 8px 8px' }}>
           {filtered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '48px 20px', color: 'var(--text-dim)' }}>
@@ -1023,7 +1021,7 @@ export default function ChatList({ className }) {
         </div>
       </div>
 
-      {/* ── Modals ── */}
+      { }
       {modal === 'newChat' && <NewChatModal onClose={() => setModal(null)} />}
       {modal === 'newGroup' && <NewGroupModal onClose={() => setModal(null)} />}
       {modal === 'joinGroup' && <JoinGroupModal onClose={() => setModal(null)} />}
@@ -1032,7 +1030,7 @@ export default function ChatList({ className }) {
   );
 }
 
-/* ── Dropdown shared styles ─────────────────── */
+ 
 const dropdownStyle = {
   position: 'absolute', top: 'calc(100% + 8px)', right: 0,
   background: 'var(--bg-card)',
@@ -1078,7 +1076,7 @@ const applyHover = (e, on) => {
   e.currentTarget.style.color = on ? 'var(--text)' : 'var(--text-dim)';
 };
 
-/* ── Helpers ────────────────────────────────── */
+ 
 function getChatDisplayName(chat, userId) {
   if (chat.isAI) return 'Kimi AI';
   if (chat.isGroup) return chat.name || 'Group';

@@ -36,17 +36,17 @@ export default function MainApp() {
     }
   }, []);
 
-  // ── CALL SIGNALING RECOVERY & MANAGEMENT ──
+   
   const handleIncomingCall = useCallback((data) => {
     console.log('📬 [SIGNAL] handleIncomingCall triggered with data:', data);
 
-    // 0. Ensure we don't handle our own signals (echo)
+     
     if (isSameId(data.from?._id, user?._id)) {
       console.log('🔄 [SIGNAL] Echo ignored');
       return;
     }
 
-    // 1. Check if actually for us
+     
     const targetId = data.targetUserId ? String(data.targetUserId) : null;
     const myId = user?._id ? String(user._id) : null;
 
@@ -61,12 +61,12 @@ export default function MainApp() {
       console.error('❌ [SIGNAL] Received call but user ID is missing from local state!');
     }
 
-    // 2. Reject if busy (ONLY if it's someone else calling us)
+     
     if (activeCallRef.current) {
       const busyWithId = activeCallRef.current.user?._id;
       const callerId = data.from?._id;
 
-      // If NOT us echoing back, and NOT already talking to this person
+       
       if (!isSameId(callerId, user?._id) && !isSameId(callerId, busyWithId)) {
         console.warn('⚠️ [SIGNAL] Busy - Rejecting incoming call from:', callerId);
         const s = getSocket();
@@ -80,7 +80,7 @@ export default function MainApp() {
 
     console.log('🔔 [SIGNAL] Legitimate incoming call from:', data.from?.name);
 
-    // 3. Trigger Overlay
+     
     setActiveCall({
       ...data,
       isIncoming: true,
@@ -90,7 +90,7 @@ export default function MainApp() {
       status: 'incoming'
     });
 
-    // 4. Trigger Professional Toast
+     
     toast.custom((t) => (
       <div style={{
         background: '#050c18', color: '#fff', padding: '16px 20px', borderRadius: '18px',
@@ -140,12 +140,12 @@ export default function MainApp() {
     if (s.connected) register();
     s.on('connect', register);
 
-    // Call signaling handshake confirmed
+     
     s.on('socket:registered', ({ userId }) => {
       console.log('✅ [SOCKET] Handshake Successful:', userId);
     });
 
-    // ── CORE SIGNALING SUITE ──
+     
     s.on('call:incoming', (data) => {
       console.log('📩 Signal: Direct/Room incoming call');
       handleIncomingCall(data);
@@ -180,7 +180,7 @@ export default function MainApp() {
       setActiveCall(null);
     });
 
-    // Chat/Message listeners...
+     
     s.on('message:new', ({ chatId, message }) => {
       const id = chatId || message.chat?._id || message.chat;
       addIncomingMessage(message);
@@ -224,7 +224,7 @@ export default function MainApp() {
 
     const tid = targetUser._id || targetUser;
 
-    // ATOMIC STATE UPDATE - MUST HAPPEN FIRST
+     
     const uniqueSession = `call_${Date.now()}`;
     const callData = {
       user: typeof targetUser === 'object' ? targetUser : { _id: tid, name: 'User' },
@@ -240,7 +240,7 @@ export default function MainApp() {
     setActiveCall(callData);
     activeCallRef.current = callData;
 
-    // Async signaling follow-up
+     
     setTimeout(() => {
       const s = getSocket();
       if (s) {
@@ -277,7 +277,7 @@ export default function MainApp() {
     if (!activeCall) return;
     const s = getSocket();
     if (s) s.emit('call:reject', { targetUserId: String(activeCall.user._id) });
-    saveCallLog(activeCall, 'missed'); // Log as missed if rejected
+    saveCallLog(activeCall, 'missed');  
     setActiveCall(null);
   };
 

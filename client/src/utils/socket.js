@@ -10,7 +10,7 @@ export const initSocket = (userId) => {
     return socket;
   }
 
-  // Create socket if not exists or not connected
+   
   socket = io(import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com', {
     withCredentials: true,
     transports: ['websocket', 'polling'],

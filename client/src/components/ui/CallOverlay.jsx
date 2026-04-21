@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Avatar from './Avatar';
 import { getSocket } from '../../utils/socket';
 
-/**
- * Premium CallOverlay Component
- * Features: Video/Audio WebRTC, Floating local preview, Professional Glassmorphism
- */
+ 
 export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeople }) {
   console.log("🔔 [OVERLAY] Rendering with user:", call.user?.name, "Status:", call.status);
   
@@ -27,7 +24,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
     if (call?.status) setStatus(call.status);
   }, [call?.status]);
 
-  // Duration timer
+   
   useEffect(() => {
     if (status === 'connected' && !timerRef.current) {
       timerRef.current = setInterval(() => setDuration(d => d + 1), 1000);
@@ -35,7 +32,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [status]);
 
-  // Ringtone / Calling Sound
+   
   useEffect(() => {
     if (status === 'connected' || status === 'ended') return;
     
@@ -59,7 +56,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
     return () => { if(ctx) ctx.close(); };
   }, [status]);
 
-  // WebRTC Setup
+   
   useEffect(() => {
     if (status === 'connected') {
       initWebRTC();
@@ -171,7 +168,7 @@ export default function CallOverlay({ call, onEnd, onAccept, onReject, onAddPeop
       </div>
 
       <div style={containerStyle}>
-        {/* User Profile Info */}
+        { }
         <div style={{ textAlign: 'center', marginBottom: 40, zIndex: 10 }}>
           <div className="calling-avatar" style={avatarContainerStyle}>
             <Avatar 

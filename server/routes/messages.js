@@ -5,7 +5,7 @@ const Chat = require('../models/Chat');
 const { protect } = require('../middleware/auth');
 const { triggerAIReply } = require('../services/aiService');
 
-// ── Send Message ─────────────────────────────────────────
+ 
 router.post('/', protect, async (req, res) => {
   try {
     const { chatId, content, type = 'text', fileUrl, sticker, replyTo } = req.body;
@@ -24,7 +24,7 @@ router.post('/', protect, async (req, res) => {
       readBy: [req.user._id],
     });
 
-    // Update chat's lastMessage
+     
     await Chat.findByIdAndUpdate(chatId, {
       lastMessage: message._id,
       updatedAt: new Date(),
@@ -32,10 +32,10 @@ router.post('/', protect, async (req, res) => {
 
     const populated = await message.populate('sender', 'name username avatar avatarColor');
     
-    // 🤖 TRIGGER AI REPLY IF APPLICABLE
+     
     if (chat.isAI && type === 'text') {
       const io = req.app.get('io');
-      // We don't await this so the user gets their 201 response immediately
+       
       triggerAIReply(io, chatId, content).catch(err => console.error('AI Reply Error:', err));
     }
 
@@ -45,7 +45,7 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// ── React to message ─────────────────────────────────────
+ 
 router.post('/:id/react', protect, async (req, res) => {
   try {
     const { emoji } = req.body;
@@ -65,7 +65,7 @@ router.post('/:id/react', protect, async (req, res) => {
   }
 });
 
-// ── Delete message ───────────────────────────────────────
+ 
 router.delete('/:id', protect, async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);
