@@ -48,10 +48,10 @@ router.post('/', protect, upload.fields([
     let bannerUrl = '';
     if (req.files) {
       if (req.files.avatar) {
-        avatarUrl = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.avatar[0].filename}`;
+        avatarUrl = `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/uploads/${req.files.avatar[0].filename}`;
       }
       if (req.files.banner) {
-        bannerUrl = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.banner[0].filename}`;
+        bannerUrl = `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/uploads/${req.files.banner[0].filename}`;
       }
     }
 

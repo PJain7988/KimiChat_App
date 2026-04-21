@@ -178,7 +178,7 @@ router.post('/verify-otp', async (req, res) => {
 
 /* ═══════════════════════════════════════════════════════
    GOOGLE OAUTH  via Passport
-   Redirect URI → http://localhost:5000/api/auth/google/callback
+   Redirect URI → https://kimichat-app.onrender.com/api/auth/google/callback
 ═══════════════════════════════════════════════════════ */
 router.get('/google/redirect',
   passport.authenticate('google', {
@@ -201,7 +201,7 @@ router.get('/google/callback',
 
 /* ═══════════════════════════════════════════════════════
    GITHUB OAUTH  via Passport
-   Callback URL → http://localhost:5000/api/auth/github/callback
+   Callback URL → https://kimichat-app.onrender.com/api/auth/github/callback
 ═══════════════════════════════════════════════════════ */
 router.get('/github/redirect',
   passport.authenticate('github', {
@@ -224,7 +224,7 @@ router.get('/github/callback',
 
 /* ═══════════════════════════════════════════════════════
    DISCORD OAUTH  via Passport
-   Redirect URI → http://localhost:5000/api/auth/discord/callback
+   Redirect URI → https://kimichat-app.onrender.com/api/auth/discord/callback
 ═══════════════════════════════════════════════════════ */
 router.get('/discord/redirect',
   passport.authenticate('discord', { session: false })

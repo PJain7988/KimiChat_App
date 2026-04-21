@@ -96,13 +96,13 @@ router.put('/update/profile', protect, upload.fields([
 
     if (req.files) {
       if (req.files.avatar && req.files.avatar[0]) {
-        update.avatar = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.avatar[0].filename}`;
+        update.avatar = `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/uploads/${req.files.avatar[0].filename}`;
       }
       if (req.files.backgroundImage && req.files.backgroundImage[0]) {
-        update.backgroundImage = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.backgroundImage[0].filename}`;
+        update.backgroundImage = `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/uploads/${req.files.backgroundImage[0].filename}`;
       }
       if (req.files.music && req.files.music[0]) {
-        update.music = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.music[0].filename}`;
+        update.music = `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/uploads/${req.files.music[0].filename}`;
         update.musicTitle = musicTitle || req.files.music[0].originalname;
         update.musicArtist = musicArtist || 'Unknown Artist';
       }

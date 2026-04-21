@@ -106,7 +106,7 @@ async function findOrCreateUser({ provider, providerId, name, email, avatar }) {
    - Console: https://console.cloud.google.com
    - Create OAuth 2.0 Client ID (Web application)
    - Authorized redirect URIs:
-     * http://localhost:5000/api/auth/google/callback (dev)
+     * https://kimichat-app.onrender.com/api/auth/google/callback (dev)
      * https://yourdomain.com/api/auth/google/callback (prod)
 ═══════════════════════════════════════════════════════ */
 
@@ -116,7 +116,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/auth/google/callback`,
+      callbackURL: `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/api/auth/google/callback`,
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
@@ -162,7 +162,7 @@ passport.use(
    - Dashboard: https://github.com/settings/developers
    - Create New OAuth App
    - Authorization callback URL:
-     * http://localhost:5000/api/auth/github/callback (dev)
+     * https://kimichat-app.onrender.com/api/auth/github/callback (dev)
      * https://yourdomain.com/api/auth/github/callback (prod)
 ═══════════════════════════════════════════════════════ */
 
@@ -172,7 +172,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/auth/github/callback`,
+      callbackURL: `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/api/auth/github/callback`,
       scope: ['user:email', 'read:user'],
       passReqToCallback: true,
     },
@@ -244,7 +244,7 @@ passport.use(
    - Dev Portal: https://discord.com/developers/applications
    - Create New Application
    - OAuth2 → Redirects → Add:
-     * http://localhost:5000/api/auth/discord/callback (dev)
+     * https://kimichat-app.onrender.com/api/auth/discord/callback (dev)
      * https://yourdomain.com/api/auth/discord/callback (prod)
 ═══════════════════════════════════════════════════════ */
 
@@ -254,7 +254,7 @@ passport.use(
     {
       clientID: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/auth/discord/callback`,
+      callbackURL: `${process.env.SERVER_URL || 'https://kimichat-app.onrender.com'}/api/auth/discord/callback`,
       scope: ['identify', 'email'],
       passReqToCallback: true,
     },
