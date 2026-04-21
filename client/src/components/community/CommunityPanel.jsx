@@ -313,7 +313,7 @@ export default function CommunityPanel() {
                <div 
                  onClick={() => fileRef.current?.click()}
                  style={{ 
-                    width: 100, height: 100, borderRadius: 24, background: 'var(--bg-dark)', 
+                    width: 100, height: 100, borderRadius: 24, 
                     border: '2px dashed var(--border)', display: 'flex', flexDirection: 'column', 
                     alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden',
                     background: avatarPreview ? `url(${avatarPreview}) center/cover no-repeat` : 'var(--bg-dark)'

@@ -22,16 +22,26 @@ module.exports = (io) => {
     console.log(`🔌 Socket connected: ${socket.id}`);
 
     // ── User comes online ─────────────────────────────────
-    socket.on('user:online', async (userId) => {
+    socket.on('user:online', async (rawUserId) => {
+      if (!rawUserId) {
+        console.error('❌ [SOCKET] user:online called without userId');
+        return;
+      }
+      const userId = String(rawUserId);
       onlineUsers.set(userId, socket.id);
-      socket.userId = userId;
-      socket.join(`user:${userId}`); // Join personal room
+      
+      socket.data.userId = userId; 
+      socket.userId = userId; 
+      
+      const userRoom = `user:${userId}`;
+      socket.join(userRoom); 
 
       await User.findByIdAndUpdate(userId, { isOnline: true, socketId: socket.id });
 
-      // Broadcast to all
       io.emit('user:status', { userId, isOnline: true });
-      console.log(`✅ User online: ${userId}`);
+      console.log(`✅ [SOCKET] User ${userId} is online and joined room: ${userRoom}`);
+      
+      socket.emit('socket:registered', { userId });
     });
 
     // ── Join chat rooms ───────────────────────────────────
@@ -125,44 +135,83 @@ module.exports = (io) => {
     });
 
     // ── WebRTC Signaling ──────────────────────────────────
-    socket.on('call:initiate', ({ targetUserId, callerId, callerName, callerAvatar, callType }) => {
-      const targetSocket = onlineUsers.get(targetUserId);
-      if (targetSocket) {
-        io.to(targetSocket).emit('call:incoming', {
-          callerId,
-          callerName,
-          callerAvatar,
-          callType,
-          socketId: socket.id,
-        });
+    socket.on('call:initiate', async ({ targetUserId, type }) => {
+      const targetId = String(targetUserId);
+      const callerId = String(socket.userId);
+      
+      console.log(`📞 [CALL] ${callerId} is calling ${targetId} (type: ${type})`);
+
+      const caller = await User.findById(callerId).select('_id name username avatar avatarColor');
+      if (caller) {
+        // Emit to target user's room
+        // 1. Try Room-based delivery (Primary)
+        const targetRoom = `user:${targetId}`;
+        console.log(`📡 [CALL] Attempting primary delivery to room: ${targetRoom}`);
+        io.to(targetRoom).emit('call:incoming', { from: caller, type });
+
+        // 2. Fallback: Search all sockets for the matching userId property
+        // This handles cases where room joining might have failed or lagged
+        const allSockets = await io.fetchSockets();
+        let fallbackSent = 0;
+        for (const s of allSockets) {
+          if (String(s.userId) === targetId || String(s.data?.userId) === targetId) {
+            console.log(`🔗 [CALL] Fallback match found on socket ${s.id}. Sending signal...`);
+            io.to(s.id).emit('call:incoming', { from: caller, type });
+            fallbackSent++;
+          }
+        }
+
+        // 3. Ultimate Fallback: Broadcast to EVERYONE (Diagnostic Only - Remove after testing)
+        // console.log('📢 [DIAGNOSTIC] Broadcasting to ALL sockets as fallback');
+        // io.emit('call:incoming', { from: caller, type, isGlobalBroadcast: true });
+
+        if (fallbackSent === 0) {
+          console.warn(`⚠️ [CALL] No active sockets found for user ${targetId} via room or property search. Target may be offline.`);
+          // Silent debug broadcast to help identify if client is listening at all
+          io.emit('call:debug', { targetId, from: caller.name });
+        } else {
+          console.log(`✅ [CALL] Signal delivered via ${fallbackSent} socket matches`);
+        }
       } else {
-        socket.emit('call:unavailable', { targetUserId });
+        console.error(`❌ [CALL] Caller ${callerId} not found in database`);
+        socket.emit('error', { message: 'Signaling error: Caller not found' });
       }
     });
 
-    socket.on('call:accept', ({ callerSocketId, callType }) => {
-      io.to(callerSocketId).emit('call:accepted', { callType });
+    socket.on('call:accept', ({ targetUserId }) => {
+      const targetId = String(targetUserId);
+      console.log(`✅ [CALL] Accepted by recipient, notifying caller: ${targetId}`);
+      io.to(`user:${targetId}`).emit('call:accepted', { fromUserId: socket.userId });
     });
 
-    socket.on('call:reject', ({ callerSocketId }) => {
-      io.to(callerSocketId).emit('call:rejected');
+    socket.on('call:reject', ({ targetUserId }) => {
+      const targetId = String(targetUserId);
+      console.log(`❌ [CALL] Rejected by recipient, notifying caller: ${targetId}`);
+      io.to(`user:${targetId}`).emit('call:rejected', { fromUserId: socket.userId });
     });
 
-    socket.on('call:end', ({ targetSocketId }) => {
-      if (targetSocketId) io.to(targetSocketId).emit('call:ended');
+    socket.on('call:end', ({ targetUserId }) => {
+      const targetId = String(targetUserId);
+      console.log(`📴 [CALL] Ended, notifying other party: ${targetId}`);
+      io.to(`user:${targetId}`).emit('call:ended', { fromUserId: socket.userId });
     });
 
     // WebRTC offer/answer/ice
-    socket.on('webrtc:offer', ({ targetSocketId, offer }) => {
-      io.to(targetSocketId).emit('webrtc:offer', { offer, fromSocketId: socket.id });
+    socket.on('webrtc:offer', ({ targetSocketId, targetUserId, offer }) => {
+      const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
+      console.log(`📤 RTC Offer to ${room}`);
+      io.to(room).emit('webrtc:offer', { offer, fromSocketId: socket.id, fromUserId: socket.userId });
     });
 
-    socket.on('webrtc:answer', ({ targetSocketId, answer }) => {
-      io.to(targetSocketId).emit('webrtc:answer', { answer });
+    socket.on('webrtc:answer', ({ targetSocketId, targetUserId, answer }) => {
+      const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
+      console.log(`📥 RTC Answer to ${room}`);
+      io.to(room).emit('webrtc:answer', { answer });
     });
 
-    socket.on('webrtc:ice', ({ targetSocketId, candidate }) => {
-      io.to(targetSocketId).emit('webrtc:ice', { candidate });
+    socket.on('webrtc:ice', ({ targetSocketId, targetUserId, candidate }) => {
+      const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
+      io.to(room).emit('webrtc:ice', { candidate });
     });
 
     // ── Status updates ────────────────────────────────────

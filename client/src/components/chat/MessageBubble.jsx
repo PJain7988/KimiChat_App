@@ -203,7 +203,6 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
           lineHeight: 1.55,
           wordBreak: 'break-word',
           boxShadow: isAI ? '0 0 16px rgba(0,201,177,0.15)' : 'none',
-          border: isAI ? '1px solid rgba(0,201,177,0.25)' : 'none',
           background: isDeleted
             ? 'rgba(255,255,255,0.04)'
             : isMe
@@ -212,7 +211,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
                 ? 'linear-gradient(135deg,rgba(0,201,177,0.12),rgba(26,140,255,0.12))'
                 : 'var(--bg-card2)',
           color: isMe ? '#000' : 'var(--text)',
-          border: isAI && !isMe ? '1px solid rgba(0,201,177,0.2)' : 'none',
+          border: isAI && !isMe ? '1px solid rgba(0,201,177,0.3)' : 'none',
           fontStyle: isDeleted ? 'italic' : 'normal',
           opacity: isDeleted ? 0.6 : message.isOptimistic ? 0.75 : 1,
           position: 'relative',
