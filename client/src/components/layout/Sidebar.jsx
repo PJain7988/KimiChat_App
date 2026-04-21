@@ -146,7 +146,8 @@ const NAV = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar(props) {
+  const { activeCall, endCall } = props;
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuthStore();
@@ -248,6 +249,30 @@ export default function Sidebar() {
 
       {/* ── Divider ── */}
       <div className={styles.divider} aria-hidden="true" />
+
+      {/* ── Active Call Indicator ── */}
+      {activeCall && (
+        <div style={{
+          margin: '10px 8px', padding: '12px 8px', borderRadius: 16,
+          background: 'rgba(0,201,177,0.1)', border: '1px solid rgba(0,201,177,0.3)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+          animation: 'pulse-slow 2s infinite'
+        }}>
+          <div style={{ fontSize: 10, color: 'var(--teal)', fontWeight: 800, textTransform: 'uppercase' }}>Active Call</div>
+          <div style={{ fontSize: 12, fontWeight: 600, textAlign: 'center', color: '#fff' }}>
+            {activeCall.isIncoming ? activeCall.callerName : activeCall.targetName}
+          </div>
+          <button 
+            onClick={() => window.scrollTo(0,0)} 
+            style={{ 
+              fontSize: 10, background: 'var(--teal)', border: 'none', 
+              borderRadius: 8, padding: '4px 10px', color: '#000', fontWeight: 700 
+            }}
+          >
+            Show
+          </button>
+        </div>
+      )}
 
       {/* ── Nav ── */}
       <nav className={styles.nav} aria-label="Main menu">

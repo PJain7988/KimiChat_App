@@ -870,8 +870,24 @@ export default function ChatPanel({ onStartCall }) {
                       }
                       return null;
                     })()}
-                    <HeaderBtn icon="📞" title="Audio Call" onClick={() => onStartCall?.(getOtherUser(activeChat), 'audio')} />
-                    <HeaderBtn icon="📹" title="Video Call" onClick={() => onStartCall?.(getOtherUser(activeChat), 'video')} />
+                    <HeaderBtn 
+                      icon="📞" 
+                      title="Audio Call" 
+                      onClick={() => {
+                        console.log('📞 HeaderBtn: Audio Call Clicked');
+                        toast('Initiating audio call...', { icon: '📞' });
+                        onStartCall?.(getOtherUser(activeChat), 'audio');
+                      }} 
+                    />
+                    <HeaderBtn 
+                      icon="📹" 
+                      title="Video Call" 
+                      onClick={() => {
+                        console.log('📹 HeaderBtn: Video Call Clicked');
+                        toast('Initiating video call...', { icon: '📹' });
+                        onStartCall?.(getOtherUser(activeChat), 'video');
+                      }} 
+                    />
                   </>
                 )}
                 <HeaderBtn icon="🔍" title="Search in chat" active={showSearch} onClick={() => { setShowSearch(p => !p); if(showSearch) setSearchQuery(''); }} />

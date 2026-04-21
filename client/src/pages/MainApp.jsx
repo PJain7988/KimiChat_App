@@ -40,6 +40,12 @@ export default function MainApp() {
   const handleIncomingCall = useCallback((data) => {
     console.log('📬 [SIGNAL] handleIncomingCall triggered with data:', data);
     
+    // 0. Ensure we don't handle our own signals (echo)
+    if (isSameId(data.from?._id, user?._id)) {
+      console.log('🔄 [SIGNAL] Echo ignored');
+      return;
+    }
+
     // 1. Check if actually for us
     const targetId = data.targetUserId ? String(data.targetUserId) : null;
     const myId = user?._id ? String(user._id) : null;
@@ -55,18 +61,34 @@ export default function MainApp() {
       console.error('❌ [SIGNAL] Received call but user ID is missing from local state!');
     }
 
-    // 2. Reject if busy
+    // 2. Reject if busy (ONLY if it's someone else calling us)
     if (activeCallRef.current) {
-      console.warn('⚠️ [SIGNAL] Busy - Rejecting incoming call');
-      const s = getSocket();
-      if (s) s.emit('call:reject', { targetUserId: data.from?._id });
-      return;
+      const busyWithId = activeCallRef.current.user?._id;
+      const callerId = data.from?._id;
+      
+      // If NOT us echoing back, and NOT already talking to this person
+      if (!isSameId(callerId, user?._id) && !isSameId(callerId, busyWithId)) {
+        console.warn('⚠️ [SIGNAL] Busy - Rejecting incoming call from:', callerId);
+        const s = getSocket();
+        if (s) s.emit('call:reject', { targetUserId: callerId });
+        return;
+      } else {
+        console.log('🔄 [SIGNAL] Busy check: ignored self-echo or duplicate signal');
+        return;
+      }
     }
 
     console.log('🔔 [SIGNAL] Legitimate incoming call from:', data.from?.name);
     
     // 3. Trigger Overlay
-    setActiveCall({ ...data, isIncoming: true, user: data.from, status: 'incoming' });
+    setActiveCall({ 
+      ...data, 
+      isIncoming: true, 
+      user: data.from, 
+      callerName: data.callerName || data.from?.name,
+      targetName: user?.name,
+      status: 'incoming' 
+    });
 
     // 4. Trigger Professional Toast
     toast.custom((t) => (
@@ -196,16 +218,44 @@ export default function MainApp() {
     });
   };
 
-  const startCall = (targetUser, type) => {
-    if (!targetUser) return;
-    const tid = String(targetUser._id);
-    console.log('☎️ CALLING:', tid);
+  const startCall = useCallback((targetUser, type) => {
+    console.log('🚀 [START_CALL_V2] Entering startCall logic...');
+    if (!targetUser) return toast.error("User profile required to call");
     
-    const callData = { user: targetUser, type, isIncoming: false, status: 'calling' };
+    const tid = targetUser._id || targetUser;
+    
+    // ATOMIC STATE UPDATE - MUST HAPPEN FIRST
+    const uniqueSession = `call_${Date.now()}`;
+    const callData = { 
+      user: typeof targetUser === 'object' ? targetUser : { _id: tid, name: 'User' }, 
+      callerName: user?.name || 'Me',
+      targetName: (typeof targetUser === 'object' ? targetUser.name : null) || 'User',
+      type, 
+      isIncoming: false, 
+      status: 'calling',
+      sessionId: uniqueSession
+    };
+
+    console.log('☎️ [START_CALL_V2] Atomic State Trigger:', uniqueSession);
     setActiveCall(callData);
-    const s = getSocket();
-    if (s) s.emit('call:initiate', { targetUserId: tid, type });
-  };
+    activeCallRef.current = callData;
+
+    // Async signaling follow-up
+    setTimeout(() => {
+      const s = getSocket();
+      if (s) {
+        console.log('📡 [START_CALL_V2] Emitting initiate signal');
+        s.emit('call:initiate', { 
+          targetUserId: String(tid), 
+          type,
+          callerName: user?.name,
+          targetName: callData.targetName,
+          sessionId: uniqueSession
+        });
+        toast.success(`Contacting ${callData.targetName}...`, { duration: 2000 });
+      }
+    }, 50);
+  }, [user?._id]);
 
   const endCall = () => {
     if (!activeCall) return;
@@ -231,9 +281,15 @@ export default function MainApp() {
     setActiveCall(null);
   };
 
+  const addPeople = () => {
+    const inviteLink = `https://kimichat.app/join/${activeCall?.user?._id || 'call'}`;
+    window.prompt('Copy and share this invite link:', inviteLink);
+    toast.success('Generated invite link');
+  };
+
   return (
     <div className={styles.wrap}>
-      <Sidebar />
+      <Sidebar activeCall={activeCall} endCall={endCall} />
       <div className={styles.content}>
         <Routes>
           <Route path="chats"     element={<ChatPanel onStartCall={startCall} />} />
@@ -254,6 +310,7 @@ export default function MainApp() {
           onEnd={endCall}
           onAccept={acceptCall}
           onReject={rejectCall}
+          onAddPeople={addPeople}
         />
       )}
     </div>

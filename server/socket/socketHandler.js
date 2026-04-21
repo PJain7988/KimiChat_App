@@ -158,20 +158,24 @@ module.exports = (io) => {
         }
 
         // Multiple fallback rooms for maximum reliability
-        const signalData = { from: caller.toPublic(), type, targetUserId: targetId };
+        const target = await User.findById(targetId).select('name');
+        const signalData = { 
+          from: caller.toPublic(), 
+          callerName: caller.name,
+          targetName: target?.name || 'User',
+          type, 
+          targetUserId: targetId 
+        };
         
         const room1 = `user:${targetId}`;
         const room2 = targetId;
         
-        const count1 = io.sockets.adapter.rooms.get(room1)?.size || 0;
-        const count2 = io.sockets.adapter.rooms.get(room2)?.size || 0;
-        
-        console.log(`📡 [CALL] Emitting to PJ rooms: ${room1}(${count1}), ${room2}(${count2})`);
+        console.log(`📡 [CALL] Emitting to ${target?.name} rooms: ${room1}, ${room2}`);
         
         io.to(room1).emit('call:incoming', signalData);
         io.to(room2).emit('call:incoming', signalData);
         
-        // Final fallback: App-wide signal
+        // Final fallback: App-wide signal with privacy filtering
         io.emit('call:incoming:broadcast', signalData);
 
         if (sentCount === 0) {
