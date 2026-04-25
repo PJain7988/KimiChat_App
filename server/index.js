@@ -59,6 +59,7 @@ if (missingOptionalVars.length > 0) {
  
  
 const app = express();
+app.set('trust proxy', 1); // Trust the proxy (Render/Vercel) to handle protocol/host correctly
 const server = http.createServer(app);
  
 app.set('io', null); 
