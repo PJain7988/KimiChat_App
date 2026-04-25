@@ -148,7 +148,7 @@ export default function Sidebar(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuthStore();
-  const { unread } = useChatStore();
+  const { unread, activeChat } = useChatStore();
   const [logoError, setLogoError] = useState(false);
 
    
@@ -203,7 +203,7 @@ export default function Sidebar(props) {
 
   return (
     <aside
-      className={styles.sidebar}
+      className={`${styles.sidebar} ${activeChat ? styles.hideOnMobile : ''}`}
       role="navigation"
       aria-label="Main navigation">
 

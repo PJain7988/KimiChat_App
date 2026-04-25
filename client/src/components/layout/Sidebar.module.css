@@ -276,4 +276,8 @@
     height: 3px;
     border-radius: 3px 3px 0 0;
   }
+
+  .hideOnMobile {
+    display: none !important;
+  }
 }

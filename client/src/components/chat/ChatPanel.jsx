@@ -796,19 +796,22 @@ export default function ChatPanel({ onStartCall }) {
           .chat-sidebar {
             width: 100% !important;
             display: ${activeChat ? 'none' : 'flex'} !important;
+            border-right: none !important;
           }
           .chat-main {
             width: 100% !important;
             display: ${activeChat ? 'flex' : 'none'} !important;
           }
           .mobile-back-btn {
-            display: block !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
           }
           .mobile-hide {
             display: none !important;
           }
           .message-bubble-container {
-            max-width: 85% !important;
+            max-width: 90% !important;
           }
         }
         @media (max-width: 500px) {
@@ -908,24 +911,28 @@ export default function ChatPanel({ onStartCall }) {
                       }
                       return null;
                     })()}
-                    <HeaderBtn
-                      icon="📞"
-                      title="Audio Call"
-                      onClick={() => {
-                        console.log('📞 HeaderBtn: Audio Call Clicked');
-                        toast('Initiating audio call...', { icon: '📞' });
-                        onStartCall?.(getOtherUser(activeChat), 'audio');
-                      }}
-                    />
-                    <HeaderBtn
-                      icon="📹"
-                      title="Video Call"
-                      onClick={() => {
-                        console.log('📹 HeaderBtn: Video Call Clicked');
-                        toast('Initiating video call...', { icon: '📹' });
-                        onStartCall?.(getOtherUser(activeChat), 'video');
-                      }}
-                    />
+                    <div className="mobile-hide">
+                      <HeaderBtn
+                        icon="📞"
+                        title="Audio Call"
+                        onClick={() => {
+                          console.log('📞 HeaderBtn: Audio Call Clicked');
+                          toast('Initiating audio call...', { icon: '📞' });
+                          onStartCall?.(getOtherUser(activeChat), 'audio');
+                        }}
+                      />
+                    </div>
+                    <div className="mobile-hide">
+                      <HeaderBtn
+                        icon="📹"
+                        title="Video Call"
+                        onClick={() => {
+                          console.log('📹 HeaderBtn: Video Call Clicked');
+                          toast('Initiating video call...', { icon: '📹' });
+                          onStartCall?.(getOtherUser(activeChat), 'video');
+                        }}
+                      />
+                    </div>
                   </>
                 )}
                 <HeaderBtn icon="🔍" title="Search in chat" active={showSearch} onClick={() => { setShowSearch(p => !p); if (showSearch) setSearchQuery(''); }} />
@@ -1058,8 +1065,8 @@ export default function ChatPanel({ onStartCall }) {
                   onClick={() => { setShowPicker(p => !p); setShowAudio(false); }} />
 
                 <ToolBtn icon="📎" title="Attach File" onClick={() => fileInputRef.current?.click()} />
-                <div className="mobile-micro-hide">
-                   <ToolBtn icon="📸" title="Image / Video" onClick={() => imageInputRef.current?.click()} />
+                <div className="mobile-hide">
+                  <ToolBtn icon="📸" title="Image / Video" onClick={() => imageInputRef.current?.click()} />
                 </div>
 
                 { }
