@@ -7,7 +7,7 @@
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",
-    "build": "cd client && npm run build && rm -rf ../public && mkdir ../public && cp -r dist/* ../public"
+    "build": "cd client && npm run build && rm -rf ../dist && mkdir ../dist && cp -r dist/* ../dist"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
