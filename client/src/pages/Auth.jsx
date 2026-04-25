@@ -181,14 +181,11 @@ export default function Auth() {
       window.location.protocol === 'capacitor:'
     );
 
-    console.log(`🚀 Initiating ${provider} login (Native: ${isNative})`);
+    console.log(`🚀 Initiating ${provider} login (Target: ${SERVER_URL})`);
 
-    if (isNative) {
-      window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
-    } else {
-      // On web, always use relative path to hit Vercel proxy
-      window.location.href = `/api/auth/${provider}/redirect`;
-    }
+    // Use absolute URL to bypass Vercel proxy for OAuth redirects.
+    // This prevents the backend from getting confused about the origin.
+    window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
   };
 
    
