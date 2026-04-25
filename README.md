@@ -98,7 +98,7 @@ DISCORD_CLIENT_SECRET=...
 
 #### **Client (`client/.env`)**
 ```env
-VITE_SERVER_URL=http://localhost:5000
+VITE_SERVER_URL=https://kimichat-app.onrender.com
 ```
 
 ### 4️⃣ Run the Application
@@ -106,7 +106,7 @@ VITE_SERVER_URL=http://localhost:5000
 # Start both server and client in development mode
 npm run dev
 ```
-- **Backend:** http://localhost:5000
+- **Backend:** https://kimichat-app.onrender.com
 - **Frontend:** http://localhost:5173
 
 ---
