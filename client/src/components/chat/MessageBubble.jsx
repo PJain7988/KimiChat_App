@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Avatar from '../ui/Avatar';
 import { getSocket } from '../../utils/socket';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 const EMOJI_REACTIONS = ['❤️', '😂', '😮', '😢', '👍', '🔥'];
 
@@ -52,7 +53,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
             <div style={{ fontSize: 13, color: isMe ? '#000' : 'var(--text-dim)', opacity: 0.8, display: 'flex', alignItems: 'center', gap: 4 }}>
               {isVoice ? '🎤 Voice Note' : '🎵 Audio File'}
             </div>
-            <audio src={message.fileUrl} controls style={{ width: '100%', height: 36, borderRadius: 10 }} />
+            <audio src={getMediaUrl(message.fileUrl)} controls style={{ width: '100%', height: 36, borderRadius: 10 }} />
           </div>
         );
       }
@@ -65,7 +66,7 @@ export default function MessageBubble({ message, isMe, showAvatar, isAI, searchH
     if (rawContent.match(urlRegex) && isImage(rawContent.trim())) {
       return (
         <img 
-          src={rawContent.trim()} 
+          src={getMediaUrl(rawContent.trim())} 
           alt="media" 
           style={{ maxWidth: '100%', borderRadius: 12, marginTop: 4, display: 'block', border: '1px solid var(--border2)' }} 
         />

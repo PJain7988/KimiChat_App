@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 const COLORS = [
   'var(--teal),var(--blue)',
@@ -124,7 +125,7 @@ export default function Avatar({
         { }
         {src && !imageError ? (
           <img
-            src={src}
+            src={getMediaUrl(src)}
             alt={alt || name}
             style={{
               width: '100%',

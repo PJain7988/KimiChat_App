@@ -4,6 +4,7 @@ import useChatStore from '../../context/chatStore';
 import api from '../../utils/api';
 import Avatar from '../ui/Avatar';
 import toast from 'react-hot-toast';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 const AVATAR_COLORS = ['#00c9b1', '#1a8cff', '#7c5cfc', '#ff4fa3', '#ffb830', '#ff6b35', '#22c55e'];
 const BACKGROUND_PRESETS = [
@@ -15,14 +16,6 @@ const BACKGROUND_PRESETS = [
   { id: 6, name: 'Fire', gradient: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)' },
 ];
 
-const SERVER_URL = 'https://kimichat-app.onrender.com';
-
-const getMediaUrl = (path) => {
-  if (!path) return null;
-  if (path.startsWith('http')) return path;
-  if (path.startsWith('data:')) return path;
-  return `${SERVER_URL}/${path.startsWith('/') ? path.slice(1) : path}`;
-};
 
 export default function ProfilePanel() {
   const { user, setUser, logout } = useAuthStore();

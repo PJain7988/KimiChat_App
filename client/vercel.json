@@ -1,4 +1,6 @@
 {
+    "cleanUrls": true,
+    "trailingSlash": false,
     "rewrites": [
         {
             "source": "/api/(.*)",
@@ -7,6 +9,9 @@
         {
             "source": "/uploads/(.*)",
             "destination": "https://kimichat-app.onrender.com/uploads/$1"
+        },
+        {
+            "handle": "filesystem"
         },
         {
             "source": "/(.*)",

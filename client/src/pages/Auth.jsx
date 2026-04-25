@@ -36,7 +36,18 @@ const SOCIAL = [
   },
 ];
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
+let SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
+
+// Self-healing: If we are not in a known development environment (Vite/React dev ports), 
+// but the URL is localhost, fallback to the production Render URL.
+if (typeof window !== 'undefined') {
+  const isDev = window.location.hostname === 'localhost' && (window.location.port === '5173' || window.location.port === '3000');
+  const isLocalHost = SERVER_URL.includes('localhost') || SERVER_URL.includes('127.0.0.1');
+  
+  if (!isDev && isLocalHost) {
+    SERVER_URL = 'https://kimichat-app.onrender.com';
+  }
+}
 
 export default function Auth() {
   const navigate             = useNavigate();

@@ -3,6 +3,7 @@ import useAuthStore from '../../context/authStore';
 import api from '../../utils/api';
 import Avatar from '../ui/Avatar';
 import { toast } from 'react-hot-toast';
+import { getMediaUrl } from '../../utils/mediaUtils';
 
 const BG_OPTIONS = [
   'linear-gradient(135deg,#00c9b1,#1a8cff)',
@@ -1751,7 +1752,7 @@ function StatusViewer({
       >
         { }
         {(status?.type === 'photo' || status?.type === 'video') && status?.songUrl && (
-           <audio src={status.songUrl} autoPlay loop hidden={true} />
+           <audio src={getMediaUrl(status.songUrl)} autoPlay loop hidden={true} />
         )}
         {status?.type === 'text' ? (
           <div
@@ -1770,7 +1771,7 @@ function StatusViewer({
           </div>
         ) : status?.type === 'photo' ? (
           <img
-            src={status?.fileUrl}
+            src={getMediaUrl(status?.fileUrl)}
             alt="status"
             style={{
               width: '100%',
@@ -1782,7 +1783,7 @@ function StatusViewer({
           />
         ) : status?.type === 'video' ? (
           <video
-            src={status?.fileUrl}
+            src={getMediaUrl(status?.fileUrl)}
             controls
             autoPlay
             style={{
@@ -1831,7 +1832,7 @@ function StatusViewer({
             { }
             {status?.fileUrl?.match(/\.(mpeg|mp4|webm|mov)$/i) ? (
               <video
-                src={status?.fileUrl}
+                src={getMediaUrl(status?.fileUrl)}
                 controls
                 autoPlay
                 style={{
@@ -1843,7 +1844,7 @@ function StatusViewer({
               />
             ) : (
               <audio
-                src={status?.fileUrl}
+                src={getMediaUrl(status?.fileUrl)}
                 controls
                 autoPlay
                 style={{

@@ -11,7 +11,16 @@ export const initSocket = (userId) => {
   }
 
    
-  socket = io(import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com', {
+  let serverUrl = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
+  
+  // Logic to prevent connecting to localhost if we are on a production domain
+  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+    if (serverUrl.includes('localhost') || serverUrl.includes('127.0.0.1')) {
+      serverUrl = 'https://kimichat-app.onrender.com';
+    }
+  }
+
+  socket = io(serverUrl, {
     withCredentials: true,
     transports: ['websocket', 'polling'],
     auth: { token },
