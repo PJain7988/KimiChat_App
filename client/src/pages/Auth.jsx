@@ -53,6 +53,11 @@ if (typeof window !== 'undefined') {
     console.log('🔄 Self-healing: Switching SERVER_URL to production Render URL');
     SERVER_URL = 'https://kimichat-app.onrender.com';
   }
+
+  // Final override for production domain
+  if (hostname.includes('vercel.app')) {
+    SERVER_URL = 'https://kimichat-app.onrender.com';
+  }
 }
 
 export default function Auth() {
