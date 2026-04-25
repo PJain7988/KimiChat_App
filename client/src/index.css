@@ -52,19 +52,29 @@
 }
 
 html, body, #root {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   margin: 0;
   padding: 0;
   font-family: var(--font-body);
   background: var(--bg-dark);
   color: var(--text);
-  overflow: hidden;
-  position: fixed; /* Lock everything */
+  overflow: hidden !important; /* Force no scroll */
+  position: fixed;
   top: 0;
   left: 0;
-  touch-action: manipulation; /* Prevent double-tap zoom/shift */
-  overscroll-behavior: none; /* Prevent bounce/scroll jump */
+  right: 0;
+  bottom: 0;
+  touch-action: none; /* Disable all browser-handled touch actions */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+/* Allow scrolling ONLY inside specific areas */
+.message-area, .chat-sidebar, [style*="overflow-y: auto"], [style*="overflow-y: scroll"] {
+  touch-action: pan-y !important;
+  overscroll-behavior: contain;
 }
 
  
