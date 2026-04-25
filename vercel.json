@@ -11,8 +11,8 @@
             "destination": "https://kimichat-app.onrender.com/uploads/$1"
         },
         {
-            "source": "/((?!api|uploads).*)",
-            "destination": "/"
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
