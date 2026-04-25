@@ -787,62 +787,22 @@ export default function ChatPanel({ onStartCall }) {
 
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden' }}>
-      <style>{`
-        @keyframes shimmer    { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-        @keyframes pulse      { 0%,100%{opacity:1} 50%{opacity:.45} }
-        @keyframes typingDot  { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
-        
-        .chat-sidebar {
-          width: 320px !important;
-          display: flex !important;
-          border-right: 1px solid var(--border2) !important;
-        }
-        .chat-main {
-          flex: 1 !important;
-          display: flex !important;
-        }
-        .mobile-back-btn {
-          display: none !important;
-        }
-
-        @media (max-width: 768px) {
-          .chat-sidebar {
-            width: 100% !important;
-            display: ${activeChat ? 'none' : 'flex'} !important;
-            border-right: none !important;
-          }
-          .chat-main {
-            width: 100% !important;
-            display: ${activeChat ? 'flex' : 'none'} !important;
-          }
-          .mobile-back-btn {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-          }
-          .mobile-hide {
-            display: none !important;
-          }
-          .message-bubble-container {
-            max-width: 90% !important;
-          }
-        }
-        @media (max-width: 500px) {
-          .message-area { padding: 10px 8px !important; }
-          .message-input-wrap { padding: 8px 10px 10px !important; }
-          .tool-bar { gap: 2px !important; }
-          .mobile-micro-hide { display: none !important; }
-        }
-      `}</style>
-
-      { }
       <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'file')} />
       <input ref={imageInputRef} type="file" accept="image/*,video/*" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'image')} />
       <input ref={audioInputRef} type="file" accept="audio/*" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'audio')} />
 
-      <ChatList className="chat-sidebar" />
+      <div className="flex h-full w-full overflow-hidden bg-[#050d1a]">
+        <ChatList 
+          className={`
+            w-full md:w-[320px] h-full shrink-0 border-r border-[rgba(255,255,255,0.07)]
+            ${activeChat ? 'hidden md:flex' : 'flex'}
+          `} 
+        />
 
-      <div className="chat-main chat-bg" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
+        <div className={`
+          flex-1 flex flex-col h-full min-w-0 overflow-hidden chat-bg
+          ${activeChat ? 'flex' : 'hidden md:flex'}
+        `}>
         {!activeChat ? (
            
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: 'var(--text-dim)' }}>
@@ -1139,6 +1099,7 @@ export default function ChatPanel({ onStartCall }) {
           messages={activeMsgs}
         />
       )}
+      </div>
     </div>
   );
 }

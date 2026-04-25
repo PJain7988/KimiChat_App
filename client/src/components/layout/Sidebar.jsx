@@ -321,35 +321,6 @@ export default function Sidebar(props) {
       <div className={styles.bottomNav} role="navigation" aria-label="Secondary menu">
 
         { }
-        <a
-          href="/downloads/kimichat.apk"
-          download="KimiChat.apk"
-          className={styles.navBtn}
-          style={{ textDecoration: 'none' }}
-          title="Download APK">
-          <span className={styles.navIcon} aria-hidden="true" style={{ position: 'relative' }}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.9"
-              strokeLinecap="round"
-              strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            <span style={{ 
-              position: 'absolute', top: -4, right: -4, fontSize: 8, 
-              background: 'var(--teal)', color: '#000', borderRadius: 4, 
-              padding: '1px 3px', fontWeight: 900 
-            }}>APK</span>
-          </span>
-          <span className={styles.navLabel}>Download</span>
-        </a>
-
         { }
         <button
           className={`${styles.navBtn} ${isActive('profile') ? styles.navActive : ''}`}
