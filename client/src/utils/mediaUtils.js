@@ -3,8 +3,12 @@ let SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrend
 
 // Self-healing for mobile/native environments
 if (typeof window !== 'undefined') {
-  const isDev = window.location.hostname === 'localhost' && (window.location.port === '5173' || window.location.port === '3000');
-  if (!isDev && (SERVER_URL.includes('localhost') || SERVER_URL.includes('127.0.0.1'))) {
+  const hostname = window.location.hostname;
+  const isDev = (hostname === 'localhost' || hostname === '127.0.0.1') && 
+                (window.location.port === '5173' || window.location.port === '3000');
+                
+  if (!isDev && (SERVER_URL.includes('localhost') || SERVER_URL.includes('127.0.0.1') || SERVER_URL.includes('10.95.141.72'))) {
+    console.log('🔄 Media Self-healing: Switching to production Render URL');
     SERVER_URL = 'https://kimichat-app.onrender.com';
   }
 }

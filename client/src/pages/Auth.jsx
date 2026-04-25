@@ -39,12 +39,18 @@ const SOCIAL = [
 let SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
 
 // Self-healing: If we are not in a known development environment (Vite/React dev ports), 
-// but the URL is localhost, fallback to the production Render URL.
+// but the URL is localhost or an internal IP, fallback to the production Render URL.
 if (typeof window !== 'undefined') {
-  const isDev = window.location.hostname === 'localhost' && (window.location.port === '5173' || window.location.port === '3000');
-  const isLocalHost = SERVER_URL.includes('localhost') || SERVER_URL.includes('127.0.0.1');
+  const hostname = window.location.hostname;
+  const isDev = (hostname === 'localhost' || hostname === '127.0.0.1') && 
+                (window.location.port === '5173' || window.location.port === '3000');
+                
+  const isLocalHost = SERVER_URL.includes('localhost') || 
+                      SERVER_URL.includes('127.0.0.1') || 
+                      SERVER_URL.includes('10.95.141.72'); // Fixed: included user's specific IP
   
   if (!isDev && isLocalHost) {
+    console.log('🔄 Self-healing: Switching SERVER_URL to production Render URL');
     SERVER_URL = 'https://kimichat-app.onrender.com';
   }
 }
@@ -169,16 +175,18 @@ export default function Auth() {
    
   const handleSocialLogin = (provider) => {
     // If we are on the web (not in an APK), use the relative path so that Vite/Vercel proxies can handle it.
-    // This ensures it uses the same backend as the rest of the API calls.
+    // This ensures it uses the same backend as the rest of the API calls and avoids localhost issues.
     const isNative = typeof window !== 'undefined' && (
       window.location.protocol === 'file:' ||
-      window.location.protocol === 'capacitor:' ||
-      (window.location.hostname === 'localhost' && window.location.port !== '5173' && window.location.port !== '3000')
+      window.location.protocol === 'capacitor:'
     );
+
+    console.log(`🚀 Initiating ${provider} login (Native: ${isNative})`);
 
     if (isNative) {
       window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
     } else {
+      // On web, always use relative path to hit Vercel proxy
       window.location.href = `/api/auth/${provider}/redirect`;
     }
   };
