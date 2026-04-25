@@ -842,7 +842,7 @@ export default function ChatPanel({ onStartCall }) {
 
       <ChatList className="chat-sidebar" />
 
-      <div className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
+      <div className="chat-main chat-bg" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
         {!activeChat ? (
            
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: 'var(--text-dim)' }}>
