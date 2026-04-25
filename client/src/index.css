@@ -60,7 +60,11 @@ html, body, #root {
   background: var(--bg-dark);
   color: var(--text);
   overflow: hidden;
-  position: relative;
+  position: fixed; /* Lock everything */
+  top: 0;
+  left: 0;
+  touch-action: manipulation; /* Prevent double-tap zoom/shift */
+  overscroll-behavior: none; /* Prevent bounce/scroll jump */
 }
 
  
