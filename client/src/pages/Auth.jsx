@@ -168,7 +168,19 @@ export default function Auth() {
 
    
   const handleSocialLogin = (provider) => {
-    window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
+    // If we are on the web (not in an APK), use the relative path so that Vite/Vercel proxies can handle it.
+    // This ensures it uses the same backend as the rest of the API calls.
+    const isNative = typeof window !== 'undefined' && (
+      window.location.protocol === 'file:' ||
+      window.location.protocol === 'capacitor:' ||
+      (window.location.hostname === 'localhost' && window.location.port !== '5173' && window.location.port !== '3000')
+    );
+
+    if (isNative) {
+      window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
+    } else {
+      window.location.href = `/api/auth/${provider}/redirect`;
+    }
   };
 
    
