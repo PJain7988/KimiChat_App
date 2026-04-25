@@ -792,6 +792,19 @@ export default function ChatPanel({ onStartCall }) {
         @keyframes pulse      { 0%,100%{opacity:1} 50%{opacity:.45} }
         @keyframes typingDot  { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
         
+        .chat-sidebar {
+          width: 320px !important;
+          display: flex !important;
+          border-right: 1px solid var(--border2) !important;
+        }
+        .chat-main {
+          flex: 1 !important;
+          display: flex !important;
+        }
+        .mobile-back-btn {
+          display: none !important;
+        }
+
         @media (max-width: 768px) {
           .chat-sidebar {
             width: 100% !important;
