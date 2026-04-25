@@ -184,7 +184,7 @@ router.get('/google/callback',
     console.log(`✅ Google OAuth success: ${req.user.email}`);
     const clientUrl = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app';
     const baseUrl = clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : clientUrl;
-    res.redirect(`${baseUrl}/auth/callback?token=${token}`);
+    res.redirect(`${baseUrl}/#/auth/callback?token=${token}`);
   }
 );
 
@@ -206,7 +206,7 @@ router.get('/github/callback',
     console.log(`✅ GitHub OAuth success: ${req.user.email}`);
     const clientUrl = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app';
     const baseUrl = clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : clientUrl;
-    res.redirect(`${baseUrl}/auth/callback?token=${token}`);
+    res.redirect(`${baseUrl}/#/auth/callback?token=${token}`);
   }
 );
 
@@ -225,7 +225,7 @@ router.get('/discord/callback',
     console.log(`✅ Discord OAuth success: ${req.user.email}`);
     const clientUrl = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app';
     const baseUrl = clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : clientUrl;
-    res.redirect(`${baseUrl}/auth/callback?token=${token}`);
+    res.redirect(`${baseUrl}/#/auth/callback?token=${token}`);
   }
 );
 
