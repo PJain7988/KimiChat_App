@@ -160,16 +160,20 @@
 }
 
  
-.spacer { flex: 1; }
+.spacer { 
+  flex: 1; 
+  min-height: 20px;
+}
 
  
 .bottomNav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 10px;
   width: 100%;
   padding: 0 8px;
+  margin-top: auto;
 }
 
  
