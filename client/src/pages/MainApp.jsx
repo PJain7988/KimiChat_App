@@ -288,9 +288,9 @@ export default function MainApp() {
   };
 
   return (
-    <div className={styles.wrap}>
+    <div className="fixed inset-0 flex flex-col-reverse md:flex-row h-screen w-screen overflow-hidden bg-[#050d1a]">
       <Sidebar activeCall={activeCall} endCall={endCall} />
-      <div className={styles.content}>
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
         <Routes>
           <Route path="chats" element={<ChatPanel onStartCall={startCall} />} />
           <Route path="calls" element={<CallsPanel onStartCall={startCall} />} />
