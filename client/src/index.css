@@ -60,15 +60,18 @@ html, body, #root {
   font-family: var(--font-body);
   background: var(--bg-dark);
   color: var(--text);
-  overflow: hidden !important; /* Force no scroll */
+  overflow: hidden !important; 
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  touch-action: none; /* Disable all browser-handled touch actions */
+  touch-action: none;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: none;
+  /* Prevent browser-level bounce/elasticity */
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 /* Allow scrolling ONLY inside specific areas */

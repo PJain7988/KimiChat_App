@@ -35,35 +35,43 @@ export default function MainApp() {
       navigate('/app/chats', { replace: true });
     }
 
-    // --- IRON-LOCK VIEWPORT STABILITY ---
-    const ironLock = () => {
+    // --- AGGRESSIVE VIEWPORT JUMP PREVENTION ---
+    let jumpInterval;
+    const handleFocus = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        // Force scroll to top immediately and for the next 500ms
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        
+        clearInterval(jumpInterval);
+        let count = 0;
+        jumpInterval = setInterval(() => {
+          window.scrollTo(0, 0);
+          count++;
+          if (count > 20) clearInterval(jumpInterval); // Stop after 1 second
+        }, 50);
+      }
+    };
+
+    const handleResize = () => {
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
     };
 
-    const handleFocus = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        // Prevent default browser "scroll-to-input"
-        e.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-        setTimeout(ironLock, 10);
-        setTimeout(ironLock, 100);
-      }
-    };
-
-    window.addEventListener('scroll', ironLock, { passive: false });
     window.addEventListener('focusin', handleFocus);
-    
+    window.addEventListener('resize', handleResize);
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', ironLock);
-      window.visualViewport.addEventListener('scroll', ironLock);
+      window.visualViewport.addEventListener('resize', handleResize);
+      window.visualViewport.addEventListener('scroll', handleResize);
     }
 
     return () => {
-      window.removeEventListener('scroll', ironLock);
+      clearInterval(jumpInterval);
       window.removeEventListener('focusin', handleFocus);
+      window.removeEventListener('resize', handleResize);
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', ironLock);
-        window.visualViewport.removeEventListener('scroll', ironLock);
+        window.visualViewport.removeEventListener('resize', handleResize);
+        window.visualViewport.removeEventListener('scroll', handleResize);
       }
     };
   }, []);
