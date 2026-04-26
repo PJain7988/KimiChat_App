@@ -23,23 +23,11 @@ export default function MainApp() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect to chats by default
   useEffect(() => {
     if (location.pathname === '/app' || location.pathname === '/app/') {
       navigate('/app/chats', { replace: true });
     }
   }, [location.pathname, navigate]);
-
-  // --- MOBILE KEYBOARD JUMP PREVENTION ---
-  useEffect(() => {
-    const handleFocus = (e) => {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        setTimeout(() => window.scrollTo(0, 0), 100);
-      }
-    };
-    window.addEventListener('focusin', handleFocus);
-    return () => window.removeEventListener('focusin', handleFocus);
-  }, []);
 
   // Socket Logic
   useEffect(() => {
@@ -70,11 +58,9 @@ export default function MainApp() {
   }, [user?._id, addIncomingMessage, updateChatLastMsg]);
 
   return (
-    <div className="fixed inset-0 flex flex-col md:flex-row h-[100dvh] w-screen overflow-hidden bg-[#050d1a]">
-      {/* Sidebar - Shows at bottom on mobile, side on desktop */}
+    <div className="fixed inset-0 flex flex-col md:flex-row h-full w-full overflow-hidden bg-[#050d1a]" style={{ height: '100dvh' }}>
       <Sidebar activeCall={activeCall} endCall={() => setActiveCall(null)} />
       
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
         <Routes>
           <Route path="chats/*" element={<ChatPanel />} />
