@@ -643,10 +643,19 @@ export default function ChatPanel({ onStartCall }) {
 
   const activeMsgs = messages[activeChat?._id] || [];
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [activeMsgs]);
+    const scrollToBottom = () => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    };
+    
+    // Use requestAnimationFrame to ensure the DOM has updated before scrolling
+    requestAnimationFrame(() => {
+      scrollToBottom();
+      // Second pass for safety (handles image loading better)
+      setTimeout(scrollToBottom, 50);
+    });
+  }, [activeMsgs.length, activeChat?._id]);
 
    
   useEffect(() => {
@@ -964,7 +973,11 @@ export default function ChatPanel({ onStartCall }) {
             )}
 
             { }
-            <div className="message-area scroll-area" style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div 
+              ref={scrollRef}
+              className="message-area scroll-area" 
+              style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}
+            >
               {activeMsgs.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-dim)' }}>
                   <div style={{ fontSize: 48, marginBottom: 12 }}>{activeChat.isAI ? '🤖' : '👋'}</div>
