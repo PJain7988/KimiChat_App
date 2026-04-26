@@ -72,9 +72,10 @@ html, body, #root {
 }
 
 /* Allow scrolling ONLY inside specific areas */
-.message-area, .chat-sidebar, [style*="overflow-y: auto"], [style*="overflow-y: scroll"] {
+.scroll-area, .message-area, .chat-sidebar, [style*="overflow-y: auto"], [style*="overflow-y: scroll"] {
   touch-action: pan-y !important;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
  

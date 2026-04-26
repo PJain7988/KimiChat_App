@@ -960,7 +960,7 @@ export default function ChatPanel({ onStartCall }) {
             )}
 
             { }
-            <div className="message-area" style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div className="message-area scroll-area" style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
               {activeMsgs.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-dim)' }}>
                   <div style={{ fontSize: 48, marginBottom: 12 }}>{activeChat.isAI ? '🤖' : '👋'}</div>

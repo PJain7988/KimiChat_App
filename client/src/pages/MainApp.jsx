@@ -34,6 +34,36 @@ export default function MainApp() {
     if (location.pathname === '/app' || location.pathname === '/app/') {
       navigate('/app/chats', { replace: true });
     }
+
+    // --- VIEWPORT JUMP PREVENTION ---
+    const handleFocus = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.body.scrollTop = 0;
+        }, 50);
+      }
+    };
+
+    const handleResize = () => {
+      if (window.visualViewport) {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    window.addEventListener('focusin', handleFocus);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+      window.visualViewport.addEventListener('scroll', handleResize);
+    }
+
+    return () => {
+      window.removeEventListener('focusin', handleFocus);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+        window.visualViewport.removeEventListener('scroll', handleResize);
+      }
+    };
   }, []);
 
    
