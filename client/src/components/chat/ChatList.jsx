@@ -725,7 +725,7 @@ export default function ChatList({ className }) {
       `}</style>
 
       <div className={className} style={{
-        width: 320, background: 'var(--bg-card2)',
+        background: 'var(--bg-card2)',
         borderRight: '1px solid var(--border2)',
         display: 'flex', flexDirection: 'column', flexShrink: 0,
         height: '100%', overflow: 'hidden',

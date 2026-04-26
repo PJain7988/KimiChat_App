@@ -196,17 +196,11 @@ export default function StatusPanel() {
       }}
     >
       { }
-      <div
-        style={{
-          width: 340,
-          background: 'var(--bg-card2)',
-          borderRight: '1px solid var(--border2)',
-          display: 'flex',
-          flexDirection: 'column',
-          flexShrink: 0,
-          overflow: 'hidden',
-        }}
-      >
+      { }
+      <div className={`
+        w-full md:w-[340px] h-full shrink-0 border-r border-[rgba(255,255,255,0.07)] flex flex-col bg-[#0a1628]
+        ${viewing ? 'hidden md:flex' : 'flex'}
+      `}>
         { }
         <div
           style={{
@@ -509,17 +503,26 @@ export default function StatusPanel() {
       </div>
 
       { }
-      <div
-        style={{
-          flex: 1,
-          background: 'var(--bg-dark)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
+      { }
+      <div className={`
+        flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#050d1a]
+        ${viewing ? 'flex' : 'hidden md:flex'}
+      `}>
+        { }
+        <div className="h-[72px] px-5 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center gap-3 shrink-0 z-10 sticky top-0 md:hidden">
+          <button 
+            onClick={() => setViewing(null)}
+            className="p-2 -ml-2 text-[var(--teal)] hover:bg-[rgba(0,201,177,0.1)] rounded-lg transition-colors"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <div className="font-display font-bold text-lg text-[var(--text)]">View Status</div>
+        </div>
+
+        <div className="flex-1 flex items-center justify-center relative overflow-hidden">
         {!viewing ? (
           <div style={{ textAlign: 'center', color: 'var(--text-dim)' }}>
             <div style={{ fontSize: 72, marginBottom: 20, opacity: 0.4 }}>📸</div>
