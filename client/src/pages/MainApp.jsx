@@ -64,10 +64,10 @@ export default function MainApp() {
   }, [user?._id, addIncomingMessage, updateChatLastMsg]);
 
   return (
-    <div className="app-container">
+    <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden bg-[#050d1a]" style={{ height: '100dvh' }}>
       <Sidebar activeCall={activeCall} endCall={() => setActiveCall(null)} />
       
-      <main className="main-content">
+      <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
         <Routes>
           <Route path="chats/*" element={<ChatPanel />} />
           <Route path="calls" element={<CallsPanel />} />
