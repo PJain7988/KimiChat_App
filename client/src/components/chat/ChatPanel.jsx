@@ -817,7 +817,7 @@ export default function ChatPanel({ onStartCall }) {
           <>
             { }
             { }
-            <div className="h-[72px] px-5 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center gap-3 shrink-0 z-10 sticky top-0">
+            <div className="h-[72px] px-5 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center gap-3 shrink-0 z-10 sticky top-0 md:relative">
               
               { }
               <button 

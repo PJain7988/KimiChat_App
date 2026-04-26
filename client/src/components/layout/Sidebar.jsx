@@ -206,6 +206,10 @@ export default function Sidebar(props) {
                       (pathParts[1] === 'chats' && pathParts.length > 2) || 
                       (pathParts[1] === 'global' && pathParts.length > 2);
 
+    // CRITICAL: On mobile, if we are chatting, the sidebar MUST be null 
+    // so it doesn't push the layout up when the keyboard opens.
+    if (isChatting && window.innerWidth < 768) return null;
+
   return (
     <aside
       className={`
