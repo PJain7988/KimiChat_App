@@ -58,13 +58,16 @@ html, body, #root {
 }
 
 .chat-header {
-  height: 72px;
-  flex-shrink: 0;
+  height: 72px !important;
+  min-height: 72px !important;
+  flex-shrink: 0 !important;
   position: sticky;
   top: 0;
   z-index: 50;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
 }
 
 .message-list {

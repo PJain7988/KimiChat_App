@@ -69,7 +69,7 @@ export default function ChatPanel({ onStartCall }) {
   const activeMsgs = messages[activeChat?._id] || [];
 
   return (
-    <div className="app-container">
+    <div className="flex flex-1 h-full overflow-hidden">
       {/* Sidebar / Chat List Column */}
       <div className={`
         w-full md:w-[320px] h-full shrink-0 border-r border-[rgba(255,255,255,0.07)] flex flex-col bg-[#0a1628]
