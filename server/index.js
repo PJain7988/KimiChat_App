@@ -232,6 +232,14 @@ connectDB();
  
 
  
+app.get('/', (req, res) => {
+  res.send('<h1>KimiChat Backend is Active 🚀</h1><p>Visit <a href="/api/health">/api/health</a> for status.</p>');
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'KimiChat API running 🚀',
