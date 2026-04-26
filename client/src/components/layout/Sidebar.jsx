@@ -201,7 +201,10 @@ export default function Sidebar(props) {
     );
   }
 
-    const isChatting = activeChat || activeRoom || location.pathname.includes('/app/chats/') || location.pathname.includes('/app/global/');
+    const pathParts = location.pathname.split('/').filter(Boolean);
+    const isChatting = activeChat || activeRoom || 
+                      (pathParts[1] === 'chats' && pathParts.length > 2) || 
+                      (pathParts[1] === 'global' && pathParts.length > 2);
 
   return (
     <aside
