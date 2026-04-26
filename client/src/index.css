@@ -72,6 +72,7 @@ html, body, #root {
   /* Prevent browser-level bounce/elasticity */
   -webkit-user-drag: none;
   user-select: none;
+  overflow-anchor: auto !important;
 }
 
 /* Allow scrolling ONLY inside specific areas */
@@ -79,6 +80,7 @@ html, body, #root {
   touch-action: pan-y !important;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  overflow-anchor: auto !important; /* Keep scroll at bottom during content loads */
 }
 
  

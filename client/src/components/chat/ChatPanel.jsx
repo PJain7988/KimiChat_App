@@ -649,12 +649,19 @@ export default function ChatPanel({ onStartCall }) {
       }
     };
     
-    // Use requestAnimationFrame to ensure the DOM has updated before scrolling
-    requestAnimationFrame(() => {
-      scrollToBottom();
-      // Second pass for safety (handles image loading better)
-      setTimeout(scrollToBottom, 50);
-    });
+    // Multiple passes to ensure we stay at bottom while content/images load
+    scrollToBottom();
+    const timer1 = setTimeout(scrollToBottom, 50);
+    const timer2 = setTimeout(scrollToBottom, 150);
+    const timer3 = setTimeout(scrollToBottom, 300);
+    const timer4 = setTimeout(scrollToBottom, 500);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      clearTimeout(timer4);
+    };
   }, [activeMsgs.length, activeChat?._id]);
 
    
