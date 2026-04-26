@@ -3,7 +3,6 @@ import useAuthStore from '../../context/authStore';
 import api from '../../utils/api';
 import Avatar from '../ui/Avatar';
 import { toast } from 'react-hot-toast';
-import { getMediaUrl } from '../../utils/mediaUtils';
 
 const BG_OPTIONS = [
   'linear-gradient(135deg,#00c9b1,#1a8cff)',
@@ -54,7 +53,7 @@ export default function StatusPanel() {
 
   useEffect(() => {
     fetchStatuses();
-     
+    // Expose for child components to trigger refresh
     window.fetchStatuses = fetchStatuses;
     return () => { delete window.fetchStatuses; };
   }, []);
@@ -195,13 +194,19 @@ export default function StatusPanel() {
         fontFamily: 'var(--font-body)',
       }}
     >
-      { }
-      { }
-      <div className={`
-        w-full md:w-[340px] h-full shrink-0 border-r border-[rgba(255,255,255,0.07)] flex flex-col bg-[#0a1628]
-        ${viewing ? 'hidden md:flex' : 'flex'}
-      `}>
-        { }
+      {/* Left Sidebar */}
+      <div
+        style={{
+          width: 340,
+          background: 'var(--bg-card2)',
+          borderRight: '1px solid var(--border2)',
+          display: 'flex',
+          flexDirection: 'column',
+          flexShrink: 0,
+          overflow: 'hidden',
+        }}
+      >
+        {/* Header */}
         <div
           style={{
             padding: '24px 20px 16px',
@@ -252,7 +257,7 @@ export default function StatusPanel() {
           </button>
         </div>
 
-        { }
+        {/* Error Message */}
         {error && (
           <div
             style={{
@@ -269,9 +274,9 @@ export default function StatusPanel() {
           </div>
         )}
 
-        { }
+        {/* Status List */}
         <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 12 }}>
-          { }
+          {/* My Status */}
           <div style={{ padding: '12px 12px 8px' }}>
             <div
               style={{
@@ -379,7 +384,7 @@ export default function StatusPanel() {
             </div>
           </div>
 
-          { }
+          {/* Friends' Statuses */}
           {otherGroups.length > 0 && (
             <div style={{ padding: '12px 12px 8px' }}>
               <div
@@ -502,27 +507,18 @@ export default function StatusPanel() {
         </div>
       </div>
 
-      { }
-      { }
-      <div className={`
-        flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#050d1a]
-        ${viewing ? 'flex' : 'hidden md:flex'}
-      `}>
-        { }
-        <div className="h-[72px] px-5 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center gap-3 shrink-0 z-10 sticky top-0 md:hidden">
-          <button 
-            onClick={() => setViewing(null)}
-            className="p-2 -ml-2 text-[var(--teal)] hover:bg-[rgba(0,201,177,0.1)] rounded-lg transition-colors"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-          </button>
-          <div className="font-display font-bold text-lg text-[var(--text)]">View Status</div>
-        </div>
-
-        <div className="flex-1 flex items-center justify-center relative overflow-hidden">
+      {/* Main Content */}
+      <div
+        style={{
+          flex: 1,
+          background: 'var(--bg-dark)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         {!viewing ? (
           <div style={{ textAlign: 'center', color: 'var(--text-dim)' }}>
             <div style={{ fontSize: 72, marginBottom: 20, opacity: 0.4 }}>📸</div>
@@ -580,7 +576,7 @@ export default function StatusPanel() {
         )}
       </div>
 
-      { }
+      {/* Add Status Modal */}
       {showAdd && (
         <AddStatusModal
           newStatus={newStatus}
@@ -670,7 +666,7 @@ function AddStatusModal({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        { }
+        {/* Modal Header */}
         <div
           style={{
             display: 'flex',
@@ -718,7 +714,7 @@ function AddStatusModal({
           </button>
         </div>
 
-        { }
+        {/* Error Message */}
         {error && (
           <div
             style={{
@@ -739,7 +735,7 @@ function AddStatusModal({
           </div>
         )}
 
-        { }
+        {/* Type Selector */}
         <div style={{ marginBottom: 20 }}>
           <div
             style={{
@@ -809,7 +805,7 @@ function AddStatusModal({
           </div>
         </div>
 
-        { }
+        {/* Preview - TEXT TYPE */}
         {newStatus.type === 'text' && (
           <>
             <div style={{ marginBottom: 18 }}>
@@ -844,7 +840,7 @@ function AddStatusModal({
               </div>
             </div>
 
-            { }
+            {/* Background Selector */}
             <div style={{ marginBottom: 18 }}>
               <div
                 style={{
@@ -917,15 +913,15 @@ function AddStatusModal({
           </>
         )}
 
-        { }
+        {/* Preview - PHOTO/VIDEO/SONG */}
         {(newStatus.type === 'photo' ||
           newStatus.type === 'video' ||
           newStatus.type === 'song') && (
           <>
-            { }
+            {/* File Preview */}
             {preview && (
               <>
-                { }
+                {/* Media Preview with Filter */}
                 <div style={{ marginBottom: 18 }}>
                   <div
                     style={{
@@ -1007,7 +1003,7 @@ function AddStatusModal({
                   </div>
                 </div>
 
-                { }
+                {/* File Info */}
                 <div
                   style={{
                     borderRadius: 14,
@@ -1089,7 +1085,7 @@ function AddStatusModal({
               </>
             )}
 
-            { }
+            {/* Upload Area */}
             {!preview && (
               <div
                 style={{
@@ -1185,7 +1181,7 @@ function AddStatusModal({
               </div>
             )}
 
-            { }
+            {/* Filters - Show only for photo/video */}
             {(newStatus.type === 'photo' || newStatus.type === 'video') && preview && (
               <div style={{ marginBottom: 18 }}>
                 <div
@@ -1242,7 +1238,7 @@ function AddStatusModal({
               </div>
             )}
 
-            { }
+            {/* Song Overlay Option */}
             {(newStatus.type === 'photo' || newStatus.type === 'video') && preview && (
               <div style={{ marginBottom: 18 }}>
                 <div
@@ -1308,7 +1304,7 @@ function AddStatusModal({
                   </div>
                 </div>
 
-                { }
+                {/* Song File Selection */}
                 {newStatus.addSongToMedia && (
                   <div style={{ marginTop: 14 }}>
                     {newStatus.songFile ? (
@@ -1424,7 +1420,7 @@ function AddStatusModal({
           </>
         )}
 
-        { }
+        {/* Caption */}
         {newStatus.type !== 'text' && (
           <div style={{ marginBottom: 18 }}>
             <div
@@ -1471,7 +1467,7 @@ function AddStatusModal({
           </div>
         )}
 
-        { }
+        {/* Action Buttons */}
         <div
           style={{
             display: 'flex',
@@ -1581,7 +1577,7 @@ function StatusViewer({
     });
     setReactions(counts);
 
-     
+    // Track View (Only if viewing someone else's status)
     const myId = me?._id?.toString();
     const ownerId = status.userId?._id?.toString() || status.userId?.toString();
     
@@ -1599,7 +1595,7 @@ function StatusViewer({
       if (res.data.success) {
         toast.success('Status deleted');
         onClose();
-         
+        // Refresh local status list directly instead of page reload
         if (typeof window.fetchStatuses === 'function') {
           window.fetchStatuses();
         } else {
@@ -1656,7 +1652,7 @@ function StatusViewer({
         overflow: 'hidden',
       }}
     >
-      { }
+      {/* Progress Bars */}
       <div style={{ display: 'flex', gap: 4, padding: '16px 16px 8px' }}>
         {Array.from({ length: total }).map((_, i) => (
           <div
@@ -1673,7 +1669,7 @@ function StatusViewer({
         ))}
       </div>
 
-      { }
+      {/* Header */}
       <div
         style={{
           display: 'flex',
@@ -1741,21 +1737,21 @@ function StatusViewer({
         </div>
       </div>
 
-      { }
+      {/* Content Area */}
       <div
         style={{
           flex: 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 0,  
+          padding: 0, // Remove padding to allow image to fill better
           overflow: 'hidden',
           position: 'relative',
         }}
       >
-        { }
+        {/* Background Music for Photos/Videos */}
         {(status?.type === 'photo' || status?.type === 'video') && status?.songUrl && (
-           <audio src={getMediaUrl(status.songUrl)} autoPlay loop hidden={true} />
+           <audio src={status.songUrl} autoPlay loop hidden={true} />
         )}
         {status?.type === 'text' ? (
           <div
@@ -1774,19 +1770,19 @@ function StatusViewer({
           </div>
         ) : status?.type === 'photo' ? (
           <img
-            src={getMediaUrl(status?.fileUrl)}
+            src={status?.fileUrl}
             alt="status"
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'contain',  
+              objectFit: 'contain', // Changed to contain to ensure full image visibility
               filter: getFilterStyle(status?.filter),
               background: 'rgba(0,0,0,0.2)'
             }}
           />
         ) : status?.type === 'video' ? (
           <video
-            src={getMediaUrl(status?.fileUrl)}
+            src={status?.fileUrl}
             controls
             autoPlay
             style={{
@@ -1832,10 +1828,10 @@ function StatusViewer({
                 {status?.content}
               </div>
             )}
-            { }
+            {/* Handle MPEG/Video files even in Song mode */}
             {status?.fileUrl?.match(/\.(mpeg|mp4|webm|mov)$/i) ? (
               <video
-                src={getMediaUrl(status?.fileUrl)}
+                src={status?.fileUrl}
                 controls
                 autoPlay
                 style={{
@@ -1847,7 +1843,7 @@ function StatusViewer({
               />
             ) : (
               <audio
-                src={getMediaUrl(status?.fileUrl)}
+                src={status?.fileUrl}
                 controls
                 autoPlay
                 style={{
@@ -1859,7 +1855,7 @@ function StatusViewer({
           </div>
         ) : null}
 
-        { }
+        {/* Views Count - Overlay for Owner */}
         {me?._id === status?.userId?._id && (
           <div 
             style={{
@@ -1878,7 +1874,7 @@ function StatusViewer({
               alignItems: 'center',
               gap: 6,
               cursor: 'pointer',
-              zIndex: 30,  
+              zIndex: 30, // Increased z-index to be above nav layers
               border: '1px solid rgba(255,255,255,0.1)'
             }}
             onClick={(e) => {
@@ -1890,7 +1886,7 @@ function StatusViewer({
                     {(status?.views || []).length === 0 ? (
                       'No views yet'
                     ) : (
-                       
+                      // Ensure unique display rows in case of legacy duplicate data
                       (() => {
                         const seen = new Set();
                         return status.views.filter(v => {
@@ -1916,7 +1912,7 @@ function StatusViewer({
         )}
       </div>
 
-      { }
+      {/* Reactions Bar */}
       {hasReactions && (
         <div
           style={{
@@ -1957,7 +1953,7 @@ function StatusViewer({
         </div>
       )}
 
-      { }
+      {/* Navigation Areas */}
       <div
         onClick={onPrev}
         style={{
@@ -1967,7 +1963,7 @@ function StatusViewer({
           left: 0,
           width: '35%',
           cursor: current > 0 ? 'pointer' : 'default',
-          zIndex: 20,  
+          zIndex: 20, // Lower than UI buttons
         }}
       />
       <div
@@ -1979,11 +1975,11 @@ function StatusViewer({
           right: 0,
           width: '35%',
           cursor: 'pointer',
-          zIndex: 20,  
+          zIndex: 20, // Lower than UI buttons
         }}
       />
 
-      { }
+      {/* Bottom Actions */}
       <div
         style={{
           padding: '12px 16px 20px',

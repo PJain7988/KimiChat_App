@@ -7,7 +7,10 @@ import api from '../../utils/api';
 import Avatar from '../ui/Avatar';
 import toast from 'react-hot-toast';
 
- 
+/**
+ * FriendsPanel Component - Friends management interface
+ * ✅ Fixed: Error handling, accessibility, proper cleanup, search optimization
+ */
 export default function FriendsPanel({ onStartCall }) {
   const { user, setUser } = useAuthStore();
   const { openDirectChat } = useChatStore();
@@ -22,7 +25,7 @@ export default function FriendsPanel({ onStartCall }) {
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
-   
+  // ✅ FIX: Fetch friends with error handling
   const fetchFriends = useCallback(async () => {
     try {
       const res = await api.get('/friends');
@@ -34,7 +37,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, []);
 
-   
+  // ✅ FIX: Fetch requests with error handling
   const fetchRequests = useCallback(async () => {
     try {
       const res = await api.get('/friends/requests');
@@ -45,7 +48,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, []);
 
-   
+  // ✅ FIX: Fetch random with error handling
   const fetchRandom = useCallback(async () => {
     setLoading(true);
     try {
@@ -60,7 +63,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, []);
 
-   
+  // ✅ FIX: Debounced search
   const handleSearch = useCallback(async (query) => {
     setSearchQuery(query);
     
@@ -81,7 +84,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, []);
 
-   
+  // ✅ FIX: Send friend request with proper error handling
   const sendRequest = useCallback(async (userId, userName) => {
     if (!userId) {
       toast.error('Invalid user');
@@ -101,7 +104,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, []);
 
-   
+  // ✅ FIX: Accept request with proper error handling
   const acceptRequest = useCallback(async (fromId, fromName) => {
     if (!fromId) {
       toast.error('Invalid request');
@@ -116,7 +119,7 @@ export default function FriendsPanel({ onStartCall }) {
       setRequests(prev => prev.filter(r => r.from?._id !== fromId));
       await fetchFriends();
       
-       
+      // ✅ Dynamic update: Add friend to local user state for accurate stats
       if (user) {
         setUser({
           ...user,
@@ -129,7 +132,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, [fetchFriends]);
 
-   
+  // ✅ FIX: Reject request with proper error handling
   const rejectRequest = useCallback(async (fromId) => {
     if (!fromId) {
       toast.error('Invalid request');
@@ -146,7 +149,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, []);
 
-   
+  // ✅ FIX: Message user with error handling
   const messageUser = useCallback(async (userId) => {
     if (!userId) {
       toast.error('Invalid user');
@@ -164,7 +167,7 @@ export default function FriendsPanel({ onStartCall }) {
     }
   }, [openDirectChat, navigate]);
 
-   
+  // ✅ FIX: Initialize data and setup socket listeners
   useEffect(() => {
     fetchFriends();
     fetchRequests();
@@ -196,7 +199,7 @@ export default function FriendsPanel({ onStartCall }) {
     };
   }, [fetchFriends, fetchRequests, fetchRandom]);
 
-   
+  // ✅ FIX: Memoized filtered friends
   const filteredFriends = useMemo(() => {
     if (!searchQuery?.trim()) return friends;
     const query = searchQuery.toLowerCase();
@@ -229,7 +232,7 @@ export default function FriendsPanel({ onStartCall }) {
       height: '100%',
       overflow: 'hidden'
     }}>
-      { }
+      {/* Header */}
       <div style={{
         padding: '20px 24px 0',
         background: 'var(--bg-card)',
@@ -270,7 +273,7 @@ export default function FriendsPanel({ onStartCall }) {
           </button>
         </div>
 
-        { }
+        {/* Tabs */}
         <div style={{ display: 'flex', gap: 10 }}>
           {[
             { key: 'list', label: 'Friends', count: friends.length },
@@ -312,14 +315,14 @@ export default function FriendsPanel({ onStartCall }) {
         </div>
       </div>
 
-      { }
+      {/* Content */}
       <div style={{
         flex: 1,
         overflowY: 'auto',
         background: 'var(--bg-dark)'
       }}>
 
-        { }
+        {/* Friends List */}
         {tab === 'list' && (
           <div style={{
             maxWidth: 700,
@@ -399,7 +402,7 @@ export default function FriendsPanel({ onStartCall }) {
           </div>
         )}
 
-        { }
+        {/* Requests Tab */}
         {tab === 'requests' && (
           <div style={{
             maxWidth: 700,
@@ -456,7 +459,7 @@ export default function FriendsPanel({ onStartCall }) {
           </div>
         )}
 
-        { }
+        {/* Random/Discover Tab */}
         {tab === 'random' && (
           <div style={{
             maxWidth: 700,
@@ -544,7 +547,7 @@ export default function FriendsPanel({ onStartCall }) {
           </div>
         )}
 
-        { }
+        {/* Add Friends Tab */}
         {tab === 'add' && (
           <div style={{
             maxWidth: 600,
@@ -632,7 +635,7 @@ export default function FriendsPanel({ onStartCall }) {
               )
             )}
 
-            { }
+            {/* Share Profile */}
             <div style={{
               marginTop: 24,
               background: 'var(--bg-card2)',
@@ -696,7 +699,10 @@ export default function FriendsPanel({ onStartCall }) {
   );
 }
 
- 
+/**
+ * FriendCard Component
+ * ✅ Fixed: Proper prop handling, accessibility
+ */
 function FriendCard({ user, subtitle, actions }) {
   if (!user) return null;
 
@@ -782,7 +788,10 @@ function FriendCard({ user, subtitle, actions }) {
   );
 }
 
- 
+/**
+ * EmptyState Component
+ * ✅ Fixed: Semantic HTML
+ */
 function EmptyState({ icon, title, subtitle }) {
   return (
     <div style={{
@@ -810,7 +819,10 @@ function EmptyState({ icon, title, subtitle }) {
   );
 }
 
- 
+/**
+ * Format relative time
+ * ✅ Fixed: Safe number conversion
+ */
 function formatAgo(dateStr) {
   if (!dateStr) return '';
   try {

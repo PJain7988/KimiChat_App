@@ -39,7 +39,7 @@ export default function CommunityPanel() {
   useEffect(() => {
     if (selected?._id) {
        fetchFullDetail(selected._id);
-       setActiveRoom(null);  
+       setActiveRoom(null); // Reset when switching community
     }
   }, [selected?._id]);
 
@@ -64,7 +64,7 @@ export default function CommunityPanel() {
     try {
       await api.post(`/community/${id}/join`);
       
-       
+      // ✅ Dynamic update: Sync local user communities
       if (user) {
         setUser({
           ...user,
@@ -98,7 +98,7 @@ export default function CommunityPanel() {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-       
+      // ✅ Dynamic update: Sync local user communities
       if (user && res.data.community) {
         setUser({
           ...user,
@@ -129,7 +129,7 @@ export default function CommunityPanel() {
      const username = prompt('Enter username to add:');
      if (!username) return;
      try {
-        
+       // We'll need a backend route for manual add. For now, we reuse join-style logic or separate route
        await api.post(`/community/${selected._id}/add-member`, { username });
        toast.success(`${username} added!`);
        fetchFullDetail(selected._id);
@@ -162,7 +162,7 @@ export default function CommunityPanel() {
 
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden' }}>
-      { }
+      {/* Left: Community List */}
       <div style={{ width: 340, background: 'var(--bg-card2)', borderRight: '1px solid var(--border2)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
         <div style={{ padding: '24px 20px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
@@ -171,7 +171,7 @@ export default function CommunityPanel() {
           </div>
         </div>
 
-        { }
+        {/* Search */}
         <div style={{ margin: '0 20px 16px', position: 'relative' }}>
           <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)', pointerEvents: 'none' }}>🔍</span>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Explore communities…"
@@ -181,7 +181,7 @@ export default function CommunityPanel() {
           />
         </div>
 
-        { }
+        {/* Category Pills */}
         <div style={{ display: 'flex', gap: 8, padding: '0 20px 16px', overflowX: 'auto', scrollbarWidth: 'none' }}>
           {CATEGORIES.map(cat => (
             <button key={cat} onClick={() => setCategory(cat)} style={{
@@ -249,7 +249,7 @@ export default function CommunityPanel() {
         </div>
       </div>
 
-      { }
+      {/* Right: Community Detail */}
       <div style={{ flex: 1, background: 'var(--bg-dark)', overflowY: 'auto' }}>
         {!selected ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-dim)', padding: 40, textAlign: 'center' }}>
@@ -292,7 +292,7 @@ export default function CommunityPanel() {
         )}
       </div>
 
-      { }
+      {/* Create Modal */}
       {showCreate && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(5,13,26,.9)', zIndex: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)' }}>
           <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(255,255,255,.1)', borderRadius: 28, padding: 36, width: 500, boxShadow: '0 32px 80px rgba(0,0,0,0.6)', maxHeight: '90vh', overflowY: 'auto', animation: 'modalIn 0.3s ease-out' }}>
@@ -398,7 +398,7 @@ function CommunityDetail({ community, onJoin, gradient, activeTab, setActiveTab,
   
   return (
     <div style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      { }
+      {/* Banner */}
       <div style={{ height: 200, background: community.banner ? `url(${community.banner}) center/cover no-repeat` : `linear-gradient(135deg,${gradient})`, position: 'relative', display: 'flex', alignItems: 'flex-end', padding: '0 32px 32px' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.6))' }} />
         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 24, position: 'relative', zIndex: 2 }}>
@@ -431,7 +431,7 @@ function CommunityDetail({ community, onJoin, gradient, activeTab, setActiveTab,
         </div>
       </div>
 
-      { }
+      {/* Navigation */}
       <div style={{ padding: '0 32px', borderBottom: '1px solid var(--border2)', display: 'flex', gap: 32, background: 'var(--bg-card)' }}>
          {['About', 'Rooms', 'Members', 'Rules', 'Chat'].map(t => {
            const id = t.toLowerCase();
@@ -447,7 +447,7 @@ function CommunityDetail({ community, onJoin, gradient, activeTab, setActiveTab,
          })}
       </div>
 
-      { }
+      {/* Content */}
       <div style={{ padding: 32, flex: 1 }}>
         {activeTab === 'about' && (
           <div style={{ maxWidth: 1000, display: 'grid', gridTemplateColumns: 'minmax(0, 1.5fr) 300px', gap: 40 }}>

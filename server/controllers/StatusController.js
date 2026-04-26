@@ -1,19 +1,23 @@
- 
+// controllers/statusController.js
 import Status from '../models/Status.js';
 import fs from 'fs';
 import path from 'path';
 
- 
+/**
+ * GET /api/status
+ * Fetch all status updates from friends/contacts
+ * Groups by user and sorts by newest first
+ */
 export const getStatuses = async (req, res) => {
   try {
     const userId = req.user.id;
 
-     
+    // Get statuses from other users
     const statusGroups = await Status.aggregate([
       {
         $match: {
-          userId: { $ne: userId },  
-          createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },  
+          userId: { $ne: userId }, // Don't include own statuses
+          createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }, // Last 24 hours
         },
       },
       {
@@ -28,11 +32,11 @@ export const getStatuses = async (req, res) => {
         $sort: { 'statuses.0.createdAt': -1 },
       },
       {
-        $limit: 50,  
+        $limit: 50, // Limit to 50 users for performance
       },
     ]);
 
-     
+    // Mark as seen
     await Status.updateMany(
       { userId: { $ne: userId }, seen: false },
       { $set: { seen: true, views: { $sum: ['$views', 1] } } }
@@ -53,7 +57,10 @@ export const getStatuses = async (req, res) => {
   }
 };
 
- 
+/**
+ * GET /api/status/user/:userId
+ * Get statuses from a specific user
+ */
 export const getUserStatuses = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -77,13 +84,17 @@ export const getUserStatuses = async (req, res) => {
   }
 };
 
- 
+/**
+ * POST /api/status
+ * Create a new status
+ * Accepts text, photo, video, or song
+ */
 export const createStatus = async (req, res) => {
   try {
     const { type, content, bg, filter } = req.body;
     const userId = req.user.id;
 
-     
+    // Validation
     if (!type) {
       return res.status(400).json({
         success: false,
@@ -105,7 +116,7 @@ export const createStatus = async (req, res) => {
       });
     }
 
-     
+    // Build status object
     const statusData = {
       userId,
       user: {
@@ -119,24 +130,24 @@ export const createStatus = async (req, res) => {
       filter: filter || 'none',
     };
 
-     
+    // Handle file upload
     if (req.files?.file) {
       const file = req.files.file[0];
       statusData.fileUrl = `/uploads/status/${file.filename}`;
       statusData.fileName = file.originalname;
       statusData.mimeType = file.mimetype;
-      statusData.filePath = file.path;  
+      statusData.filePath = file.path; // For deletion later
     }
 
-     
+    // Handle song overlay
     if (req.files?.songFile) {
       const songFile = req.files.songFile[0];
       statusData.songUrl = `/uploads/status/${songFile.filename}`;
       statusData.songFileName = songFile.originalname;
-      statusData.songPath = songFile.path;  
+      statusData.songPath = songFile.path; // For deletion later
     }
 
-     
+    // Save to database
     const status = new Status(statusData);
     await status.save();
 
@@ -148,7 +159,7 @@ export const createStatus = async (req, res) => {
   } catch (err) {
     console.error('Error creating status:', err);
 
-     
+    // Clean up uploaded files if error occurs
     if (req.files?.file) {
       fs.unlink(req.files.file[0].path, (unlinkErr) => {
         if (unlinkErr) console.error('Error deleting file:', unlinkErr);
@@ -168,7 +179,10 @@ export const createStatus = async (req, res) => {
   }
 };
 
- 
+/**
+ * DELETE /api/status/:statusId
+ * Delete a status (only owner can delete)
+ */
 export const deleteStatus = async (req, res) => {
   try {
     const { statusId } = req.params;
@@ -183,7 +197,7 @@ export const deleteStatus = async (req, res) => {
       });
     }
 
-     
+    // Check ownership
     if (status.userId.toString() !== userId) {
       return res.status(403).json({
         success: false,
@@ -191,7 +205,7 @@ export const deleteStatus = async (req, res) => {
       });
     }
 
-     
+    // Delete files from disk
     if (status.filePath && fs.existsSync(status.filePath)) {
       fs.unlink(status.filePath, (err) => {
         if (err) console.error('Error deleting file:', err);
@@ -204,7 +218,7 @@ export const deleteStatus = async (req, res) => {
       });
     }
 
-     
+    // Delete from database
     await Status.findByIdAndDelete(statusId);
 
     return res.json({
@@ -220,7 +234,10 @@ export const deleteStatus = async (req, res) => {
   }
 };
 
- 
+/**
+ * PUT /api/status/:statusId/reaction
+ * Add or remove reaction to a status
+ */
 export const addReaction = async (req, res) => {
   try {
     const { statusId } = req.params;
@@ -244,7 +261,7 @@ export const addReaction = async (req, res) => {
       });
     }
 
-     
+    // Increment reaction count
     status.reactions[reactionType] = (status.reactions[reactionType] || 0) + 1;
     await status.save();
 
@@ -262,7 +279,10 @@ export const addReaction = async (req, res) => {
   }
 };
 
- 
+/**
+ * POST /api/status/:statusId/reply
+ * Add a reply to a status
+ */
 export const addReply = async (req, res) => {
   try {
     const { statusId } = req.params;

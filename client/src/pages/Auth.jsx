@@ -5,7 +5,7 @@ import useAuthStore from '../context/authStore';
 import api from '../utils/api';
 import styles from './Auth.module.css';
 
- 
+/* ── OAuth provider config ─────────────────────────────── */
 const SOCIAL = [
   {
     id: 'google', label: 'Google', bg: '#fff', color: '#444',
@@ -36,29 +36,7 @@ const SOCIAL = [
   },
 ];
 
-let SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
-
-// Self-healing: If we are not in a known development environment (Vite/React dev ports), 
-// but the URL is localhost or an internal IP, fallback to the production Render URL.
-if (typeof window !== 'undefined') {
-  const hostname = window.location.hostname;
-  const isDev = (hostname === 'localhost' || hostname === '127.0.0.1') && 
-                (window.location.port === '5173' || window.location.port === '3000');
-                
-  const isLocalHost = SERVER_URL.includes('localhost') || 
-                      SERVER_URL.includes('127.0.0.1') || 
-                      SERVER_URL.includes('10.95.141.72'); // Fixed: included user's specific IP
-  
-  if (!isDev && isLocalHost) {
-    console.log('🔄 Self-healing: Switching SERVER_URL to production Render URL');
-    SERVER_URL = 'https://kimichat-app.onrender.com';
-  }
-
-  // Final override for production domain
-  if (hostname.includes('vercel.app')) {
-    SERVER_URL = 'https://kimichat-app.onrender.com';
-  }
-}
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
 
 export default function Auth() {
   const navigate             = useNavigate();
@@ -74,29 +52,33 @@ export default function Auth() {
   const [oauthLoading, setOauthLoading] = useState(false);
   const otpRefs = useRef([]);
 
-   
+  /* ════════════════════════════════════════════════════
+     OAUTH CALLBACK HANDLER
+     Runs on mount — checks if Passport redirected back
+     here with ?token=JWT or ?error=message in the URL
+  ════════════════════════════════════════════════════ */
   useEffect(() => {
     const token = searchParams.get('token');
     const error = searchParams.get('error');
 
-     
+    // OAuth error came back from server
     if (error) {
       toast.error(decodeURIComponent(error));
-       
+      // Clean URL so error doesn't persist on refresh
       navigate('/auth', { replace: true });
       return;
     }
 
-     
+    // Token received — complete the OAuth login
     if (token) {
       setOauthLoading(true);
 
       const finish = async () => {
         try {
-           
+          // 1. Save token
           localStorage.setItem('kimi_token', token);
 
-           
+          // 2. Fetch full user profile using the token
           const res  = await fetch('/api/auth/me', {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -104,7 +86,7 @@ export default function Auth() {
 
           if (!res.ok || !data.success) throw new Error(data.message || 'Failed to fetch profile');
 
-           
+          // 3. Save to localStorage + Zustand store
           localStorage.setItem('kimi_user', JSON.stringify(data.user));
           setUser(data.user);
 
@@ -123,9 +105,11 @@ export default function Auth() {
 
       finish();
     }
-  }, []);  
+  }, []); // only on mount
 
-   
+  /* ════════════════════════════════════════════════════
+     While processing OAuth token — show spinner overlay
+  ════════════════════════════════════════════════════ */
   if (oauthLoading) {
     return (
       <div style={{
@@ -151,7 +135,7 @@ export default function Auth() {
     );
   }
 
-   
+  /* ── Helpers ──────────────────────────────────────── */
   const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
   const handleOtpChange = (i, val) => {
@@ -177,23 +161,12 @@ export default function Auth() {
     }
   };
 
-   
+  /* ── Social login — passport redirect ────────────── */
   const handleSocialLogin = (provider) => {
-    // If we are on the web (not in an APK), use the relative path so that Vite/Vercel proxies can handle it.
-    // This ensures it uses the same backend as the rest of the API calls and avoids localhost issues.
-    const isNative = typeof window !== 'undefined' && (
-      window.location.protocol === 'file:' ||
-      window.location.protocol === 'capacitor:'
-    );
-
-    console.log(`🚀 Initiating ${provider} login (Target: ${SERVER_URL})`);
-
-    // Use absolute URL to bypass Vercel proxy for OAuth redirects.
-    // This prevents the backend from getting confused about the origin.
     window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
   };
 
-   
+  /* ── Form submit ──────────────────────────────────── */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -221,12 +194,14 @@ export default function Auth() {
     }
   };
 
-   
+  /* ════════════════════════════════════════════════════
+     RENDER
+  ════════════════════════════════════════════════════ */
   return (
     <div className={styles.wrap}>
       <div className={`${styles.box} animate-scale-in`}>
 
-        { }
+        {/* Logo */}
         <div className={styles.logoRow}>
           {!logoErr ? (
             <img
@@ -249,7 +224,7 @@ export default function Auth() {
             : 'Sign in to continue your conversations'}
         </p>
 
-        { }
+        {/* Tabs */}
         <div className={styles.tabs}>
           {['email', 'mobile'].map(t => (
             <button key={t}
@@ -261,7 +236,7 @@ export default function Auth() {
           ))}
         </div>
 
-        { }
+        {/* Form */}
         <form onSubmit={handleSubmit} className={styles.form}>
           {tab === 'email' ? (
             <>
@@ -305,7 +280,7 @@ export default function Auth() {
           </button>
         </form>
 
-        { }
+        {/* Social OAuth */}
         <div className={styles.divider}><span>or continue with</span></div>
         <div className={styles.socialRow}>
           {SOCIAL.map(s => (
@@ -328,7 +303,7 @@ export default function Auth() {
           ))}
         </div>
 
-        { }
+        {/* Toggle */}
         <p className={styles.toggle}>
           {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
           <button className={styles.toggleBtn}
@@ -341,7 +316,7 @@ export default function Auth() {
   );
 }
 
- 
+/* ── Reusable field ────────────────────────────────────── */
 function Field({ label, ...props }) {
   return (
     <div style={{ marginBottom:16 }}>

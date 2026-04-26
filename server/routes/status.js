@@ -7,9 +7,9 @@ const { protect } = require('../middleware/auth');
 const fs = require('fs');
 const path = require('path');
 
- 
- 
- 
+// ════════════════════════════════════════════════════════
+// ✅ GET ALL STATUSES (grouped by user)
+// ════════════════════════════════════════════════════════
 statusRouter.get('/', protect, async (req, res) => {
   try {
     const me = await User.findById(req.user._id);
@@ -17,7 +17,7 @@ statusRouter.get('/', protect, async (req, res) => {
       return res.status(401).json({ success: false, message: 'User not found' });
     }
 
-     
+    // Safety: Ensure we have a list of friend IDs + our own ID
     const friendIds = [me._id];
     if (Array.isArray(me.friends)) {
       me.friends.forEach(fId => {
@@ -25,7 +25,7 @@ statusRouter.get('/', protect, async (req, res) => {
       });
     }
 
-     
+    // Note: Temporary removal of friend restriction so you can see statuses from any user for testing
     const statuses = await Status.find({})
       .populate('userId', 'name username avatar avatarColor')
       .populate('reactions.user', 'name avatar')
@@ -33,10 +33,10 @@ statusRouter.get('/', protect, async (req, res) => {
       .populate('views', 'name avatar')
       .sort({ createdAt: -1 });
 
-     
+    // Grouping logic (Group statuses by userId)
     const grouped = {};
     statuses.forEach((s) => {
-       
+      // If userId failed to populate, s.userId might still be an ID or null
       if (!s.userId) return;
       
       const uid = s.userId._id ? s.userId._id.toString() : s.userId.toString();
@@ -64,9 +64,9 @@ statusRouter.get('/', protect, async (req, res) => {
   }
 });
 
- 
- 
- 
+// ════════════════════════════════════════════════════════
+// ✅ CREATE STATUS
+// ════════════════════════════════════════════════════════
 statusRouter.post('/', protect, upload.fields([
   { name: 'file', maxCount: 1 },
   { name: 'songFile', maxCount: 1 },
@@ -97,13 +97,13 @@ statusRouter.post('/', protect, upload.fields([
   }
 });
 
- 
- 
- 
+// ════════════════════════════════════════════════════════
+// ✅ ADD REACTION
+// ════════════════════════════════════════════════════════
 statusRouter.put('/:id/reaction', protect, async (req, res) => {
   try {
     const { reactionType } = req.body;
-     
+    // Remove existing reaction from this user first
     await Status.findByIdAndUpdate(req.params.id, {
       $pull: { reactions: { user: req.user._id } }
     });
@@ -122,20 +122,20 @@ statusRouter.put('/:id/reaction', protect, async (req, res) => {
   }
 });
 
- 
- 
- 
+// ════════════════════════════════════════════════════════
+// ✅ ADD REPLY
+// ════════════════════════════════════════════════════════
 statusRouter.put('/:id/view', protect, async (req, res) => {
   try {
     const status = await Status.findById(req.params.id);
     if (!status) return res.status(404).json({ success: false, message: 'Status not found' });
 
-     
+    // Don't count owner viewing own status
     if (status.userId.toString() === req.user._id.toString()) {
       return res.json({ success: true, message: 'Owner view' });
     }
 
-     
+    // Use $addToSet to ensure uniqueness at database level
     await Status.findByIdAndUpdate(req.params.id, {
       $addToSet: { views: req.user._id }
     });
@@ -163,15 +163,15 @@ statusRouter.post('/:id/reply', protect, async (req, res) => {
   }
 });
 
- 
- 
- 
+// ════════════════════════════════════════════════════════
+// ✅ DELETE STATUS
+// ════════════════════════════════════════════════════════
 statusRouter.delete('/:id', protect, async (req, res) => {
   try {
     const status = await Status.findOne({ _id: req.params.id, userId: req.user._id });
     if (!status) return res.status(404).json({ success: false, message: 'Not found or unauthorized' });
 
-     
+    // Cleanup files
     const cleanup = (url) => {
       if (!url) return;
       const fullPath = path.join(__dirname, '..', url);

@@ -1,8 +1,11 @@
- 
+/* ══════════════════════════════════════════════
+   KimiChat Sidebar
+   Layout: icon centered, label below icon
+   Width: 80px
+══════════════════════════════════════════════ */
 
 .sidebar {
   width: 80px;
-  height: 100%;
   background: var(--bg-card);
   border-right: 1px solid var(--border2);
   display: flex;
@@ -14,7 +17,7 @@
   gap: 0;
 }
 
- 
+/* ── Logo ─────────────────────────────────── */
 .logoWrap {
   width: 46px;
   height: 46px;
@@ -48,7 +51,7 @@
   animation: pulse 4s ease-in-out infinite;
 }
 
- 
+/* ── Divider ──────────────────────────────── */
 .divider {
   width: 40px;
   height: 1px;
@@ -57,7 +60,7 @@
   flex-shrink: 0;
 }
 
- 
+/* ── Nav ──────────────────────────────────── */
 .nav {
   display: flex;
   flex-direction: column;
@@ -67,7 +70,7 @@
   padding: 0 8px;
 }
 
- 
+/* ── Every nav button — icon stacked above label ── */
 .navBtn {
   width: 64px;
   min-height: 58px;
@@ -76,10 +79,10 @@
   background: transparent;
   cursor: pointer;
   display: flex;
-  flex-direction: column;       
+  flex-direction: column;      /* ← vertical stack */
   align-items: center;
   justify-content: center;
-  gap: 4px;                     
+  gap: 4px;                    /* space between icon and label */
   padding: 8px 4px;
   position: relative;
   transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -92,7 +95,7 @@
   color: var(--text);
 }
 
- 
+/* Active state */
 .navActive {
   background: linear-gradient(
     160deg,
@@ -102,7 +105,7 @@
   color: var(--teal) !important;
 }
 
- 
+/* Left accent bar */
 .activeBar {
   position: absolute;
   left: 0;
@@ -115,7 +118,7 @@
   box-shadow: 0 0 10px rgba(0, 201, 177, 0.55);
 }
 
- 
+/* Icon wrapper */
 .navIcon {
   display: flex;
   align-items: center;
@@ -125,7 +128,7 @@
   flex-shrink: 0;
 }
 
- 
+/* Label — sits below icon */
 .navLabel {
   font-family: var(--font-display);
   font-size: 10px;
@@ -139,7 +142,7 @@
   text-align: center;
 }
 
- 
+/* Unread badge */
 .badge {
   position: absolute;
   top: 7px;
@@ -160,24 +163,20 @@
   letter-spacing: 0;
 }
 
- 
-.spacer { 
-  flex: 1; 
-  min-height: 20px;
-}
+/* ── Spacer ───────────────────────────────── */
+.spacer { flex: 1; }
 
- 
+/* ── Bottom section ───────────────────────── */
 .bottomNav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 2px;
   width: 100%;
   padding: 0 8px;
-  margin-top: auto;
 }
 
- 
+/* ── Avatar button ────────────────────────── */
 .avatarBtn {
   width: 64px;
   border: none;
@@ -280,9 +279,5 @@
     width: 24px;
     height: 3px;
     border-radius: 3px 3px 0 0;
-  }
-
-  .hideOnMobile {
-    display: none !important;
   }
 }

@@ -8,7 +8,7 @@ const statusSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-     
+    // Keep this for legacy or quick display if needed, but primary is userId
     user: {
       id: String,
       name: String,
@@ -31,18 +31,18 @@ const statusSchema = new mongoose.Schema(
       type: String,
       default: 'none',
     },
-     
+    // Consolidated file fields
     fileUrl: String,
     fileName: String,
     songUrl: String,
     songFileName: String,
 
-     
+    // Improved tracking
     views: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     reactions: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        type: { type: String },  
+        type: { type: String }, // 'heart', 'fire', 'laugh', 'clap'
       },
     ],
     replies: [
@@ -57,7 +57,7 @@ const statusSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
       index: true,
-      expires: 86400,  
+      expires: 86400, // 24 hour TTL
     },
   },
   { timestamps: true }

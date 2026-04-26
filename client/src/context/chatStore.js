@@ -4,13 +4,11 @@ import api from '../utils/api';
 const useChatStore = create((set, get) => ({
   chats: [],
   activeChat: null,
-  activeRoom: null,
-  messages: {},        
-  typing: {},          
-  unread: {},          
-  invitations: [],     
+  messages: {},       // chatId -> Message[]
+  typing: {},         // chatId -> { userId, name }[]
+  unread: {},         // chatId -> count
+  invitations: [],    // global room invites
   loading: false,
-  setActiveRoom: (room) => set({ activeRoom: room }),
 
   addInvitation: (invite) => set(state => {
     if (state.invitations.some(i => i.roomId === invite.roomId)) return {};
@@ -52,7 +50,7 @@ const useChatStore = create((set, get) => ({
   },
 
   sendMessage: async ({ chatId, senderId, content, type = 'text', fileUrl, sticker }) => {
-     
+    // Optimistic update
     const tempMsg = {
       _id: 'temp_' + Date.now(),
       chat: chatId,
@@ -74,7 +72,7 @@ const useChatStore = create((set, get) => ({
 
     try {
       const res = await api.post('/messages', { chatId, content, type, fileUrl, sticker });
-       
+      // Replace optimistic
       set(state => ({
         messages: {
           ...state.messages,
@@ -85,7 +83,7 @@ const useChatStore = create((set, get) => ({
       }));
       return res.data.message;
     } catch {
-       
+      // Remove optimistic on failure
       set(state => ({
         messages: {
           ...state.messages,
@@ -145,7 +143,7 @@ const useChatStore = create((set, get) => ({
     }));
   },
 
-   
+  // Calls logic
   callLogs: JSON.parse(localStorage.getItem('kc_call_logs') || '[]'),
   addCallLog: (log) => {
     set(state => {
