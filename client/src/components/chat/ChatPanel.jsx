@@ -642,7 +642,11 @@ export default function ChatPanel({ onStartCall }) {
   }, [activeChat?._id, fetchMessages, socket]);
 
   const activeMsgs = messages[activeChat?._id] || [];
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [activeMsgs.length]);
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [activeMsgs]);
 
    
   useEffect(() => {

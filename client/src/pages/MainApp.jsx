@@ -328,7 +328,7 @@ export default function MainApp() {
   };
 
   return (
-    <div className="fixed inset-0 flex flex-col-reverse md:flex-row h-screen w-screen overflow-hidden bg-[#050d1a]">
+    <div className="fixed inset-0 flex flex-col-reverse md:flex-row h-full w-full overflow-hidden bg-[#050d1a]" style={{ height: '100dvh' }}>
       <Sidebar activeCall={activeCall} endCall={endCall} />
       <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
         <Routes>
