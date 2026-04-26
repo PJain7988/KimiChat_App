@@ -59,6 +59,13 @@ export default function Sidebar() {
             </span>
           </NavLink>
         ))}
+
+        {/* User Avatar - Mobile Only */}
+        <div className="md:hidden flex items-center justify-center w-12 h-12">
+          <NavLink to="/app/profile">
+            <Avatar name={user?.name} src={user?.avatar} size={32} online={true} gradient="var(--teal),var(--blue)" />
+          </NavLink>
+        </div>
       </nav>
 
       {/* Profile/Settings Icon - Bottom on Desktop */}
