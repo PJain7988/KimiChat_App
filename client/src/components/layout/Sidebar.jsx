@@ -1,113 +1,72 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../context/authStore';
-import useChatStore from '../../context/chatStore';
 
-export default function Sidebar({ activeCall, endCall }) {
+const MENU_ITEMS = [
+  { id: 'chats', label: 'Messages', icon: '💬', path: '/app/chats' },
+  { id: 'global', label: 'Global', icon: '🌍', path: '/app/global' },
+  { id: 'friends', label: 'Friends', icon: '👥', path: '/app/friends' },
+  { id: 'calls', label: 'Calls', icon: '📞', path: '/app/calls' },
+  { id: 'status', label: 'Status', icon: '✨', path: '/app/status' },
+  { id: 'search', label: 'Explore', icon: '🔍', path: '/app/search' },
+  { id: 'profile', label: 'Settings', icon: '⚙️', path: '/app/profile' },
+];
+
+export default function Sidebar() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { user } = useAuthStore();
-  const { unread, activeChat, activeRoom } = useChatStore();
-  const [logoError, setLogoError] = useState(false);
 
-  const totalUnread = useMemo(() => {
-    if (!unread || typeof unread !== 'object') return 0;
-    return Object.values(unread).reduce((sum, count) => sum + (typeof count === 'number' ? count : 0), 0);
-  }, [unread]);
+  // On mobile, hide the sidebar if we are inside a chat
+  const isChatting = pathname.split('/').filter(Boolean).length >= 3;
 
-  const isActive = (path) => location.pathname.includes(`/app/${path}`);
-
-  const handleNav = (path) => navigate(`/app/${path}`);
-
-  const pathParts = location.pathname.split('/').filter(Boolean);
-  const isChatting = activeChat || activeRoom || 
-                    (pathParts[1] === 'chats' && pathParts.length > 2) || 
-                    (pathParts[1] === 'global' && pathParts.length > 2);
-
-  // Hide sidebar on mobile when in a chat
   if (isChatting && window.innerWidth < 768) return null;
 
   return (
-    <aside className={`
-      w-full h-16 md:w-20 md:h-full bg-[#0a1628] border-t md:border-t-0 md:border-r border-[rgba(255,255,255,0.07)]
-      flex md:flex-col items-center justify-between px-4 md:px-0 md:py-6 shrink-0 z-50
-    `}>
-      {/* Top Logo / App Icon (Desktop Only) */}
+    <nav className="w-full md:w-20 lg:w-24 bg-[#0a1628] border-t md:border-t-0 md:border-r border-[rgba(255,255,255,0.07)] flex md:flex-col items-center justify-around md:justify-start md:py-8 md:gap-8 shrink-0 z-50">
+      {/* Brand Logo (Desktop) */}
       <div 
-        onClick={() => handleNav('chats')}
-        className="hidden md:flex w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--teal)] to-[var(--blue)] items-center justify-center cursor-pointer shadow-lg shadow-[rgba(0,201,177,0.2)] mb-8"
+        onClick={() => navigate('/app/chats')}
+        className="hidden md:flex w-12 h-12 bg-gradient-to-br from-[var(--teal)] to-[var(--blue)] rounded-xl items-center justify-center text-2xl font-bold cursor-pointer shadow-lg shadow-[rgba(0,201,177,0.2)]"
       >
-        <span className="text-xl font-bold text-black">K</span>
+        <span className="text-black">K</span>
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex flex-1 md:flex-col items-center justify-around md:justify-start md:gap-4 w-full">
-        <NavItem 
-          icon="💬" 
-          active={isActive('chats')} 
-          onClick={() => handleNav('chats')} 
-          badge={totalUnread}
-        />
-        <NavItem 
-          icon="🌍" 
-          active={isActive('global')} 
-          onClick={() => handleNav('global')} 
-        />
-        <NavItem 
-          icon="📞" 
-          active={isActive('calls')} 
-          onClick={() => handleNav('calls')} 
-        />
-        <NavItem 
-          icon="✨" 
-          active={isActive('status')} 
-          onClick={() => handleNav('status')} 
-        />
-        <NavItem 
-          icon="👥" 
-          active={isActive('friends')} 
-          onClick={() => handleNav('friends')} 
-        />
-      </nav>
-
-      {/* User Profile (Bottom/Right) */}
-      <div 
-        onClick={() => handleNav('profile')}
-        className={`
-          w-10 h-10 rounded-xl overflow-hidden cursor-pointer border-2 transition-all
-          ${isActive('profile') ? 'border-[var(--teal)]' : 'border-transparent hover:border-[rgba(0,201,177,0.3)]'}
-        `}
-      >
-        {user?.avatar && !logoError ? (
-          <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" onError={() => setLogoError(true)} />
-        ) : (
-          <div className="w-full h-full bg-[#1e3050] flex items-center justify-center text-xs font-bold text-[var(--teal)]">
-            {user?.name?.[0] || 'U'}
-          </div>
-        )}
+      {/* Nav Items */}
+      <div className="flex-1 flex md:flex-col items-center justify-around md:justify-center w-full md:gap-6 py-2 md:py-0">
+        {MENU_ITEMS.map((item) => {
+          const isActive = pathname.startsWith(item.path);
+          return (
+            <button
+              key={item.id}
+              onClick={() => navigate(item.path)}
+              className="group relative flex flex-col items-center justify-center p-2"
+              title={item.label}
+            >
+              <div className={`
+                w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center text-xl transition-all duration-300
+                ${isActive ? 'bg-[var(--teal)] text-black shadow-lg scale-110' : 'text-[var(--text-dim)] hover:bg-white/5 hover:text-white'}
+              `}>
+                {item.icon}
+              </div>
+              <span className={`text-[9px] mt-1 font-bold uppercase tracking-widest md:hidden lg:block ${isActive ? 'text-[var(--teal)]' : 'text-[var(--text-dim)]'}`}>
+                {item.label}
+              </span>
+              {isActive && (
+                <div className="hidden md:block absolute -right-0.5 top-1/2 -translate-y-1/2 w-1 h-6 bg-[var(--teal)] rounded-full shadow-[0_0_8px_var(--teal)]" />
+              )}
+            </button>
+          );
+        })}
       </div>
-    </aside>
-  );
-}
 
-function NavItem({ icon, active, onClick, badge }) {
-  return (
-    <div 
-      onClick={onClick}
-      className={`
-        relative p-3 rounded-xl cursor-pointer transition-all duration-200
-        ${active ? 'bg-[rgba(0,201,177,0.1)] text-[var(--teal)]' : 'text-[var(--text-dim)] hover:bg-[rgba(255,255,255,0.05)]'}
-      `}
-    >
-      <span className="text-2xl">{icon}</span>
-      {badge > 0 && (
-        <span className="absolute top-2 right-2 w-5 h-5 bg-[#ff4444] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-[#0a1628]">
-          {badge > 9 ? '9+' : badge}
-        </span>
-      )}
-      {active && (
-        <div className="hidden md:block absolute left-[-4px] top-1/4 bottom-1/4 w-1 bg-[var(--teal)] rounded-full shadow-[0_0_8px_var(--teal)]" />
-      )}
-    </div>
+      {/* User Avatar (Desktop) */}
+      <div 
+        onClick={() => navigate('/app/profile')}
+        className="hidden md:block w-10 h-10 rounded-full border-2 border-[var(--teal)] p-0.5 cursor-pointer hover:scale-110 transition-all"
+      >
+        <img src={user?.avatar} alt="Me" className="w-full h-full rounded-full object-cover" />
+      </div>
+    </nav>
   );
 }
