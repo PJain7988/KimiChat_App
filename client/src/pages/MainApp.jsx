@@ -35,33 +35,35 @@ export default function MainApp() {
       navigate('/app/chats', { replace: true });
     }
 
-    // --- VIEWPORT JUMP PREVENTION ---
+    // --- IRON-LOCK VIEWPORT STABILITY ---
+    const ironLock = () => {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+    };
+
     const handleFocus = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        setTimeout(() => {
-          window.scrollTo(0, 0);
-          document.body.scrollTop = 0;
-        }, 50);
+        // Prevent default browser "scroll-to-input"
+        e.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        setTimeout(ironLock, 10);
+        setTimeout(ironLock, 100);
       }
     };
 
-    const handleResize = () => {
-      if (window.visualViewport) {
-        window.scrollTo(0, 0);
-      }
-    };
-
+    window.addEventListener('scroll', ironLock, { passive: false });
     window.addEventListener('focusin', handleFocus);
+    
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize);
-      window.visualViewport.addEventListener('scroll', handleResize);
+      window.visualViewport.addEventListener('resize', ironLock);
+      window.visualViewport.addEventListener('scroll', ironLock);
     }
 
     return () => {
+      window.removeEventListener('scroll', ironLock);
       window.removeEventListener('focusin', handleFocus);
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize);
-        window.visualViewport.removeEventListener('scroll', handleResize);
+        window.visualViewport.removeEventListener('resize', ironLock);
+        window.visualViewport.removeEventListener('scroll', ironLock);
       }
     };
   }, []);
