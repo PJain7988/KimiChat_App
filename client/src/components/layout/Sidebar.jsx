@@ -27,14 +27,14 @@ export default function Sidebar() {
   return (
     <aside className={`
       bg-[#0a1628] border-[rgba(255,255,255,0.07)] z-50 transition-all
-      md:w-[72px] md:h-full md:border-r md:flex md:flex-col md:items-center md:py-6
+      md:w-[72px] md:h-full md:border-r md:flex md:flex-col md:items-center md:py-4
       fixed bottom-0 left-0 right-0 h-[64px] border-t flex flex-row items-center justify-around px-2
       md:static md:translate-y-0
     `}>
-      {/* User Avatar - Only on Desktop */}
-      <div className="hidden md:flex mb-8 cursor-pointer hover:opacity-80 transition-opacity">
-        <NavLink to="/app/profile">
-          <Avatar name={user?.name} src={user?.avatar} size={42} online={true} gradient="var(--teal),var(--blue)" />
+      {/* Branding Logo - Desktop */}
+      <div className="hidden md:flex mb-6 cursor-pointer hover:opacity-80 transition-opacity">
+        <NavLink to="/app/chats">
+          <img src="/images/logo.png" alt="Logo" className="w-10 h-10 rounded-lg object-contain" style={{ filter: 'drop-shadow(0 0 8px var(--teal))' }} />
         </NavLink>
       </div>
 

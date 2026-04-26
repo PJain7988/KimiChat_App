@@ -18,7 +18,7 @@ import { toast } from 'react-hot-toast';
 
 export default function MainApp() {
   const { user } = useAuthStore();
-  const { addIncomingMessage, updateChatLastMsg } = useChatStore();
+  const { addIncomingMessage, updateChatLastMsg, addInvitation } = useChatStore();
   const [activeCall, setActiveCall] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,6 +48,11 @@ export default function MainApp() {
 
     s.on('call:incoming', (data) => setActiveCall({ ...data, isIncoming: true, status: 'incoming' }));
     s.on('call:ended', () => setActiveCall(null));
+
+    s.on('global:invite', (data) => {
+      addInvitation(data);
+      toast.success(`New invite to ${data.roomName}!`);
+    });
 
     return () => {
       s.off('connect', register);

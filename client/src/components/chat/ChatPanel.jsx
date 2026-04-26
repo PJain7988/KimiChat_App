@@ -69,7 +69,7 @@ export default function ChatPanel({ onStartCall }) {
   const { user } = useAuthStore();
   const { 
     activeChat, setActiveChat, messages, 
-    sendMessage, typingStatus 
+    sendMessage, fetchMessages, typingStatus 
   } = useChatStore();
   
   const [input, setInput] = useState('');
@@ -84,6 +84,17 @@ export default function ChatPanel({ onStartCall }) {
   const getOtherUser = (chat) => getChatOtherUser(chat, user?._id);
   const getChatName = (chat) => chat?.isGroup ? chat.name : (getOtherUser(chat)?.name || 'Kimi User');
   
+  // Join socket room and fetch history
+  useEffect(() => {
+    if (activeChat?._id) {
+      fetchMessages(activeChat._id);
+      if (socket) {
+        socket.emit('chat:join', activeChat._id);
+        return () => socket.emit('chat:leave', activeChat._id);
+      }
+    }
+  }, [activeChat?._id, fetchMessages, socket]);
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
