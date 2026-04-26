@@ -816,40 +816,41 @@ export default function ChatPanel({ onStartCall }) {
         ) : (
           <>
             { }
-            <div style={{ padding: '12px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+            { }
+            <div className="h-[72px] px-5 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center gap-3 shrink-0 z-10 sticky top-0">
               
               { }
               <button 
                 onClick={() => setActiveChat(null)}
-                style={{
-                  display: 'none',  
-                  background: 'transparent', border: 'none', color: 'var(--teal)',
-                  fontSize: 22, cursor: 'pointer', padding: '0 8px 0 0',
-                }}
-                className="mobile-back-btn"
+                className="md:hidden p-2 -ml-2 text-[var(--teal)] hover:bg-[rgba(0,201,177,0.1)] rounded-lg transition-colors"
+                title="Back to chats"
               >
-                ←
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
               </button>
+
               <div
-                style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, minWidth: 0, cursor: 'pointer' }}
+                className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => setShowProfile(true)}
               >
                 <Avatar name={getChatName(activeChat)} src={activeChat.avatar} size={42}
                   online={activeChat.isAI ? true : getOtherUser(activeChat)?.isOnline}
                   gradient={activeChat.isAI ? 'var(--teal),var(--blue)' : null}
                   emoji={activeChat.isAI ? '🤖' : null} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {getChatName(activeChat)}
-                  </div>
-                  <div style={{ fontSize: 12, color: getOtherUser(activeChat)?.isOnline || activeChat.isAI ? 'var(--green)' : 'var(--text-dim)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                    {activeChat.isAI && <span>🤖</span>}
-                    {getChatStatus(activeChat)}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-display font-bold text-base truncate text-[var(--text)]">
+                      {getChatName(activeChat)}
+                    </div>
+                    <div className={`text-xs flex items-center gap-1 ${getOtherUser(activeChat)?.isOnline || activeChat.isAI ? 'text-[var(--green)]' : 'text-[var(--text-dim)]'}`}>
+                      {activeChat.isAI && <span>🤖</span>}
+                      {getChatStatus(activeChat)}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                <div className="flex items-center gap-2 shrink-0">
                 {!activeChat.isGroup && !activeChat.isAI && (
                   <>
                     {(() => {
