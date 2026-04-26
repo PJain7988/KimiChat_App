@@ -16,111 +16,41 @@ export default function CallsPanel({ onStartCall }) {
   }, [logs, filter]);
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-      height: '100%',
-      background: 'var(--bg-dark)',
-      overflow: 'hidden'
-    }}>
-      <style>{`
-        @media (max-width: 600px) {
-          .calls-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px; }
-          .calls-list { padding: 0 12px !important; }
-        }
-      `}</style>
+    <div className="flex flex-col h-full w-full overflow-hidden bg-[#050d1a]">
       { }
-      <div style={{
-        padding: '20px 24px',
-        background: 'var(--bg-card)',
-        borderBottom: '1px solid var(--border2)'
-      }}>
-        <div className="calls-header" style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 16
-        }}>
-          <h1 style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 22,
-            fontWeight: 700,
-            margin: 0
-          }}>
-            Calls
-          </h1>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button 
-              onClick={() => setFilter('all')}
-              style={{
-                padding: '6px 16px',
-                borderRadius: 20,
-                border: 'none',
-                background: filter === 'all' ? 'var(--teal-glow)' : 'transparent',
-                color: filter === 'all' ? 'var(--teal)' : 'var(--text-dim)',
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}>All</button>
-            <button 
-              onClick={() => setFilter('missed')}
-              style={{
-                padding: '6px 16px',
-                borderRadius: 20,
-                border: 'none',
-                background: filter === 'missed' ? 'rgba(255,68,68,0.1)' : 'transparent',
-                color: filter === 'missed' ? 'var(--red)' : 'var(--text-dim)',
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}>Missed</button>
-            <button 
-              onClick={() => {
-                if (window.confirm('Clear all call history?')) clearCallLogs();
-              }}
-              style={{
-                padding: '6px 16px',
-                borderRadius: 20,
-                border: '1px solid var(--border)',
-                background: 'transparent',
-                color: 'var(--red)',
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}>Clear History</button>
-          </div>
+      <div className="h-[72px] px-6 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center justify-between shrink-0 sticky top-0 z-10">
+        <h1 className="font-display text-xl font-bold text-[var(--text)]">Calls</h1>
+        <div className="flex gap-2 items-center">
+          <button 
+            onClick={() => setFilter('all')}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${filter === 'all' ? 'bg-[var(--teal-glow)] text-[var(--teal)]' : 'text-[var(--text-dim)] hover:bg-[rgba(255,255,255,0.05)]'}`}
+          >All</button>
+          <button 
+            onClick={() => setFilter('missed')}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${filter === 'missed' ? 'bg-[rgba(255,68,68,0.1)] text-[var(--red)]' : 'text-[var(--text-dim)] hover:bg-[rgba(255,255,255,0.05)]'}`}
+          >Missed</button>
+          <button 
+            onClick={() => {
+              if (window.confirm('Clear all call history?')) clearCallLogs();
+            }}
+            className="px-4 py-1.5 rounded-full border border-[rgba(255,255,255,0.07)] text-xs font-semibold text-[var(--red)] hover:bg-[rgba(255,0,0,0.05)] transition-all ml-2"
+          >Clear</button>
         </div>
       </div>
 
       { }
-      <div style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '12px 0'
-      }}>
+      <div className="flex-1 overflow-y-auto px-6 py-4 custom-scrollbar">
         {filteredLogs.length > 0 ? (
-          <div className="calls-list" style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px' }}>
+          <div className="max-w-3xl mx-auto space-y-1">
             {filteredLogs.map((log, i) => (
               <CallRow key={i} log={log} onStartCall={onStartCall} />
             ))}
           </div>
         ) : (
-          <div style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--text-dim)',
-            textAlign: 'center',
-            padding: 40
-          }}>
-            <div style={{ fontSize: 64, marginBottom: 20 }}>📞</div>
-            <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px 0', color: 'var(--text)' }}>No call history</h2>
-            <p style={{ maxWidth: 300, fontSize: 14 }}>Calls you make or receive will show up here, just like on your mobile.</p>
+          <div className="h-full flex flex-col items-center justify-center text-center p-10 opacity-60">
+            <div className="text-6xl mb-6">📞</div>
+            <h2 className="text-xl font-bold mb-2 text-[var(--text)]">No call history</h2>
+            <p className="max-w-xs text-sm text-[var(--text-dim)]">Calls you make or receive will show up here, just like on your mobile.</p>
           </div>
         )}
       </div>

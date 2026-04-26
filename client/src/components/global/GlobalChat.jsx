@@ -898,19 +898,23 @@ export default function GlobalChat() {
       )}
       
       { }
-      <div style={{ width: 260, background: 'var(--bg-card2)', borderRight: '1px solid var(--border2)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
-        <div style={{ padding: '20px 16px 12px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700 }}>🌐 Rooms</div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-               <div onClick={() => setShowInvites(true)} style={{ position: 'relative', cursor: 'pointer', width: 28, height: 28, borderRadius: 8, background: 'rgba(255,255,255,.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
+      { }
+      <div className={`
+        w-full md:w-[280px] h-full shrink-0 border-r border-[rgba(255,255,255,0.07)] flex flex-col bg-[#0a1628]
+        ${activeRoom ? 'hidden md:flex' : 'flex'}
+      `}>
+        <div className="p-5 pb-3">
+          <div className="flex justify-between items-center">
+            <div className="font-display text-xl font-bold text-[var(--text)]">🌐 Rooms</div>
+            <div className="flex gap-2 items-center">
+               <div onClick={() => setShowInvites(true)} className="relative cursor-pointer w-8 h-8 rounded-lg bg-[rgba(255,255,255,0.05)] flex items-center justify-center text-sm hover:bg-[rgba(255,255,255,0.1)] transition-colors">
                   🔔
-                  {invitations.length > 0 && <div style={{ position: 'absolute', top: -4, right: -4, background: 'var(--red)', color: '#fff', fontSize: 9, fontWeight: 700, borderRadius: 6, padding: '1px 4px', border: '1.5px solid var(--bg-card2)' }}>{invitations.length}</div>}
+                  {invitations.length > 0 && <div className="absolute -top-1 -right-1 bg-[var(--red)] text-white text-[9px] font-bold rounded px-1 border-2 border-[#0a1628]">{invitations.length}</div>}
                </div>
-               <button onClick={() => setShowCreateRoom(true)} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,201,177,.15)', border: 'none', color: 'var(--teal)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>➕</button>
+               <button onClick={() => setShowCreateRoom(true)} className="w-8 h-8 rounded-lg bg-[rgba(0,201,177,0.15)] text-[var(--teal)] flex items-center justify-center hover:bg-[rgba(0,201,177,0.25)] transition-colors">➕</button>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-dim)', marginTop: 4 }}>Join a public room</div>
+          <div className="text-xs text-[var(--text-dim)] mt-1">Join a public room</div>
         </div>
           <div style={{ padding: '10px 0', marginTop: 12 }}>
              <div style={{ position: 'relative' }}>
@@ -954,43 +958,55 @@ export default function GlobalChat() {
       </div>
  
       { }
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
+      { }
+      <div className={`
+        flex-1 flex flex-col h-full min-w-0 overflow-hidden
+        ${activeRoom ? 'flex' : 'hidden md:flex'}
+      `}>
         { }
-        <div style={{ padding: '14px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="h-[72px] px-5 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center gap-3 shrink-0 z-10 sticky top-0">
+          
+          <button 
+            onClick={() => setActiveRoom(null)}
+            className="md:hidden p-2 -ml-2 text-[var(--teal)] hover:bg-[rgba(0,201,177,0.1)] rounded-lg transition-colors"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+
           {activeRoom && (
             <>
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: 'linear-gradient(135deg,var(--teal),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--teal)] to-[var(--blue)] flex items-center justify-center text-xl shrink-0">
                 {activeRoom.emoji}
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16 }}>{activeRoom.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--green)' }}>👥 {(activeRoom.membersCount || 0).toLocaleString()} online</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-display font-bold text-base truncate text-[var(--text)]">{activeRoom.name}</div>
+                <div className="text-xs text-[var(--green)] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse"></span>
+                  {(activeRoom.membersCount || 0).toLocaleString()} online
+                </div>
               </div>
             </>
           )}
-          <div style={{ display: 'flex', gap: 8, position: 'relative' }}>
-            <button onClick={() => setShowSearch(p => !p)} style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,.06)', border: '1px solid var(--border2)', color: showSearch ? 'var(--teal)' : 'var(--text-dim)', fontSize: 14, cursor: 'pointer', transition: 'all .25s' }}>🔍</button>
-            <button onClick={() => activeRoom && toggleMute(activeRoom.id)} style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,.06)', border: '1px solid var(--border2)', color: activeRoom && mutedRooms.includes(activeRoom.id) ? 'var(--red)' : 'var(--text-dim)', fontSize: 14, cursor: 'pointer', transition: 'all .25s' }}>{activeRoom && mutedRooms.includes(activeRoom.id) ? '🔕' : '🔔'}</button>
-            <button onClick={() => setShowOptions(p => !p)} style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(255,255,255,.06)', border: '1px solid var(--border2)', color: 'var(--text-dim)', fontSize: 14, cursor: 'pointer', transition: 'all .25s' }}>⋯</button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button onClick={() => setShowSearch(p => !p)} className={`w-9 h-9 rounded-lg border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-sm transition-all ${showSearch ? 'bg-[var(--teal-glow)] text-[var(--teal)]' : 'bg-[rgba(255,255,255,0.05)] text-[var(--text-dim)]'}`}>🔍</button>
+            <button onClick={() => activeRoom && toggleMute(activeRoom.id)} className={`w-9 h-9 rounded-lg border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-sm transition-all ${activeRoom && mutedRooms.includes(activeRoom.id) ? 'bg-[rgba(255,0,0,0.1)] text-[var(--red)]' : 'bg-[rgba(255,255,255,0.05)] text-[var(--text-dim)]'}`}>{activeRoom && mutedRooms.includes(activeRoom.id) ? '🔕' : '🔔'}</button>
+            <button onClick={() => setShowOptions(p => !p)} className="w-9 h-9 rounded-lg bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.07)] text-[var(--text-dim)] flex items-center justify-center text-sm hover:text-[var(--text)] transition-colors">⋯</button>
             
             {showOptions && activeRoom && (
-              <div style={{
-                position: 'absolute', right: 0, top: '100%', marginTop: 8,
-                background: 'var(--bg-card)', border: '1px solid var(--border2)',
-                borderRadius: 14, width: 220, zIndex: 100,
-                boxShadow: '0 8px 24px rgba(0,0,0,0.4)', padding: '6px',
-                animation: 'pickerUp 0.15s ease-out'
-              }}>
-                 {canInvite && <div onClick={() => { setShowOptions(false); setShowInvite(true); }} style={dropItemStyle}>🙌 Invite People</div>}
-                 <div onClick={() => { setShowOptions(false); togglePin(activeRoom.id); }} style={dropItemStyle}>
+              <div className="absolute right-0 top-[100%] mt-2 bg-[#1a2635] border border-[rgba(255,255,255,0.07)] rounded-xl w-52 z-50 shadow-2xl p-1 animate-in fade-in zoom-in duration-150">
+                 {canInvite && <div onClick={() => { setShowOptions(false); setShowInvite(true); }} className="p-2.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] cursor-pointer text-sm flex items-center gap-2 transition-colors">🙌 Invite People</div>}
+                 <div onClick={() => { setShowOptions(false); togglePin(activeRoom.id); }} className="p-2.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] cursor-pointer text-sm flex items-center gap-2 transition-colors">
                    {pinnedRooms.includes(activeRoom.id) ? '📍 Unpin Room' : '📌 Pin Room'}
                  </div>
-                 <div onClick={() => { setShowOptions(false); setShowRoomInfo(true); }} style={dropItemStyle}>ℹ️ Room Info</div>
-                 <div onClick={() => { setShowOptions(false); setShowMembers(true); }} style={dropItemStyle}>👥 View Members</div>
-                 <div style={{ height: 1, background: 'var(--border2)', margin: '4px 0' }} />
-                 <div onClick={clearChat} style={{ ...dropItemStyle, color: 'var(--red)' }}>🗑️ Clear Chat (Local)</div>
-                 {!isOwner && <div onClick={() => { setShowOptions(false); setShowExitConfirm(true); }} style={{ ...dropItemStyle, color: 'var(--red)' }}>🚪 Exit Room</div>}
-                 {isOwner && <div onClick={handleDeleteRoom} style={{ ...dropItemStyle, color: 'var(--red)', fontWeight: 700 }}>🗑️ DELETE ROOM</div>}
+                 <div onClick={() => { setShowOptions(false); setShowRoomInfo(true); }} className="p-2.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] cursor-pointer text-sm flex items-center gap-2 transition-colors">ℹ️ Room Info</div>
+                 <div onClick={() => { setShowOptions(false); setShowMembers(true); }} className="p-2.5 rounded-lg hover:bg-[rgba(255,255,255,0.05)] cursor-pointer text-sm flex items-center gap-2 transition-colors">👥 View Members</div>
+                 <div className="h-px bg-[rgba(255,255,255,0.07)] my-1" />
+                 <div onClick={clearChat} className="p-2.5 rounded-lg hover:bg-[rgba(255,0,0,0.1)] cursor-pointer text-sm flex items-center gap-2 transition-colors text-[var(--red)]">🗑️ Clear Chat</div>
+                 {!isOwner && <div onClick={() => { setShowOptions(false); setShowExitConfirm(true); }} className="p-2.5 rounded-lg hover:bg-[rgba(255,0,0,0.1)] cursor-pointer text-sm flex items-center gap-2 transition-colors text-[var(--red)]">🚪 Exit Room</div>}
+                 {isOwner && <div onClick={handleDeleteRoom} className="p-2.5 rounded-lg hover:bg-[rgba(255,0,0,0.1)] cursor-pointer text-sm flex items-center gap-2 transition-colors text-[var(--red)] font-bold">🗑️ DELETE ROOM</div>}
               </div>
             )}
           </div>
