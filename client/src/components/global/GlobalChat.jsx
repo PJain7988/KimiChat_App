@@ -489,7 +489,7 @@ export default function GlobalChat() {
   const { user } = useAuthStore();
   const { invitations, removeInvitation } = useChatStore();
   const [rooms, setRooms] = useState([]);
-  const [activeRoom, setActiveRoom] = useState(null);
+  const { activeRoom, setActiveRoom } = useChatStore();
   const [input, setInput] = useState('');
   const [roomQuery, setRoomQuery] = useState('');
   const [showOptions, setShowOptions] = useState(false);

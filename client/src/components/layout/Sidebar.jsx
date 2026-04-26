@@ -148,7 +148,7 @@ export default function Sidebar(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuthStore();
-  const { unread, activeChat } = useChatStore();
+  const { unread, activeChat, activeRoom } = useChatStore();
   const [logoError, setLogoError] = useState(false);
 
    
@@ -207,7 +207,7 @@ export default function Sidebar(props) {
         w-full h-[70px] border-t border-[rgba(255,255,255,0.07)] px-2.5 flex items-center justify-between
         md:w-20 md:h-full md:flex-col md:border-t-0 md:border-r md:px-0 md:py-3.5 md:justify-start
         bg-[#0a1628] flex shrink-0 z-20 transition-all
-        ${activeChat ? 'hidden md:flex' : 'flex'}
+        ${(activeChat || activeRoom) ? 'hidden md:flex' : 'flex'}
       `}
       role="navigation"
       aria-label="Main navigation">

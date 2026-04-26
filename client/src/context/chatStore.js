@@ -4,11 +4,13 @@ import api from '../utils/api';
 const useChatStore = create((set, get) => ({
   chats: [],
   activeChat: null,
+  activeRoom: null,
   messages: {},        
   typing: {},          
   unread: {},          
   invitations: [],     
   loading: false,
+  setActiveRoom: (room) => set({ activeRoom: room }),
 
   addInvitation: (invite) => set(state => {
     if (state.invitations.some(i => i.roomId === invite.roomId)) return {};
