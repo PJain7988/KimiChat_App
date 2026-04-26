@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../context/authStore';
 import useChatStore from '../context/chatStore';
@@ -15,25 +15,31 @@ import ProfilePanel from '../components/profile/ProfilePanel';
 import CallsPanel from '../components/chat/CallsPanel';
 import CallOverlay from '../components/ui/CallOverlay';
 import { toast } from 'react-hot-toast';
-import { isSameId } from '../utils/idUtils';
 
 export default function MainApp() {
   const { user } = useAuthStore();
-  const { addIncomingMessage, setTyping, updateChatLastMsg, addInvitation } = useChatStore();
+  const { addIncomingMessage, updateChatLastMsg } = useChatStore();
   const [activeCall, setActiveCall] = useState(null);
-  const activeCallRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    activeCallRef.current = activeCall;
-  }, [activeCall]);
-
+  // Redirect to chats by default
   useEffect(() => {
     if (location.pathname === '/app' || location.pathname === '/app/') {
       navigate('/app/chats', { replace: true });
     }
   }, [location.pathname, navigate]);
+
+  // --- MOBILE KEYBOARD JUMP PREVENTION ---
+  useEffect(() => {
+    const handleFocus = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        setTimeout(() => window.scrollTo(0, 0), 100);
+      }
+    };
+    window.addEventListener('focusin', handleFocus);
+    return () => window.removeEventListener('focusin', handleFocus);
+  }, []);
 
   // Socket Logic
   useEffect(() => {
@@ -64,9 +70,11 @@ export default function MainApp() {
   }, [user?._id, addIncomingMessage, updateChatLastMsg]);
 
   return (
-    <div className="flex flex-col-reverse md:flex-row h-full w-full overflow-hidden bg-[#050d1a]" style={{ height: '100dvh' }}>
+    <div className="fixed inset-0 flex flex-col md:flex-row h-[100dvh] w-screen overflow-hidden bg-[#050d1a]">
+      {/* Sidebar - Shows at bottom on mobile, side on desktop */}
       <Sidebar activeCall={activeCall} endCall={() => setActiveCall(null)} />
       
+      {/* Main Content Area */}
       <main className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
         <Routes>
           <Route path="chats/*" element={<ChatPanel />} />

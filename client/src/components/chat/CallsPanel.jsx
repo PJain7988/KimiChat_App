@@ -12,69 +12,64 @@ export default function CallsPanel({ onStartCall }) {
   }, [logs, filter]);
 
   return (
-    <div className="flex flex-col h-full bg-[#050d1a]">
+    <div className="flex flex-col h-full w-full bg-[#050d1a] overflow-hidden">
       {/* Header */}
-      <header className="h-[72px] px-6 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center justify-between shrink-0">
-        <h1 className="text-xl font-bold font-display">Call History</h1>
-        <div className="flex gap-2">
+      <div className="h-[72px] px-6 bg-[#0a1628] border-b border-[rgba(255,255,255,0.07)] flex items-center justify-between shrink-0 sticky top-0 z-10">
+        <h1 className="font-display text-xl font-bold text-[var(--text)]">Call History</h1>
+        <div className="flex gap-2 items-center">
+          {['all', 'missed'].map(f => (
+            <button 
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all uppercase tracking-widest ${filter === f ? 'bg-[var(--teal)] text-black' : 'bg-white/5 text-gray-500 hover:text-gray-300'}`}
+            >
+              {f}
+            </button>
+          ))}
           <button 
-            onClick={() => setFilter('all')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${filter === 'all' ? 'bg-[var(--teal)] text-black' : 'text-[var(--text-dim)] hover:bg-[rgba(255,255,255,0.05)]'}`}
-          >All</button>
-          <button 
-            onClick={() => setFilter('missed')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${filter === 'missed' ? 'bg-red-500/20 text-red-500' : 'text-[var(--text-dim)] hover:bg-[rgba(255,255,255,0.05)]'}`}
-          >Missed</button>
-          <button 
-            onClick={() => window.confirm('Clear all logs?') && clearCallLogs()}
-            className="px-4 py-1.5 rounded-full border border-[rgba(255,68,68,0.2)] text-xs font-bold text-red-500 hover:bg-red-500/10 transition-all"
-          >Clear</button>
+            onClick={() => window.confirm('Clear history?') && clearCallLogs()}
+            className="px-4 py-1.5 rounded-full text-xs font-bold text-red-500 hover:bg-red-500/10 transition-all uppercase tracking-widest ml-2"
+          >
+            Clear
+          </button>
         </div>
-      </header>
+      </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      {/* List Area */}
+      <div className="flex-1 overflow-y-auto px-6 py-4 no-scrollbar">
         {filteredLogs.length > 0 ? (
-          <div className="max-w-4xl mx-auto space-y-1">
+          <div className="max-w-3xl mx-auto space-y-1 animate-fade-in">
             {filteredLogs.map((log, i) => (
-              <CallRow key={i} log={log} onStartCall={onStartCall} />
+              <div key={i} className="flex items-center gap-4 py-4 border-b border-white/5 hover:bg-white/2 transition-all group px-2 rounded-2xl">
+                <Avatar name={log.user.name} src={log.user.avatar} size={52} />
+                <div className="flex-1 min-w-0">
+                  <div className={`font-bold flex items-center gap-2 ${log.status === 'missed' ? 'text-red-400' : 'text-gray-200'}`}>
+                    {log.user.name} {log.type === 'video' ? '📹' : '📞'}
+                  </div>
+                  <div className="text-xs text-gray-500 flex items-center gap-2 mt-1">
+                    <span className={log.direction === 'incoming' ? 'text-green-500' : 'text-blue-500'}>
+                      {log.direction === 'incoming' ? '↙' : '↗'}
+                    </span>
+                    {log.direction} • {new Date(log.timestamp).toLocaleTimeString()}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => onStartCall(log.user, 'audio')} className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-[var(--teal)] hover:text-black transition-all">📞</button>
+                  <button onClick={() => onStartCall(log.user, 'video')} className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all">📹</button>
+                </div>
+              </div>
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full opacity-40 gap-4">
-            <span className="text-6xl">📞</span>
-            <p className="text-sm font-medium">No recent calls found</p>
+          <div className="h-full flex flex-col items-center justify-center opacity-40 text-center space-y-4">
+            <div className="text-7xl">📞</div>
+            <div className="space-y-1">
+              <h2 className="text-lg font-bold">No calls yet</h2>
+              <p className="text-xs max-w-[200px]">Your voice and video call history will appear here.</p>
+            </div>
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function CallRow({ log, onStartCall }) {
-  const isMissed = log.status === 'missed';
-  return (
-    <div className="flex items-center gap-4 p-4 hover:bg-[rgba(255,255,255,0.03)] rounded-2xl transition-all border-b border-[rgba(255,255,255,0.05)] last:border-0">
-      <Avatar name={log.user?.name} src={log.user?.avatar} size={48} online={log.user?.isOnline} />
-      <div className="flex-1 min-w-0">
-        <div className={`font-bold flex items-center gap-2 ${isMissed ? 'text-red-500' : 'text-[var(--text)]'}`}>
-          {log.user?.name}
-          <span>{log.type === 'video' ? '📹' : '📞'}</span>
-        </div>
-        <div className="text-xs text-[var(--text-dim)] flex items-center gap-2 mt-1">
-          <span className={isMissed ? 'text-red-500/70' : 'text-teal-400/70'}>
-            {log.direction === 'incoming' ? '↙ Incoming' : '↗ Outgoing'}
-          </span>
-          <span>•</span>
-          <span>{new Date(log.createdAt).toLocaleString()}</span>
-        </div>
-      </div>
-      <button 
-        onClick={() => onStartCall?.(log.user, log.type)}
-        className="w-10 h-10 flex items-center justify-center bg-[rgba(255,255,255,0.05)] hover:bg-[var(--teal)] hover:text-black rounded-xl transition-all"
-      >
-        {log.type === 'video' ? '📹' : '📞'}
-      </button>
     </div>
   );
 }
