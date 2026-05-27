@@ -4,6 +4,7 @@ const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const upload = require('../config/multer');
 
+ 
 router.get('/search', protect, async (req, res) => {
   try {
     const { q } = req.query;
@@ -24,10 +25,12 @@ router.get('/search', protect, async (req, res) => {
   }
 });
 
+ 
 router.get('/random', protect, async (req, res) => {
   try {
     const me = await User.findById(req.user._id);
-
+    
+     
     const excludeIds = [req.user._id];
     if (me.friends) me.friends.forEach(f => excludeIds.push(f));
     if (me.sentRequests) me.sentRequests.forEach(r => excludeIds.push(r));
@@ -58,6 +61,7 @@ router.get('/random', protect, async (req, res) => {
   }
 });
 
+ 
 router.get('/:username', protect, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username })
@@ -72,6 +76,7 @@ router.get('/:username', protect, async (req, res) => {
   }
 });
 
+ 
 router.put('/update/profile', protect, upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'backgroundImage', maxCount: 1 },
@@ -91,13 +96,13 @@ router.put('/update/profile', protect, upload.fields([
 
     if (req.files) {
       if (req.files.avatar && req.files.avatar[0]) {
-        update.avatar = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.avatar[0].filename}`;
+        update.avatar = `uploads/${req.files.avatar[0].filename}`;
       }
       if (req.files.backgroundImage && req.files.backgroundImage[0]) {
-        update.backgroundImage = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.backgroundImage[0].filename}`;
+        update.backgroundImage = `uploads/${req.files.backgroundImage[0].filename}`;
       }
       if (req.files.music && req.files.music[0]) {
-        update.music = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.music[0].filename}`;
+        update.music = `uploads/${req.files.music[0].filename}`;
         update.musicTitle = musicTitle || req.files.music[0].originalname;
         update.musicArtist = musicArtist || 'Unknown Artist';
       }

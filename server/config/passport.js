@@ -8,17 +8,20 @@ const Chat = require('../models/Chat');
 
 async function findOrCreateUser({ provider, providerId, name, email, avatar }) {
   try {
+
     if (!provider || !providerId) {
       throw new Error('Provider and providerId are required');
     }
 
-    const idField = `${provider}Id`; 
+    const idField = `${provider}Id`;
+
 
     let user = await User.findOne({ [idField]: providerId });
     if (user) {
       console.log(`✅ Found existing user linked to ${provider}: ${user.email}`);
       return user;
     }
+
 
     if (email) {
       const emailLower = email.toLowerCase();
@@ -28,47 +31,53 @@ async function findOrCreateUser({ provider, providerId, name, email, avatar }) {
         console.log(`✅ Found existing user by email, linking ${provider}: ${email}`);
         user[idField] = providerId;
 
+
         if (avatar && !user.avatar) {
           user.avatar = avatar;
         }
 
-                await user.save();
+        await user.save();
         return user;
       }
     }
 
+
     console.log(`✅ Creating new user from ${provider}: ${email || providerId}`);
+
 
     const base = (name || 'user')
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '_')
       .slice(0, 14);
 
-        const randomSuffix = Date.now().toString(36).slice(-4);
+    const randomSuffix = Date.now().toString(36).slice(-4);
     const username = `${base}_${randomSuffix}`;
+
 
     let existingUser = await User.findOne({ username });
     let finalUsername = username;
     let counter = 0;
 
-        while (existingUser && counter < 5) {
+    while (existingUser && counter < 5) {
       counter++;
       finalUsername = `${base}_${randomSuffix}_${counter}`;
       existingUser = await User.findOne({ username: finalUsername });
     }
 
+
     user = await User.create({
       name: name || `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
       email: email ? email.toLowerCase() : `${providerId}@${provider}.kimichat.app`,
       username: finalUsername,
-      password: `oauth_${providerId}`, 
+      password: `oauth_${providerId}`,
       avatar: avatar || '',
       [idField]: providerId,
       isOnline: true,
-      emailVerified: !!email, 
+      emailVerified: !!email,
     });
 
     console.log(`✅ New user created: ${user.email} (${user.username})`);
+
 
     try {
       await Chat.create({
@@ -80,6 +89,7 @@ async function findOrCreateUser({ provider, providerId, name, email, avatar }) {
       console.log(`✅ Kimi AI chat created for user: ${user._id}`);
     } catch (chatErr) {
       console.error(`⚠️  Failed to create Kimi AI chat: ${chatErr.message}`);
+
     }
 
     return user;
@@ -90,17 +100,19 @@ async function findOrCreateUser({ provider, providerId, name, email, avatar }) {
 }
 
 
+
 passport.use(
   'google',
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/auth/google/callback`,
+      callbackURL: 'https://kimichat-app.onrender.com/api/auth/google/callback',
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
+
         const email = profile.emails?.[0]?.value || null;
         const avatar = profile.photos?.[0]?.value || null;
         const name = profile.displayName || profile.given_name || 'Google User';
@@ -111,9 +123,11 @@ passport.use(
           name,
         });
 
+
         if (!profile.id) {
           throw new Error('Google profile ID is missing');
         }
+
 
         const user = await findOrCreateUser({
           provider: 'google',
@@ -133,19 +147,22 @@ passport.use(
 );
 
 
+
 passport.use(
   'github',
   new GitHubStrategy(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/auth/github/callback`,
+      callbackURL: 'https://kimichat-app.onrender.com/api/auth/github/callback',
       scope: ['user:email', 'read:user'],
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
+
         let email = profile.emails?.[0]?.value || null;
+
 
         if (!email && Array.isArray(profile._json?.emails)) {
           const primaryEmail = profile._json.emails.find(
@@ -156,12 +173,15 @@ passport.use(
           }
         }
 
+
         if (!email && Array.isArray(profile._json?.emails)) {
           email = profile._json.emails[0]?.email || null;
         }
 
+
         const avatar =
           profile.photos?.[0]?.value || profile._json?.avatar_url || null;
+
 
         const name =
           profile.displayName ||
@@ -176,9 +196,11 @@ passport.use(
           name,
         });
 
+
         if (!profile.id) {
           throw new Error('GitHub profile ID is missing');
         }
+
 
         const user = await findOrCreateUser({
           provider: 'github',
@@ -198,18 +220,20 @@ passport.use(
 );
 
 
+
 passport.use(
   'discord',
   new DiscordStrategy(
     {
       clientID: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/auth/discord/callback`,
+      callbackURL: 'https://kimichat-app.onrender.com/api/auth/discord/callback',
       scope: ['identify', 'email'],
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
       try {
+
         const email = profile.email || null;
         const avatar = profile.avatar
           ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
@@ -223,9 +247,11 @@ passport.use(
           name,
         });
 
+
         if (!profile.id) {
           throw new Error('Discord profile ID is missing');
         }
+
 
         const user = await findOrCreateUser({
           provider: 'discord',
@@ -245,6 +271,8 @@ passport.use(
 );
 
 
+
+
 passport.serializeUser((user, done) => {
   try {
     if (!user || !user._id) {
@@ -257,13 +285,14 @@ passport.serializeUser((user, done) => {
   }
 });
 
+
 passport.deserializeUser(async (id, done) => {
   try {
     if (!id) {
       return done(new Error('User ID is missing'));
     }
 
-    const user = await User.findById(id).lean(); 
+    const user = await User.findById(id).lean();
 
     if (!user) {
       return done(null, false);

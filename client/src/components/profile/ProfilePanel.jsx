@@ -15,7 +15,7 @@ const BACKGROUND_PRESETS = [
   { id: 6, name: 'Fire', gradient: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)' },
 ];
 
-const SERVER_URL = 'http://localhost:5000';
+const SERVER_URL = 'https://kimichat-app.onrender.com';
 
 const getMediaUrl = (path) => {
   if (!path) return null;

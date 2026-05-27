@@ -1,5 +1,11 @@
+ 
+ 
+ 
 require('dotenv').config();
 
+ 
+ 
+ 
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -11,8 +17,12 @@ const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const fs = require('fs');
 
+ 
 const passport = require('./config/passport');
 
+ 
+ 
+ 
 const requiredEnvVars = [
   'PORT',
   'NODE_ENV',
@@ -21,6 +31,7 @@ const requiredEnvVars = [
   'CLIENT_URL',
 ];
 
+ 
 const optionalEnvVars = [
   'GOOGLE_CLIENT_ID',
   'GOOGLE_CLIENT_SECRET',
@@ -37,20 +48,29 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
+ 
 const missingOptionalVars = optionalEnvVars.filter(varName => !process.env[varName]);
 if (missingOptionalVars.length > 0) {
   console.warn(`⚠️  Missing optional environment variables: ${missingOptionalVars.join(', ')}`);
   console.warn('OAuth features may be disabled');
 }
 
+ 
+ 
+ 
 const app = express();
+app.set('trust proxy', 1); // Trust the proxy (Render/Vercel) to handle protocol/host correctly
 const server = http.createServer(app);
+ 
 app.set('io', null); 
 
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+const CLIENT_URL = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app/';
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+ 
+ 
+ 
 const io = new Server(server, {
   cors: {
     origin: CLIENT_URL,
@@ -69,18 +89,24 @@ const io = new Server(server, {
 
 app.set('io', io);
 
+ 
+ 
+ 
 
+ 
 app.use(
   helmet({
+     
     crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
-    crossOriginResourcePolicy: { policy: 'cross-origin' }, 
+    crossOriginResourcePolicy: { policy: 'cross-origin' },  
     contentSecurityPolicy: false,
   })
 );
 
+ 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
+  windowMs: 15 * 60 * 1000,  
+  max: 100,  
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again later.',
@@ -88,6 +114,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => {
+     
     return (
       req.path.includes('/callback') ||
       req.path.includes('/health')
@@ -98,6 +125,9 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
+ 
+ 
+ 
 app.use(
   cors({
     origin: CLIENT_URL,
@@ -108,33 +138,46 @@ app.use(
   })
 );
 
+ 
+ 
+ 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+ 
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
   console.log('✅ Created uploads directory');
 }
 
+ 
+ 
+ 
 app.use(
   session({
     secret: process.env.JWT_SECRET || 'kimichat_session_secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: NODE_ENV === 'production', 
+      secure: NODE_ENV === 'production',  
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, 
+      maxAge: 24 * 60 * 60 * 1000,  
       sameSite: NODE_ENV === 'production' ? 'strict' : 'lax',
     },
   })
 );
 
+ 
+ 
+ 
 app.use(passport.initialize());
 app.use(passport.session());
 
+ 
+ 
+ 
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -148,12 +191,16 @@ app.use((req, res, next) => {
   next();
 });
 
+ 
+ 
+ 
 const connectDB = async () => {
   try {
     if (!process.env.MONGO_URI) {
       throw new Error('MONGO_URI not defined in .env');
     }
 
+     
     await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
@@ -168,6 +215,7 @@ const connectDB = async () => {
   }
 };
 
+ 
 mongoose.connection.on('disconnected', () => {
   console.warn('⚠️  MongoDB Disconnected — Attempting to reconnect...');
 });
@@ -176,8 +224,21 @@ mongoose.connection.on('error', (err) => {
   console.error('❌ MongoDB Error:', err.message);
 });
 
+ 
 connectDB();
 
+ 
+ 
+ 
+
+ 
+app.get('/', (req, res) => {
+  res.send('<h1>KimiChat Backend is Active 🚀</h1><p>Visit <a href="/api/health">/api/health</a> for status.</p>');
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 
 app.get('/api/health', (req, res) => {
   res.json({
@@ -190,6 +251,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+ 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/messages', require('./routes/messages'));
@@ -197,10 +259,14 @@ app.use('/api/chats', require('./routes/chats'));
 app.use('/api/friends', require('./routes/friends'));
 app.use('/api/community', require('./routes/community'));
 
+ 
 app.use('/api/status', require('./routes/status'));
 
 app.use('/api/global', require('./routes/global'));
 
+ 
+ 
+ 
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -208,6 +274,9 @@ app.use((req, res) => {
   });
 });
 
+ 
+ 
+ 
 app.use((err, req, res, next) => {
   console.error('❌ Error:', {
     message: err.message,
@@ -216,6 +285,7 @@ app.use((err, req, res, next) => {
     stack: NODE_ENV === 'development' ? err.stack : undefined,
   });
 
+   
   if (err.name === 'MulterError') {
     if (err.code === 'FILE_TOO_LARGE') {
       return res.status(413).json({
@@ -235,6 +305,7 @@ app.use((err, req, res, next) => {
     });
   }
 
+   
   if (err.message && err.message.includes('Invalid file type')) {
     return res.status(400).json({
       success: false,
@@ -252,6 +323,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+ 
+ 
+ 
 try {
   require('./socket/socketHandler')(io);
   console.log('✅ Socket.IO handler loaded');
@@ -260,6 +334,9 @@ try {
   console.log('   Continuing without Socket.IO features...');
 }
 
+ 
+ 
+ 
 const serverInstance = server.listen(PORT, () => {
   console.log('\n' + '═'.repeat(65));
   console.log('🚀 KimiChat Server Started Successfully');
@@ -276,6 +353,9 @@ const serverInstance = server.listen(PORT, () => {
   console.log('═'.repeat(65) + '\n');
 });
 
+ 
+ 
+ 
 const shutdown = async (signal) => {
   console.log(`\n⚠️  ${signal} received — Shutting down gracefully...`);
 
@@ -293,6 +373,7 @@ const shutdown = async (signal) => {
     process.exit(0);
   });
 
+   
   setTimeout(() => {
     console.error('❌ Forced shutdown — graceful shutdown took too long');
     process.exit(1);
@@ -302,6 +383,9 @@ const shutdown = async (signal) => {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
+ 
+ 
+ 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('❌ Unhandled Rejection:', {
     reason,

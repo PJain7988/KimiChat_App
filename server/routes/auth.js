@@ -6,6 +6,7 @@ const User       = require('../models/User');
 const Chat       = require('../models/Chat');
 const { generateToken, protect } = require('../middleware/auth');
 
+ 
 const mailer = nodemailer.createTransport({
   service: 'gmail',
   auth: { user: process.env.EMAIL, pass: process.env.EMAIL_PASS },
@@ -36,6 +37,7 @@ const sendOTPEmail = async (to, otp) => {
   }
 };
 
+ 
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, username } = req.body;
@@ -63,6 +65,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+ 
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -85,6 +88,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+ 
 router.post('/send-otp', async (req, res) => {
   try {
     const { phone, email } = req.body;
@@ -121,6 +125,7 @@ router.post('/send-otp', async (req, res) => {
       return res.json({ success: true, message: `OTP sent to ${email}` });
     }
 
+     
     console.log(`\n📱 OTP for ${phone}: ${otp}\n`);
     res.json({
       success: true,
@@ -133,6 +138,7 @@ router.post('/send-otp', async (req, res) => {
   }
 });
 
+ 
 router.post('/verify-otp', async (req, res) => {
   try {
     const { phone, email, otp } = req.body;
@@ -160,6 +166,7 @@ router.post('/verify-otp', async (req, res) => {
   }
 });
 
+ 
 router.get('/google/redirect',
   passport.authenticate('google', {
     scope:  ['profile', 'email'],
@@ -175,10 +182,13 @@ router.get('/google/callback',
   (req, res) => {
     const token = generateToken(req.user._id);
     console.log(`✅ Google OAuth success: ${req.user.email}`);
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+    const clientUrl = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app';
+    const baseUrl = clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : clientUrl;
+    res.redirect(`${baseUrl}/#/auth/callback?token=${token}`);
   }
 );
 
+ 
 router.get('/github/redirect',
   passport.authenticate('github', {
     scope:   ['user:email', 'read:user'],
@@ -194,10 +204,13 @@ router.get('/github/callback',
   (req, res) => {
     const token = generateToken(req.user._id);
     console.log(`✅ GitHub OAuth success: ${req.user.email}`);
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+    const clientUrl = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app';
+    const baseUrl = clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : clientUrl;
+    res.redirect(`${baseUrl}/#/auth/callback?token=${token}`);
   }
 );
 
+ 
 router.get('/discord/redirect',
   passport.authenticate('discord', { session: false })
 );
@@ -210,10 +223,13 @@ router.get('/discord/callback',
   (req, res) => {
     const token = generateToken(req.user._id);
     console.log(`✅ Discord OAuth success: ${req.user.email}`);
-    res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${token}`);
+    const clientUrl = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app';
+    const baseUrl = clientUrl.endsWith('/') ? clientUrl.slice(0, -1) : clientUrl;
+    res.redirect(`${baseUrl}/#/auth/callback?token=${token}`);
   }
 );
 
+ 
 router.post('/social', async (req, res) => {
   try {
     const { provider, providerId, name, email, avatar } = req.body;
@@ -221,6 +237,7 @@ router.post('/social', async (req, res) => {
     if (!provider || !providerId)
       return res.status(400).json({ success: false, message: 'provider and providerId are required' });
 
+     
     const idField = `${provider}Id`;
     let user = await User.findOne({ [idField]: providerId });
 
@@ -252,6 +269,7 @@ router.post('/social', async (req, res) => {
   }
 });
 
+ 
 router.get('/me', protect, (req, res) => {
   res.json({ success: true, user: req.user.toPublic() });
 });

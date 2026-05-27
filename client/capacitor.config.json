@@ -1,0 +1,9 @@
+{
+  "appId": "com.kimichat.app",
+  "appName": "KimiChat",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}

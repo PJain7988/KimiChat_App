@@ -5,6 +5,7 @@ const Chat = require('../models/Chat');
 const { protect } = require('../middleware/auth');
 const upload = require('../config/multer');
 
+ 
 router.get('/', protect, async (req, res) => {
   try {
     const { q, category } = req.query;
@@ -23,6 +24,7 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
+ 
 router.get('/mine', protect, async (req, res) => {
   try {
     const communities = await Community.find({ members: req.user._id })
@@ -34,6 +36,7 @@ router.get('/mine', protect, async (req, res) => {
   }
 });
 
+ 
 router.post('/', protect, upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'banner', maxCount: 1 }
@@ -45,10 +48,10 @@ router.post('/', protect, upload.fields([
     let bannerUrl = '';
     if (req.files) {
       if (req.files.avatar) {
-        avatarUrl = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.avatar[0].filename}`;
+        avatarUrl = `uploads/${req.files.avatar[0].filename}`;
       }
       if (req.files.banner) {
-        bannerUrl = `${process.env.SERVER_URL || 'http://localhost:5000'}/uploads/${req.files.banner[0].filename}`;
+        bannerUrl = `uploads/${req.files.banner[0].filename}`;
       }
     }
 
@@ -76,6 +79,7 @@ router.post('/', protect, upload.fields([
   }
 });
 
+ 
 router.post('/:id/join', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id);
@@ -99,6 +103,7 @@ router.post('/:id/join', protect, async (req, res) => {
   }
 });
 
+ 
 router.post('/:id/add-member', protect, async (req, res) => {
   try {
     const { username } = req.body;
@@ -129,6 +134,7 @@ router.post('/:id/add-member', protect, async (req, res) => {
   }
 });
 
+ 
 router.get('/:id', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id)
@@ -142,11 +148,13 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
+ 
 router.post('/:id/kick/:userId', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id);
     if (!community) return res.status(404).json({ success: false, message: 'Not found' });
 
+     
     if (!community.admins.includes(req.user._id) && community.creator.toString() !== req.user._id.toString()) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
@@ -155,6 +163,7 @@ router.post('/:id/kick/:userId', protect, async (req, res) => {
     community.memberCount = community.members.length;
     await community.save();
 
+     
     await Chat.findByIdAndUpdate(community.chat, { $pull: { participants: req.params.userId } });
     if (community.rooms?.length) {
       await Chat.updateMany({ _id: { $in: community.rooms } }, { $pull: { participants: req.params.userId } });
@@ -166,6 +175,7 @@ router.post('/:id/kick/:userId', protect, async (req, res) => {
   }
 });
 
+ 
 router.post('/:id/rooms', protect, async (req, res) => {
   try {
     const community = await Community.findById(req.params.id);
@@ -179,7 +189,7 @@ router.post('/:id/rooms', protect, async (req, res) => {
     const room = await Chat.create({
       name,
       isGroup: true,
-      participants: community.members, 
+      participants: community.members,  
       admins: [req.user._id],
     });
 
@@ -192,6 +202,7 @@ router.post('/:id/rooms', protect, async (req, res) => {
   }
 });
 
+ 
 router.patch('/:id/rules', protect, async (req, res) => {
   try {
     const { rules } = req.body;
