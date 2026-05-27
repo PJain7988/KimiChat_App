@@ -37,7 +37,6 @@ const SOCIAL = [
 
 let SERVER_URL = import.meta.env.VITE_SERVER_URL || 'https://kimichat-app.onrender.com';
 
-// Self-healing: If we are not in a known development environment, but URL is localhost or internal IP, switch to production
 if (typeof window !== 'undefined') {
   const hostname = window.location.hostname;
   const isDev = (hostname === 'localhost' || hostname === '127.0.0.1') && 
