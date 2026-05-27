@@ -6,7 +6,7 @@ export default function ContactProfile({ contact, chat, onClose, messages = [] }
   if (!contact && !chat) return null;
 
   const isGroup = chat?.isGroup;
-  // If it's Kimi AI
+  
   const isAI = chat?.isAI;
   
   const name = isAI ? 'Kimi AI' : (isGroup ? chat.name : contact?.name);
@@ -14,7 +14,7 @@ export default function ContactProfile({ contact, chat, onClose, messages = [] }
   const isOnline = isAI ? true : (isGroup ? false : contact?.isOnline);
   const bio = isAI ? 'Your personal AI assistant, here to help 24/7!' : (contact?.bio || 'Hey there! I am using KimiChat.');
 
-  // States for management
+  
   const [mutedChats, setMutedChats] = useState(() => JSON.parse(localStorage.getItem('kc_muted_chats') || '[]'));
   const [blockedUsers, setBlockedUsers] = useState(() => JSON.parse(localStorage.getItem('kc_blocked_users') || '[]'));
   const [showMedia, setShowMedia] = useState(false);
@@ -60,13 +60,13 @@ export default function ContactProfile({ contact, chat, onClose, messages = [] }
         .cp-section { border-bottom: 8px solid var(--bg-dark); }
       `}</style>
       
-      {/* Header */}
+      
       <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '16px 20px', borderBottom: '1px solid var(--border2)', background: 'var(--bg-card)', position: 'sticky', top: 0, zIndex: 10 }}>
         <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: 18, padding: 4 }}>✕</button>
         <span style={{ fontSize: 16, fontWeight: 600 }}>Contact Info</span>
       </div>
 
-      {/* Info */}
+      
       <div className="cp-section" style={{ padding: '24px 20px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Avatar src={avatar} name={name} size={140} online={isOnline} emoji={isAI ? '🤖' : null} gradient={isAI ? 'var(--teal),var(--blue)' : null} />
         <div style={{ marginTop: 16, fontSize: 22, fontWeight: 700, textAlign: 'center' }}>{name}</div>
@@ -101,7 +101,7 @@ export default function ContactProfile({ contact, chat, onClose, messages = [] }
         </div>
       )}
 
-      {/* Media, links, docs */}
+      
       {!isAI && (
         <div className="cp-section">
            <div className="cp-item" onClick={() => setShowMedia(p => !p)}>
@@ -124,7 +124,7 @@ export default function ContactProfile({ contact, chat, onClose, messages = [] }
         </div>
       )}
 
-      {/* Actions */}
+      
       {!isAI && (
         <div className="cp-section" style={{ padding: '8px 0' }}>
            <div className="cp-item" onClick={() => toast.success('Starred messages feature active! No messages starred yet.')}>
@@ -165,7 +165,7 @@ export default function ContactProfile({ contact, chat, onClose, messages = [] }
         </div>
       )}
 
-      {/* Danger zone */}
+      
       {!isAI && (
         <div className="cp-section" style={{ padding: '8px 0', borderBottom: 'none' }}>
           {!isGroup && (

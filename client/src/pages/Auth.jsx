@@ -5,7 +5,6 @@ import useAuthStore from '../context/authStore';
 import api from '../utils/api';
 import styles from './Auth.module.css';
 
-/* ── OAuth provider config ─────────────────────────────── */
 const SOCIAL = [
   {
     id: 'google', label: 'Google', bg: '#fff', color: '#444',
@@ -52,33 +51,29 @@ export default function Auth() {
   const [oauthLoading, setOauthLoading] = useState(false);
   const otpRefs = useRef([]);
 
-  /* ════════════════════════════════════════════════════
-     OAUTH CALLBACK HANDLER
-     Runs on mount — checks if Passport redirected back
-     here with ?token=JWT or ?error=message in the URL
-  ════════════════════════════════════════════════════ */
+  
   useEffect(() => {
     const token = searchParams.get('token');
     const error = searchParams.get('error');
 
-    // OAuth error came back from server
+    
     if (error) {
       toast.error(decodeURIComponent(error));
-      // Clean URL so error doesn't persist on refresh
+      
       navigate('/auth', { replace: true });
       return;
     }
 
-    // Token received — complete the OAuth login
+    
     if (token) {
       setOauthLoading(true);
 
       const finish = async () => {
         try {
-          // 1. Save token
+          
           localStorage.setItem('kimi_token', token);
 
-          // 2. Fetch full user profile using the token
+          
           const res  = await fetch('/api/auth/me', {
             headers: { Authorization: `Bearer ${token}` },
           });
@@ -86,7 +81,7 @@ export default function Auth() {
 
           if (!res.ok || !data.success) throw new Error(data.message || 'Failed to fetch profile');
 
-          // 3. Save to localStorage + Zustand store
+          
           localStorage.setItem('kimi_user', JSON.stringify(data.user));
           setUser(data.user);
 
@@ -105,12 +100,9 @@ export default function Auth() {
 
       finish();
     }
-  }, []); // only on mount
+  }, []); 
 
-  /* ════════════════════════════════════════════════════
-     While processing OAuth token — show spinner overlay
-  ════════════════════════════════════════════════════ */
-  if (oauthLoading) {
+    if (oauthLoading) {
     return (
       <div style={{
         height:'100vh', display:'flex', flexDirection:'column',
@@ -135,8 +127,7 @@ export default function Auth() {
     );
   }
 
-  /* ── Helpers ──────────────────────────────────────── */
-  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+    const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
   const handleOtpChange = (i, val) => {
     const next = [...otp];
@@ -161,13 +152,11 @@ export default function Auth() {
     }
   };
 
-  /* ── Social login — passport redirect ────────────── */
-  const handleSocialLogin = (provider) => {
+    const handleSocialLogin = (provider) => {
     window.location.href = `${SERVER_URL}/api/auth/${provider}/redirect`;
   };
 
-  /* ── Form submit ──────────────────────────────────── */
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (tab === 'mobile') {
@@ -194,14 +183,11 @@ export default function Auth() {
     }
   };
 
-  /* ════════════════════════════════════════════════════
-     RENDER
-  ════════════════════════════════════════════════════ */
-  return (
+    return (
     <div className={styles.wrap}>
       <div className={`${styles.box} animate-scale-in`}>
 
-        {/* Logo */}
+        
         <div className={styles.logoRow}>
           {!logoErr ? (
             <img
@@ -224,7 +210,7 @@ export default function Auth() {
             : 'Sign in to continue your conversations'}
         </p>
 
-        {/* Tabs */}
+        
         <div className={styles.tabs}>
           {['email', 'mobile'].map(t => (
             <button key={t}
@@ -236,7 +222,7 @@ export default function Auth() {
           ))}
         </div>
 
-        {/* Form */}
+        
         <form onSubmit={handleSubmit} className={styles.form}>
           {tab === 'email' ? (
             <>
@@ -280,7 +266,7 @@ export default function Auth() {
           </button>
         </form>
 
-        {/* Social OAuth */}
+        
         <div className={styles.divider}><span>or continue with</span></div>
         <div className={styles.socialRow}>
           {SOCIAL.map(s => (
@@ -303,7 +289,7 @@ export default function Auth() {
           ))}
         </div>
 
-        {/* Toggle */}
+        
         <p className={styles.toggle}>
           {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
           <button className={styles.toggleBtn}
@@ -316,7 +302,6 @@ export default function Auth() {
   );
 }
 
-/* ── Reusable field ────────────────────────────────────── */
 function Field({ label, ...props }) {
   return (
     <div style={{ marginBottom:16 }}>

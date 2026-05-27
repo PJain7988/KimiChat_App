@@ -1,9 +1,6 @@
 const Message = require('../models/Message');
 const Chat = require('../models/Chat');
 
-/**
- * Service to handle AI responses using Groq (OpenAI-compatible)
- */
 const getAIResponse = async (chatId, userMessage) => {
     const GROQ_API_KEY = process.env.GROQ_API_KEY;
     if (!GROQ_API_KEY) {
@@ -19,7 +16,7 @@ const getAIResponse = async (chatId, userMessage) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: "llama-3.3-70b-versatile", // High quality Groq model
+                model: "llama-3.3-70b-versatile", 
                 messages: [
                     { 
                         role: "system", 
@@ -33,8 +30,8 @@ const getAIResponse = async (chatId, userMessage) => {
         });
 
         const data = await response.json();
-        
-        if (!response.ok) {
+
+                if (!response.ok) {
             console.error('Groq API Error:', data);
             return "I'm having a bit of trouble thinking right now. Could you try again in a moment?";
         }
@@ -46,12 +43,8 @@ const getAIResponse = async (chatId, userMessage) => {
     }
 };
 
-/**
- * Trigger an AI reply and emit it via socket
- */
 const triggerAIReply = async (io, chatId, query) => {
     console.log(`🤖 AI Triggered for chat ${chatId}: "${query}"`);
-    // 1. Emit typing indicator
     if (io) {
         io.to(`chat:${chatId}`).emit('message:typing', { 
             chatId, 
@@ -61,14 +54,11 @@ const triggerAIReply = async (io, chatId, query) => {
         });
     }
 
-    // Add a small natural delay
     await new Promise(r => setTimeout(r, 1500));
 
-    // 2. Get AI response text
     const aiText = await getAIResponse(chatId, query);
     console.log(`🤖 AI Reply generated: "${aiText.substring(0, 30)}..."`);
 
-    // 3. Stop typing
     if (io) {
         io.to(`chat:${chatId}`).emit('message:typing', { 
             chatId, 
@@ -77,7 +67,6 @@ const triggerAIReply = async (io, chatId, query) => {
         });
     }
 
-    // 4. Create the AI message in DB
     const aiMessage = await Message.create({
         chat: chatId,
         sender: null, 
@@ -90,7 +79,6 @@ const triggerAIReply = async (io, chatId, query) => {
     const populated = await Message.findById(aiMessage._id).populate('chat');
     console.log(`🤖 AI Message Created in DB. Emitting to chat:${chatId}...`);
 
-    // 5. Emit via Socket.io so user sees it live
     if (io) {
         const result = io.to(`chat:${chatId}`).emit('message:new', { 
             chatId, 
@@ -102,7 +90,6 @@ const triggerAIReply = async (io, chatId, query) => {
 
 
 
-    // 4. Update chat last message
     await Chat.findByIdAndUpdate(chatId, {
         lastMessage: aiMessage._id,
         updatedAt: new Date()

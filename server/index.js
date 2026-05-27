@@ -1,11 +1,5 @@
-// ═══════════════════════════════════════════════════════
-// ⚠️  CRITICAL: Load .env FIRST before anything else!
-// ═══════════════════════════════════════════════════════
 require('dotenv').config();
 
-// ═══════════════════════════════════════════════════════
-// DEPENDENCIES
-// ═══════════════════════════════════════════════════════
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -17,12 +11,8 @@ const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const fs = require('fs');
 
-// ✅ NOW .env is loaded, safe to require passport
 const passport = require('./config/passport');
 
-// ═══════════════════════════════════════════════════════
-// ENVIRONMENT VALIDATION
-// ═══════════════════════════════════════════════════════
 const requiredEnvVars = [
   'PORT',
   'NODE_ENV',
@@ -31,7 +21,6 @@ const requiredEnvVars = [
   'CLIENT_URL',
 ];
 
-// Optional OAuth vars - only required if OAuth is enabled
 const optionalEnvVars = [
   'GOOGLE_CLIENT_ID',
   'GOOGLE_CLIENT_SECRET',
@@ -48,28 +37,20 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
-// Check optional vars
 const missingOptionalVars = optionalEnvVars.filter(varName => !process.env[varName]);
 if (missingOptionalVars.length > 0) {
   console.warn(`⚠️  Missing optional environment variables: ${missingOptionalVars.join(', ')}`);
   console.warn('OAuth features may be disabled');
 }
 
-// ═══════════════════════════════════════════════════════
-// EXPRESS & SERVER SETUP
-// ═══════════════════════════════════════════════════════
 const app = express();
 const server = http.createServer(app);
-// Share io with routes
 app.set('io', null); 
 
-const CLIENT_URL = process.env.CLIENT_URL || 'https://kimi-chat-app.vercel.app/';
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// ═══════════════════════════════════════════════════════
-// SOCKET.IO CONFIGURATION
-// ═══════════════════════════════════════════════════════
 const io = new Server(server, {
   cors: {
     origin: CLIENT_URL,
@@ -88,24 +69,18 @@ const io = new Server(server, {
 
 app.set('io', io);
 
-// ═══════════════════════════════════════════════════════
-// SECURITY MIDDLEWARE
-// ═══════════════════════════════════════════════════════
 
-// Helmet for security headers
 app.use(
   helmet({
-    // Allow OAuth popups (Google/Discord/GitHub)
     crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
-    crossOriginResourcePolicy: { policy: 'cross-origin' }, // Allow cross-origin images/media
+    crossOriginResourcePolicy: { policy: 'cross-origin' }, 
     contentSecurityPolicy: false,
   })
 );
 
-// ✅ FIXED: Proper rate limiting with IPv6 support
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again later.',
@@ -113,7 +88,6 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => {
-    // Don't rate-limit OAuth callbacks and health checks
     return (
       req.path.includes('/callback') ||
       req.path.includes('/health')
@@ -124,9 +98,6 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
-// ═══════════════════════════════════════════════════════
-// CORS MIDDLEWARE
-// ═══════════════════════════════════════════════════════
 app.use(
   cors({
     origin: CLIENT_URL,
@@ -137,46 +108,33 @@ app.use(
   })
 );
 
-// ═══════════════════════════════════════════════════════
-// BODY PARSER & STATIC FILES
-// ═══════════════════════════════════════════════════════
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
   console.log('✅ Created uploads directory');
 }
 
-// ═══════════════════════════════════════════════════════
-// SESSION MIDDLEWARE (Required for Passport OAuth)
-// ═══════════════════════════════════════════════════════
 app.use(
   session({
     secret: process.env.JWT_SECRET || 'kimichat_session_secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: NODE_ENV === 'production', // HTTPS only in production
+      secure: NODE_ENV === 'production', 
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, 
       sameSite: NODE_ENV === 'production' ? 'strict' : 'lax',
     },
   })
 );
 
-// ═══════════════════════════════════════════════════════
-// PASSPORT MIDDLEWARE (Must come AFTER session)
-// ═══════════════════════════════════════════════════════
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ═══════════════════════════════════════════════════════
-// REQUEST LOGGING
-// ═══════════════════════════════════════════════════════
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -190,16 +148,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// ═══════════════════════════════════════════════════════
-// DATABASE CONNECTION
-// ═══════════════════════════════════════════════════════
 const connectDB = async () => {
   try {
     if (!process.env.MONGO_URI) {
       throw new Error('MONGO_URI not defined in .env');
     }
 
-    // ✅ FIXED: Removed deprecated useNewUrlParser and useUnifiedTopology options
     await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
@@ -214,7 +168,6 @@ const connectDB = async () => {
   }
 };
 
-// MongoDB event listeners
 mongoose.connection.on('disconnected', () => {
   console.warn('⚠️  MongoDB Disconnected — Attempting to reconnect...');
 });
@@ -223,14 +176,9 @@ mongoose.connection.on('error', (err) => {
   console.error('❌ MongoDB Error:', err.message);
 });
 
-// Connect to database
 connectDB();
 
-// ═══════════════════════════════════════════════════════
-// ROUTES
-// ═══════════════════════════════════════════════════════
 
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'KimiChat API running 🚀',
@@ -242,7 +190,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/messages', require('./routes/messages'));
@@ -250,14 +197,10 @@ app.use('/api/chats', require('./routes/chats'));
 app.use('/api/friends', require('./routes/friends'));
 app.use('/api/community', require('./routes/community'));
 
-// ✅ STATUS ROUTES - Properly integrated with authentication
 app.use('/api/status', require('./routes/status'));
 
 app.use('/api/global', require('./routes/global'));
 
-// ═══════════════════════════════════════════════════════
-// 404 - NOT FOUND
-// ═══════════════════════════════════════════════════════
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -265,9 +208,6 @@ app.use((req, res) => {
   });
 });
 
-// ═══════════════════════════════════════════════════════
-// GLOBAL ERROR HANDLER
-// ═══════════════════════════════════════════════════════
 app.use((err, req, res, next) => {
   console.error('❌ Error:', {
     message: err.message,
@@ -276,7 +216,6 @@ app.use((err, req, res, next) => {
     stack: NODE_ENV === 'development' ? err.stack : undefined,
   });
 
-  // Handle multer file upload errors
   if (err.name === 'MulterError') {
     if (err.code === 'FILE_TOO_LARGE') {
       return res.status(413).json({
@@ -296,7 +235,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // Handle validation errors
   if (err.message && err.message.includes('Invalid file type')) {
     return res.status(400).json({
       success: false,
@@ -314,9 +252,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ═══════════════════════════════════════════════════════
-// SOCKET.IO EVENT HANDLER
-// ═══════════════════════════════════════════════════════
 try {
   require('./socket/socketHandler')(io);
   console.log('✅ Socket.IO handler loaded');
@@ -325,9 +260,6 @@ try {
   console.log('   Continuing without Socket.IO features...');
 }
 
-// ═══════════════════════════════════════════════════════
-// START SERVER
-// ═══════════════════════════════════════════════════════
 const serverInstance = server.listen(PORT, () => {
   console.log('\n' + '═'.repeat(65));
   console.log('🚀 KimiChat Server Started Successfully');
@@ -344,9 +276,6 @@ const serverInstance = server.listen(PORT, () => {
   console.log('═'.repeat(65) + '\n');
 });
 
-// ═══════════════════════════════════════════════════════
-// GRACEFUL SHUTDOWN
-// ═══════════════════════════════════════════════════════
 const shutdown = async (signal) => {
   console.log(`\n⚠️  ${signal} received — Shutting down gracefully...`);
 
@@ -364,7 +293,6 @@ const shutdown = async (signal) => {
     process.exit(0);
   });
 
-  // Force shutdown after 10 seconds
   setTimeout(() => {
     console.error('❌ Forced shutdown — graceful shutdown took too long');
     process.exit(1);
@@ -374,9 +302,6 @@ const shutdown = async (signal) => {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
-// ═══════════════════════════════════════════════════════
-// UNHANDLED ERRORS
-// ═══════════════════════════════════════════════════════
 process.on('unhandledRejection', (reason, promise) => {
   console.error('❌ Unhandled Rejection:', {
     reason,

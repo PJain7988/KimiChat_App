@@ -3,7 +3,6 @@ const GlobalMessage = require('../models/GlobalMessage');
 const Chat = require('../models/Chat');
 const User = require('../models/User');
 
-// AI reply pool
 const AI_REPLIES = [
   "I understand! Let me help you with that. 🤖",
   "Great question! Here's what I think: based on the context, you might want to consider multiple approaches.",
@@ -15,32 +14,28 @@ const AI_REPLIES = [
 ];
 
 module.exports = (io) => {
-  // Track online users: userId -> socketId
   const onlineUsers = new Map();
 
   io.on('connection', (socket) => {
     console.log(`🔌 Socket connected: ${socket.id}`);
 
-    // ── User comes online ─────────────────────────────────
     socket.on('user:online', async (rawUserId) => {
       const userId = String(rawUserId);
       onlineUsers.set(userId, socket.id);
-      
-      // 💎 BROAD SIGNALING (Multiple Patterns)
+
       socket.join(`user:${userId}`);
       socket.join(userId); 
       socket.join('authenticated-users');
-      
-      socket.data.userId = userId; 
+
+            socket.data.userId = userId; 
       socket.userId = userId; 
-      
-      await User.findByIdAndUpdate(userId, { isOnline: true, socketId: socket.id });
+
+            await User.findByIdAndUpdate(userId, { isOnline: true, socketId: socket.id });
       io.emit('user:status', { userId, isOnline: true });
       socket.emit('socket:registered', { userId });
       console.log(`📡 [SOCKET] User ${userId} joined signaling rooms.`);
     });
 
-    // ── Join chat rooms ───────────────────────────────────
     socket.on('chat:join', (chatId) => {
       socket.join(`chat:${chatId}`);
     });
@@ -49,7 +44,6 @@ module.exports = (io) => {
       socket.leave(`chat:${chatId}`);
     });
 
-    // ── Send message ──────────────────────────────────────
     socket.on('message:send', async (data) => {
       try {
         const { chatId, senderId, content, type = 'text', fileUrl, replyTo } = data;
@@ -71,7 +65,6 @@ module.exports = (io) => {
 
         const populated = await message.populate('sender', 'name username avatar avatarColor');
 
-        // Emit to all in chat room
         io.to(`chat:${chatId}`).emit('message:new', { chatId, message: populated });
 
       } catch (err) {
@@ -79,7 +72,6 @@ module.exports = (io) => {
       }
     });
 
-    // ── Typing indicators ─────────────────────────────────
     socket.on('typing:start', ({ chatId, userId, name }) => {
       socket.to(`chat:${chatId}`).emit('typing:start', { chatId, userId, name });
     });
@@ -88,7 +80,6 @@ module.exports = (io) => {
       socket.to(`chat:${chatId}`).emit('typing:stop', { chatId, userId });
     });
 
-    // ── Message read ──────────────────────────────────────
     socket.on('message:read', async ({ chatId, userId }) => {
       await Message.updateMany(
         { chat: chatId, readBy: { $ne: userId } },
@@ -97,7 +88,6 @@ module.exports = (io) => {
       io.to(`chat:${chatId}`).emit('message:read', { chatId, userId });
     });
 
-    // ── Global chat rooms ─────────────────────────────────
     socket.on('global:join', (room) => {
       socket.join(`global:${room}`);
     });
@@ -130,12 +120,17 @@ module.exports = (io) => {
       io.to(`user:${targetUserId}`).emit('global:invite', data);
     });
 
-    // ── WebRTC Signaling ──────────────────────────────────
-    socket.on('call:initiate', async ({ targetUserId, type }) => {
+    socket.on('call:initiate', async (data) => {
+      const { targetUserId, type, callerId: payloadCallerId } = data;
       const targetId = String(targetUserId);
-      const callerId = String(socket.userId || socket.data?.userId);
+      const rawCallerId = socket.userId || socket.data?.userId || payloadCallerId;
       
-      // Prevent self-calling
+      if (!rawCallerId) {
+        console.warn(`🛑 [CALL] Unauthorized call attempt, missing callerId`);
+        return socket.emit('error', { message: "Unauthorized call attempt. Please reconnect." });
+      }
+      const callerId = String(rawCallerId);
+
       if (targetId === callerId) {
         console.warn(`🛑 [CALL] User ${callerId} tried to call themselves.`);
         return socket.emit('error', { message: "You cannot call yourself." });
@@ -147,8 +142,8 @@ module.exports = (io) => {
       if (caller) {
         let sentCount = 0;
         const allSockets = await io.fetchSockets();
-        
-        for (const s of allSockets) {
+
+                for (const s of allSockets) {
           const sid = String(s.data?.userId || s.userId || "");
           if (sid === targetId) {
             console.log(`📡 [CALL] Direct emission to PJ (Socket: ${s.id})`);
@@ -157,7 +152,6 @@ module.exports = (io) => {
           }
         }
 
-        // Multiple fallback rooms for maximum reliability
         const target = await User.findById(targetId).select('name');
         const signalData = { 
           from: caller.toPublic(), 
@@ -166,16 +160,15 @@ module.exports = (io) => {
           type, 
           targetUserId: targetId 
         };
-        
-        const room1 = `user:${targetId}`;
+
+                const room1 = `user:${targetId}`;
         const room2 = targetId;
-        
-        console.log(`📡 [CALL] Emitting to ${target?.name} rooms: ${room1}, ${room2}`);
-        
-        io.to(room1).emit('call:incoming', signalData);
+
+                console.log(`📡 [CALL] Emitting to ${target?.name} rooms: ${room1}, ${room2}`);
+
+                io.to(room1).emit('call:incoming', signalData);
         io.to(room2).emit('call:incoming', signalData);
-        
-        // Final fallback: App-wide signal with privacy filtering
+
         io.emit('call:incoming:broadcast', signalData);
 
         if (sentCount === 0) {
@@ -207,22 +200,17 @@ module.exports = (io) => {
       io.to(`user:${targetId}`).emit('call:ended');
     });
 
-    // Unified WebRTC Signaling
     socket.on('call:signal', ({ targetUserId, targetSocketId, signal }) => {
       const room = targetUserId ? `user:${String(targetUserId)}` : targetSocketId;
       console.log(`📡 [RTC] Signal forwarded from ${socket.userId} to ${room}`);
       io.to(room).emit('call:signal', { signal, fromUserId: socket.userId, fromSocketId: socket.id });
-      // Also bridge to the non-prefixed room for extra reliability
       if (targetUserId) io.to(String(targetUserId)).emit('call:signal', { signal, fromUserId: socket.userId });
     });
 
-    // ── Status updates ────────────────────────────────────
     socket.on('status:new', (statusData) => {
-      // Broadcast to friends – in real app filter by friendIds
       socket.broadcast.emit('status:new', statusData);
     });
 
-    // ── Disconnect ────────────────────────────────────────
     socket.on('disconnect', async () => {
       if (socket.userId) {
         onlineUsers.delete(socket.userId);

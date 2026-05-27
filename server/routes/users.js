@@ -4,7 +4,6 @@ const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const upload = require('../config/multer');
 
-// ── Search Users ─────────────────────────────────────────
 router.get('/search', protect, async (req, res) => {
   try {
     const { q } = req.query;
@@ -25,12 +24,10 @@ router.get('/search', protect, async (req, res) => {
   }
 });
 
-// ── Random User Discovery ────────────────────────────────
 router.get('/random', protect, async (req, res) => {
   try {
     const me = await User.findById(req.user._id);
-    
-    // Exclude: self, friends, people I sent requests to, and people who sent requests to me
+
     const excludeIds = [req.user._id];
     if (me.friends) me.friends.forEach(f => excludeIds.push(f));
     if (me.sentRequests) me.sentRequests.forEach(r => excludeIds.push(r));
@@ -61,7 +58,6 @@ router.get('/random', protect, async (req, res) => {
   }
 });
 
-// ── Get User Profile ─────────────────────────────────────
 router.get('/:username', protect, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username })
@@ -76,7 +72,6 @@ router.get('/:username', protect, async (req, res) => {
   }
 });
 
-// ── Update Profile ───────────────────────────────────────
 router.put('/update/profile', protect, upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'backgroundImage', maxCount: 1 },

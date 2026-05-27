@@ -9,10 +9,6 @@ const COLORS = [
   'var(--teal),var(--purple)',
 ];
 
-/**
- * Get consistent color based on name
- * ✅ Fixed: Better hash function, consistent colors
- */
 function getColor(name) {
   if (!name || typeof name !== 'string') return COLORS[0];
   
@@ -20,16 +16,12 @@ function getColor(name) {
   for (let i = 0; i < name.length; i++) {
     const char = name.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
+    hash = hash & hash; 
   }
   
   return COLORS[Math.abs(hash) % COLORS.length];
 }
 
-/**
- * Avatar Component - Display user profile pictures
- * ✅ Fixed: Image display, error handling, responsive, accessibility
- */
 export default function Avatar({
   name = 'User',
   src = null,
@@ -44,17 +36,17 @@ export default function Avatar({
   onClick = null,
   title = ''
 }) {
-  // ✅ FIX: Track image loading state
+  
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // ✅ FIX: Reset states when src changes to allow fresh loading
+  
   React.useEffect(() => {
     setImageLoaded(false);
     setImageError(false);
   }, [src]);
 
-  // ✅ FIX: Safely get initials
+  
   const initials = React.useMemo(() => {
     if (!name || typeof name !== 'string') return '?';
     return name
@@ -67,24 +59,24 @@ export default function Avatar({
       .toUpperCase() || '?';
   }, [name]);
 
-  // ✅ FIX: Choose background based on image availability
+  
   const bg = src && imageLoaded && !imageError
-    ? 'transparent' // Will use image
+    ? 'transparent' 
     : gradient
     ? `linear-gradient(135deg, ${gradient})`
     : `linear-gradient(135deg, ${getColor(name)})`;
 
-  // ✅ FIX: Responsive font size
+  
   const fs = fontSize || Math.max(8, size * 0.38);
   const onlineIndicatorSize = Math.max(6, size * 0.22);
 
-  // ✅ FIX: Handle image load
+  
   const handleImageLoad = () => {
     setImageLoaded(true);
     setImageError(false);
   };
 
-  // ✅ FIX: Handle image error gracefully
+  
   const handleImageError = () => {
     setImageLoaded(false);
     setImageError(true);
@@ -107,7 +99,7 @@ export default function Avatar({
       role="img"
       aria-label={alt || name || 'Avatar'}
     >
-      {/* Main Avatar Circle */}
+      
       <div
         style={{
           width: size,
@@ -127,7 +119,7 @@ export default function Avatar({
           transition: 'background 0.3s ease'
         }}
       >
-        {/* ✅ FIX: Image with proper error handling */}
+        
         {src && !imageError ? (
           <img
             src={src}
@@ -146,7 +138,7 @@ export default function Avatar({
           />
         ) : null}
 
-        {/* ✅ FIX: Fallback content - show only if image not loaded */}
+        
         {!imageLoaded && (
           <span style={{
             position: 'relative',
@@ -158,7 +150,7 @@ export default function Avatar({
         )}
       </div>
 
-      {/* ✅ FIX: Online status indicator */}
+      
       {online !== undefined && (
         <div
           style={{

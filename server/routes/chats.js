@@ -4,7 +4,6 @@ const Chat = require('../models/Chat');
 const Message = require('../models/Message');
 const { protect } = require('../middleware/auth');
 
-// ── Get all chats for user ───────────────────────────────
 router.get('/', protect, async (req, res) => {
   try {
     const chats = await Chat.find({ participants: req.user._id })
@@ -18,7 +17,6 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// ── Create/Get direct chat ───────────────────────────────
 router.post('/direct', protect, async (req, res) => {
   try {
     const { userId } = req.body;
@@ -40,7 +38,6 @@ router.post('/direct', protect, async (req, res) => {
   }
 });
 
-// ── Create group chat ────────────────────────────────────
 router.post('/group', protect, async (req, res) => {
   try {
     const { name, participants, description, avatar } = req.body;
@@ -63,7 +60,6 @@ router.post('/group', protect, async (req, res) => {
   }
 });
 
-// ── Get chat messages ────────────────────────────────────
 router.get('/:chatId/messages', protect, async (req, res) => {
   try {
     const { page = 1, limit = 40 } = req.query;
@@ -75,7 +71,6 @@ router.get('/:chatId/messages', protect, async (req, res) => {
       .skip((page - 1) * limit)
       .limit(Number(limit));
 
-    // Mark as read
     await Message.updateMany(
       { chat: req.params.chatId, readBy: { $ne: req.user._id } },
       { $addToSet: { readBy: req.user._id } }
@@ -87,7 +82,6 @@ router.get('/:chatId/messages', protect, async (req, res) => {
   }
 });
 
-// ── Delete chat ──────────────────────────────────────────
 router.delete('/:chatId', protect, async (req, res) => {
   try {
     await Chat.findByIdAndUpdate(req.params.chatId, {
@@ -99,7 +93,6 @@ router.delete('/:chatId', protect, async (req, res) => {
   }
 });
 
-// ── Create/Get AI chat ───────────────────────────────────────
 router.post('/ai', protect, async (req, res) => {
   try {
     let chat = await Chat.findOne({

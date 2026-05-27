@@ -4,13 +4,12 @@ let socket = null;
 
 export const initSocket = (userId) => {
   const token = localStorage.getItem('kimi_token');
-  
-  if (socket?.connected) {
+
+    if (socket?.connected) {
     if (token) socket.auth = { token };
     return socket;
   }
 
-  // Create socket if not exists or not connected
   socket = io(import.meta.env.VITE_SERVER_URL || 'http://localhost:5000', {
     withCredentials: true,
     transports: ['websocket', 'polling'],

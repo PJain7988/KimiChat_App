@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 
-// ── Get friends ──────────────────────────────────────────
 router.get('/', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
@@ -14,7 +13,6 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// ── Get friend requests ──────────────────────────────────
 router.get('/requests', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
@@ -25,7 +23,6 @@ router.get('/requests', protect, async (req, res) => {
   }
 });
 
-// ── Send friend request ──────────────────────────────────
 router.post('/request/:userId', protect, async (req, res) => {
   try {
     const target = await User.findById(req.params.userId);
@@ -49,7 +46,6 @@ router.post('/request/:userId', protect, async (req, res) => {
   }
 });
 
-// ── Accept friend request ────────────────────────────────
 router.post('/accept/:userId', protect, async (req, res) => {
   try {
     const me = await User.findById(req.user._id);
@@ -71,7 +67,6 @@ router.post('/accept/:userId', protect, async (req, res) => {
   }
 });
 
-// ── Reject/cancel friend request ─────────────────────────
 router.delete('/request/:userId', protect, async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.user._id, {
@@ -86,7 +81,6 @@ router.delete('/request/:userId', protect, async (req, res) => {
   }
 });
 
-// ── Unfriend ─────────────────────────────────────────────
 router.delete('/:userId', protect, async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.user._id, { $pull: { friends: req.params.userId } });
@@ -97,7 +91,6 @@ router.delete('/:userId', protect, async (req, res) => {
   }
 });
 
-// ── Get Blocked Users ─────────────────────────────────────
 router.get('/blocked', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
@@ -108,7 +101,6 @@ router.get('/blocked', protect, async (req, res) => {
   }
 });
 
-// ── Block User ───────────────────────────────────────────
 router.post('/block/:userId', protect, async (req, res) => {
   try {
     const me = await User.findById(req.user._id);
@@ -116,15 +108,13 @@ router.post('/block/:userId', protect, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Cannot block yourself' });
     }
 
-    // Add to blocked, remove from friends/requests
     me.blockedUsers.addToSet(req.params.userId);
     me.friends = me.friends.filter(id => id.toString() !== req.params.userId);
     me.friendRequests = me.friendRequests.filter(r => r.from.toString() !== req.params.userId);
     me.sentRequests = me.sentRequests.filter(id => id.toString() !== req.params.userId);
-    
-    await me.save();
-    
-    // Also remove ME from THEIR friends list
+
+        await me.save();
+
     await User.findByIdAndUpdate(req.params.userId, {
       $pull: { friends: req.user._id, sentRequests: req.user._id }
     });
@@ -135,7 +125,6 @@ router.post('/block/:userId', protect, async (req, res) => {
   }
 });
 
-// ── Unblock User ─────────────────────────────────────────
 router.post('/unblock/:userId', protect, async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.user._id, {

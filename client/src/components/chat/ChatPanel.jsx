@@ -9,9 +9,9 @@ import ChatList from './ChatList';
 import ContactProfile from './ContactProfile';
 import { toast } from 'react-hot-toast';
 import { getChatOtherUser } from '../../utils/idUtils';
-// ─────────────────────────────────────────────────────────────────
-// EMOJI DATA — 8 categories, 200+ emojis
-// ─────────────────────────────────────────────────────────────────
+
+
+
 const EMOJI_CATEGORIES = [
   {
     id: 'smileys', label: '😊', title: 'Smileys & People',
@@ -159,9 +159,9 @@ const STICKER_PACKS = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// WHISPER (OpenAI) — audio transcription
-// ─────────────────────────────────────────────────────────────────
+
+
+
 const OPENAI_KEY = import.meta.env?.VITE_OPENAI_API_KEY || '';
 
 async function transcribeAudio(blob) {
@@ -180,9 +180,9 @@ async function transcribeAudio(blob) {
   return data.text || null;
 }
 
-// ─────────────────────────────────────────────────────────────────
-// MEDIA PICKER — Emoji | GIF | Stickers  (WhatsApp style)
-// ─────────────────────────────────────────────────────────────────
+
+
+
 function MediaPicker({ onEmoji, onSticker, onClose }) {
   const [tab, setTab] = useState('emoji');
   const [emojiCat, setEmojiCat] = useState('smileys');
@@ -200,7 +200,7 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
     onEmoji(em);
   };
 
-  // Which emojis to show in grid
+  
   const displayEmojis = emojiSearch.trim()
     ? EMOJI_CATEGORIES.flatMap(c => c.emojis).filter(e => e.includes(emojiSearch))
     : emojiCat === 'recent'
@@ -238,7 +238,7 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
         .p-chip:hover   { background:rgba(0,201,177,0.2) !important; }
       `}</style>
 
-      {/* ── Top bar ── */}
+      
       <div style={{
         display: 'flex', borderBottom: '1px solid var(--border2,#1e3050)',
         padding: '6px 10px 0', gap: 2, alignItems: 'flex-end', flexShrink: 0,
@@ -258,10 +258,10 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
         </button>
       </div>
 
-      {/* ══════════════ EMOJI TAB ══════════════ */}
+      
       {tab === 'emoji' && (
         <>
-          {/* Search */}
+          
           <div style={{ padding: '8px 10px 4px', flexShrink: 0 }}>
             <input
               value={emojiSearch} onChange={e => setEmojiSearch(e.target.value)}
@@ -277,7 +277,7 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
             />
           </div>
 
-          {/* Category pills */}
+          
           {!emojiSearch && (
             <div style={{ display: 'flex', gap: 2, padding: '2px 10px 4px', overflowX: 'auto', flexShrink: 0 }}>
               {[{ id: 'recent', label: '🕐' }, ...EMOJI_CATEGORIES.map(c => ({ id: c.id, label: c.label }))].map(c => (
@@ -295,7 +295,7 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
             </div>
           )}
 
-          {/* Emoji grid */}
+          
           <div style={{
             flex: 1, overflowY: 'auto', padding: '4px 10px 10px',
             display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', gap: 2,
@@ -321,10 +321,10 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
         </>
       )}
 
-      {/* ══════════════ STICKER TAB ══════════════ */}
+      
       {tab === 'sticker' && (
         <>
-          {/* Pack selector */}
+          
           <div style={{ display: 'flex', gap: 6, padding: '8px 10px 6px', overflowX: 'auto', flexShrink: 0 }}>
             {STICKER_PACKS.map(p => (
               <button key={p.id} onClick={() => setStickerPack(p.id)} style={{
@@ -337,7 +337,7 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
             ))}
           </div>
 
-          {/* Sticker grid */}
+          
           <div style={{
             flex: 1, overflowY: 'auto', padding: '6px 10px 12px',
             display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8,
@@ -366,11 +366,11 @@ function MediaPicker({ onEmoji, onSticker, onClose }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
-// AUDIO RECORDER — live waveform + Whisper transcription
-// ─────────────────────────────────────────────────────────────────
+
+
+
 function AudioRecorder({ onSend, onCancel }) {
-  const [phase, setPhase] = useState('idle');   // idle | recording | preview | transcribing
+  const [phase, setPhase] = useState('idle');   
   const [duration, setDuration] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
@@ -385,7 +385,7 @@ function AudioRecorder({ onSend, onCancel }) {
   const analyserRef = useRef(null);
   const audioCtxRef = useRef(null);
 
-  // Cleanup on unmount
+  
   useEffect(() => () => {
     cancelAnimationFrame(animRef.current);
     clearInterval(timerRef.current);
@@ -471,7 +471,7 @@ function AudioRecorder({ onSend, onCancel }) {
     }}>
       <style>{`@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.5)}70%{box-shadow:0 0 0 8px rgba(255,71,87,0)}}`}</style>
 
-      {/* Cancel */}
+      
       <button onClick={cancel} title="Cancel" style={{
         width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
         background: 'rgba(255,71,87,0.15)', border: '1px solid rgba(255,71,87,0.3)',
@@ -479,7 +479,7 @@ function AudioRecorder({ onSend, onCancel }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>✕</button>
 
-      {/* Center content */}
+      
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
         {phase === 'idle' && !error && (
           <span style={{ fontSize: 13, color: 'var(--text-dim)' }}>Tap 🎤 to start recording your voice note</span>
@@ -520,7 +520,7 @@ function AudioRecorder({ onSend, onCancel }) {
         )}
       </div>
 
-      {/* Action buttons */}
+      
       <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
         {phase === 'idle' && !error && (
           <button onClick={startRecording} title="Start" style={{
@@ -562,9 +562,9 @@ function AudioRecorder({ onSend, onCancel }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
-// MAIN ChatPanel
-// ─────────────────────────────────────────────────────────────────
+
+
+
 export default function ChatPanel({ onStartCall }) {
   const { user } = useAuthStore();
   const { chats, activeChat, messages, typing, fetchChats, fetchMessages, sendMessage, setActiveChat } = useChatStore();
@@ -581,7 +581,7 @@ export default function ChatPanel({ onStartCall }) {
   const [attachedFile, setAttachedFile] = useState(null);
   const [attachedMedia, setAttachedMedia] = useState(null);
 
-  // Management States
+  
   const [mutedChats, setMutedChats] = useState(() => JSON.parse(localStorage.getItem('kc_muted_chats') || '[]'));
   const [pinnedChats, setPinnedChats] = useState(() => JSON.parse(localStorage.getItem('kc_pinned_chats') || '[]'));
 
@@ -628,12 +628,12 @@ export default function ChatPanel({ onStartCall }) {
   const pickerRef = useRef(null);
   const socket = getSocket();
 
-  // ── Fetching ──
+  
   useEffect(() => { fetchChats(); }, [fetchChats]);
   useEffect(() => {
     if (activeChat?._id) {
       fetchMessages(activeChat._id);
-      // Join socket room for real-time updates
+      
       if (socket) {
         socket.emit('chat:join', activeChat._id);
         return () => socket.emit('chat:leave', activeChat._id);
@@ -644,11 +644,11 @@ export default function ChatPanel({ onStartCall }) {
   const activeMsgs = messages[activeChat?._id] || [];
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [activeMsgs.length]);
 
-  // Close dropdown or picker on outside click
+  
   useEffect(() => {
     const handleClick = (e) => {
       if (showOptions && !e.target.closest('.options-btn-container')) setShowOptions(false);
-      // Use both class and ref check for extra robustness
+      
       if (showPicker && !e.target.closest('.picker-container') && !pickerRef.current?.contains(e.target)) {
         setShowPicker(false);
       }
@@ -657,7 +657,7 @@ export default function ChatPanel({ onStartCall }) {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showOptions, showPicker]);
 
-  // ── Helpers ──
+  
   const getOtherUser = useCallback((chat) => {
     return getChatOtherUser(chat, user?._id);
   }, [user?._id]);
@@ -677,7 +677,7 @@ export default function ChatPanel({ onStartCall }) {
     return o?.isOnline ? 'Online' : 'Last seen recently';
   }, [getOtherUser]);
 
-  // ── Typing ──
+  
   const handleTyping = useCallback((e) => {
     const val = e.target.value;
     setInput(val);
@@ -692,7 +692,7 @@ export default function ChatPanel({ onStartCall }) {
     }, 1500);
   }, [isTyping, activeChat, socket]);
 
-  // ── Send ──
+  
   const handleSend = useCallback(async (override) => {
     let content = override ?? input.trim();
     let type = 'text';
@@ -700,7 +700,7 @@ export default function ChatPanel({ onStartCall }) {
     let sticker = null;
 
     if (attachedMedia?.type === 'gif') {
-      // GIF removal cleanup - this block could be removed or handled generically
+      
     }
 
     if (attachedFile) {
@@ -727,14 +727,14 @@ export default function ChatPanel({ onStartCall }) {
 
   const handleKeyDown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
-  // ── Picker callbacks ──
+  
   const handleEmojiPick = em => {
     const start = textareaRef.current?.selectionStart ?? input.length;
     const end = textareaRef.current?.selectionEnd ?? input.length;
     const nextVal = input.substring(0, start) + em + input.substring(end);
     setInput(nextVal);
 
-    // Focus back and move cursor
+    
     setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.focus();
@@ -763,17 +763,17 @@ export default function ChatPanel({ onStartCall }) {
     toast.success('Sticker sent! 🎨');
   };
 
-  // ── Audio ──
+  
   const handleAudioSend = useCallback(async ({ blob, url, duration, transcript }) => {
     setShowAudio(false);
     const content = transcript
       ? `🎤 Voice note (${Math.round(duration)}s): ${transcript}`
       : `🎤 Voice note (${Math.round(duration)}s)`;
     await handleSend(content);
-    // Production: upload blob → Cloudinary/S3, then sendMessage with fileUrl
+    
   }, [handleSend]);
 
-  // ── File attach ──
+  
   const handleFileChange = (e, type) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -819,7 +819,7 @@ export default function ChatPanel({ onStartCall }) {
         }
       `}</style>
 
-      {/* Hidden file inputs */}
+      
       <input ref={fileInputRef} type="file" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'file')} />
       <input ref={imageInputRef} type="file" accept="image/*,video/*" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'image')} />
       <input ref={audioInputRef} type="file" accept="audio/*" style={{ display: 'none' }} onChange={e => handleFileChange(e, 'audio')} />
@@ -828,8 +828,7 @@ export default function ChatPanel({ onStartCall }) {
 
       <div className="chat-main" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--bg-dark)', overflow: 'hidden' }}>
         {!activeChat ? (
-          /* ── Empty state ── */
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: 'var(--text-dim)' }}>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: 'var(--text-dim)' }}>
             {!logoErr
               ? <img src="/images/logo.png" alt="KimiChat" onError={() => setLogoErr(true)} style={{ width: 72, height: 72, borderRadius: 20, objectFit: 'contain', filter: 'drop-shadow(0 0 18px rgba(0,201,177,.45))' }} />
               : <div style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg,var(--teal),var(--blue))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 34, boxShadow: '0 0 28px rgba(0,201,177,.35)' }}>💬</div>
@@ -839,14 +838,14 @@ export default function ChatPanel({ onStartCall }) {
           </div>
         ) : (
           <>
-            {/* ── Header ── */}
+            
             <div style={{ padding: '12px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
               
-              {/* Mobile Back Button */}
+              
               <button 
                 onClick={() => setActiveChat(null)}
                 style={{
-                  display: 'none', // Hidden by default, shown by media query below
+                  display: 'none', 
                   background: 'transparent', border: 'none', color: 'var(--teal)',
                   fontSize: 22, cursor: 'pointer', padding: '0 8px 0 0',
                 }}
@@ -955,7 +954,7 @@ export default function ChatPanel({ onStartCall }) {
               </div>
             </div>
 
-            {/* ── Search Bar ── */}
+            
             {showSearch && (
               <div style={{ padding: '10px 20px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border2)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, zIndex: 5 }}>
                 <div style={{ position: 'relative', flex: 1 }}>
@@ -978,7 +977,7 @@ export default function ChatPanel({ onStartCall }) {
               </div>
             )}
 
-            {/* ── Messages ── */}
+            
             <div className="message-area" style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: 4 }}>
               {activeMsgs.length === 0 && (
                 <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-dim)' }}>
@@ -1019,13 +1018,13 @@ export default function ChatPanel({ onStartCall }) {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* ── Input area ── */}
+            
             <div style={{ padding: '10px 16px 14px', background: 'var(--bg-card)', borderTop: '1px solid var(--border2)', flexShrink: 0, position: 'relative' }}>
 
-              {/* Audio recorder */}
+              
               {showAudio && <AudioRecorder onSend={handleAudioSend} onCancel={() => setShowAudio(false)} />}
 
-              {/* Picker (emoji/gif/sticker) */}
+              
               <div ref={pickerRef} className="picker-container" style={{ position: 'relative' }}>
                 {showPicker && (
                   <MediaPicker
@@ -1036,7 +1035,7 @@ export default function ChatPanel({ onStartCall }) {
                 )}
               </div>
 
-              {/* File preview chip */}
+              
               {attachedFile && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, background: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: '6px 10px', fontSize: 12, color: 'var(--text-dim)' }}>
                   <span>{attachedFile.type === 'image' ? '🖼️' : '📎'}</span>
@@ -1046,13 +1045,13 @@ export default function ChatPanel({ onStartCall }) {
                 </div>
               )}
 
-              {/* GIF preview removal */}
+              
 
-              {/* GIF picker removal */}
+              
 
-              {/* Toolbar */}
+              
               <div className="tool-bar" style={{ display: 'flex', gap: 6, marginBottom: 8, alignItems: 'center' }}>
-                {/* 😊 opens Emoji/GIF/Sticker picker */}
+                
                 <ToolBtn icon="😊" title="Emoji / Stickers" active={showPicker}
                   activeColor="var(--teal,#00d4c8)" activeBg="rgba(0,201,177,0.15)"
                   onClick={() => { setShowPicker(p => !p); setShowAudio(false); }} />
@@ -1062,7 +1061,7 @@ export default function ChatPanel({ onStartCall }) {
                    <ToolBtn icon="📸" title="Image / Video" onClick={() => imageInputRef.current?.click()} />
                 </div>
 
-                {/* 🎤 opens audio recorder */}
+                
                 <ToolBtn icon="🎤" title="Voice Note" active={showAudio}
                   activeColor="#ff4757" activeBg="rgba(255,71,87,0.15)"
                   onClick={() => { setShowAudio(p => !p); setShowPicker(false); }} />
@@ -1072,7 +1071,7 @@ export default function ChatPanel({ onStartCall }) {
                 </div>
               </div>
 
-              {/* Textarea + send */}
+              
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
                 <textarea
                   ref={textareaRef} value={input}
@@ -1110,7 +1109,7 @@ export default function ChatPanel({ onStartCall }) {
         )}
       </div>
 
-      {/* ── Contact Profile Sidebar ── */}
+      
       {showProfile && activeChat && (
         <ContactProfile
           chat={activeChat}
@@ -1123,7 +1122,7 @@ export default function ChatPanel({ onStartCall }) {
   );
 }
 
-// ── Small reusable toolbar button ────────────
+
 function ToolBtn({ icon, title, onClick, active, activeColor, activeBg }) {
   const ac = activeColor || 'var(--teal,#00d4c8)';
   const ab = activeBg || 'rgba(0,201,177,0.15)';
@@ -1142,7 +1141,7 @@ function ToolBtn({ icon, title, onClick, active, activeColor, activeBg }) {
   );
 }
 
-// ── Reusable header button ────────────────────
+
 function HeaderBtn({ icon, title, onClick }) {
   return (
     <button title={title} onClick={onClick} style={{
