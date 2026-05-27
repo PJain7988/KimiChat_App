@@ -107,7 +107,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'https://kimichat-app.onrender.com/api/auth/google/callback',
+      callbackURL: process.env.GOOGLE_CALLBACK_URL || 'https://kimichat-app.onrender.com/api/auth/google/callback',
       passReqToCallback: true,
     },
     async (req, accessToken, refreshToken, profile, done) => {
@@ -154,7 +154,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: 'https://kimichat-app.onrender.com/api/auth/github/callback',
+      callbackURL: process.env.GITHUB_CALLBACK_URL || 'https://kimichat-app.onrender.com/api/auth/github/callback',
       scope: ['user:email', 'read:user'],
       passReqToCallback: true,
     },
@@ -227,7 +227,7 @@ passport.use(
     {
       clientID: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
-      callbackURL: 'https://kimichat-app.onrender.com/api/auth/discord/callback',
+      callbackURL: process.env.DISCORD_CALLBACK_URL || 'https://kimichat-app.onrender.com/api/auth/discord/callback',
       scope: ['identify', 'email'],
       passReqToCallback: true,
     },
