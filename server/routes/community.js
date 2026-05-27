@@ -4,7 +4,6 @@ const Community = require('../models/Community');
 const Chat = require('../models/Chat');
 const { protect } = require('../middleware/auth');
 const upload = require('../config/multer');
-
  
 router.get('/', protect, async (req, res) => {
   try {
